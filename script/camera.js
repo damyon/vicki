@@ -9,7 +9,7 @@ class Camera {
     // or not a point is inside of our outside of the shadow
     this.lightVertexGLSL = `
       attribute vec3 aVertexPosition;
-
+      
       uniform mat4 uPMatrix;
       uniform mat4 uMVMatrix;
 
@@ -178,7 +178,6 @@ class Camera {
         gl_FragColor.g = floor(gl_FragColor.g / 0.05) * 0.05;
         gl_FragColor.b = floor(gl_FragColor.b / 0.05) * 0.05;
 
-
         vec4 n[9];
         float lineWidth = 0.2;
         float outlineCutoff = 0.1;
@@ -332,6 +331,7 @@ class Camera {
     this.uLightMatrix = gl.getUniformLocation(this.cameraShaderProgram, 'lightMViewMatrix');
     this.uLightProjection = gl.getUniformLocation(this.cameraShaderProgram, 'lightProjectionMatrix');
     this.uColor = gl.getUniformLocation(this.cameraShaderProgram, 'uColor');
+    
     this.uCanvasWidth = gl.getUniformLocation(this.cameraShaderProgram, 'uCanvasWidth');
     this.uCanvasHeight = gl.getUniformLocation(this.cameraShaderProgram, 'uCanvasHeight');
     
@@ -363,6 +363,15 @@ class Camera {
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
   }
 
+  translate(gl, x, y, z) {
+    mat4.translate(this.cameraMatrix, this.cameraMatrix, [x, y, z]);
+
+    // Reapply.
+    var modelViewMatrix = mat4.create();
+    mat4.multiply(modelViewMatrix, this.cameraMatrix, modelViewMatrix);
+    gl.uniformMatrix4fv(this.uMVMatrix, false, modelViewMatrix);
+  }
+
   prepareCameraFrame(gl, controls) {
     this.useCameraShader(gl);
     gl.viewport(0, 0, gl.canvas.clientWidth, gl.canvas.clientHeight);
@@ -380,6 +389,7 @@ class Camera {
     mat4.translate(this.cameraMatrix, this.cameraMatrix, [controls.x, controls.y + this.rock, controls.z]);
     
     gl.uniform3fv(this.uColor, [0.0, 0.0, 0.0]);
+
     gl.uniform1f(this.uCanvasWidth, this.width);
     gl.uniform1f(this.uCanvasHeight, this.height);
     

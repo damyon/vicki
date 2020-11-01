@@ -18,6 +18,8 @@ class Boat extends Drawable {
 
     this.vertexCount = this.LOD * 3 * 4;
     this.sourcePositions = [];
+
+    
   }
 
   /**
@@ -234,6 +236,8 @@ class Boat extends Drawable {
     // Load the texture.
     this.loadTexture(gl, 'texture/wood.jpg');
 
+    
+
     return this.buffers;
   }
 
@@ -248,8 +252,9 @@ class Boat extends Drawable {
     // buffer into the vertexPosition attribute
     if (shadow) {
       gl.uniform1i(camera.isWater, 0);
+      gl.uniform1i(camera.isSand, 0);
     }
-    gl.uniform1i(camera.isSand, 0);
+   
     {
       const numComponents = 3;
       const type = gl.FLOAT;
@@ -312,6 +317,8 @@ class Boat extends Drawable {
       const offset = 0;
       gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
     }
+
+    
 
   }
 }
