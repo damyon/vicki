@@ -650,9 +650,9 @@ class ProjectedModel extends Drawable {
     // buffer into the vertexPosition attribute
     if (shadow) {
       gl.uniform1i(camera.isWater, 0);
+      gl.uniform1i(camera.isSand, 0);
     }
-    gl.uniform1i(camera.isSand, 0);
-
+    
     {
       const numComponents = 3;
       const type = gl.FLOAT;

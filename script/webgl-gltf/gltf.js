@@ -78,6 +78,7 @@ const getBufferFromName = (gl, gltf, buffers, mesh, name) => {
         buffer,
         size: bufferData.size,
         type: bufferData.componentType,
+        length: bufferData.data.length,
     };
 };
 const loadNodes = (index, node) => {

@@ -123,12 +123,12 @@ class Character extends Drawable {
 
   draw(gl, camera, shadow, deltaTime, absTime) {
     let element = null;
-    gl.uniform1i(camera.isSand, 0);
     this.updatePathThrottle(absTime);
 
     this.moveForward(gl, deltaTime, absTime);
 
     if (shadow) {
+      gl.uniform1i(camera.isSand, 0);
       this.main.predraw(gl);
       for (element of this.members) {
         element.predraw(gl);
