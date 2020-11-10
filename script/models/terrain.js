@@ -19,9 +19,9 @@ class Terrain extends Drawable {
     this.bushDensity = 256;
     this.bushMinHeight = 0.2;
     this.bushSlope = 0.01;
-    this.treeDensity = 24;
-    this.treeMinHeight = 4;
-    this.treeSlope = 0.3;
+    this.treeDensity = 50;
+    this.treeMinHeight = 2;
+    this.treeSlope = 2;
     this.foamDensity = 64;
     this.foamMinHeight = -0.3;
     this.foamMaxHeight = 0.1;
@@ -283,6 +283,22 @@ class Terrain extends Drawable {
     return result;
   }
 
+  minimumTreeDistance(treeX, treeY, treeZ) {
+    let smallest = 1000, i = 0;
+
+    for (i = 0; i < this.treePositions.length; i++) {
+      let x = this.treePositions[i].x,
+          y = this.treePositions[i].y,
+          z = this.treePositions[i].z;
+      let distance = Math.abs(x - treeX) + Math.abs(y - treeY) + Math.abs(z - treeZ);
+
+      if (distance < smallest) {
+        smallest = distance;
+      }
+    }
+
+    return smallest;
+  }
 
   loadHeightmap(gl, filename) {
     const image = new Image();
@@ -363,7 +379,7 @@ class Terrain extends Drawable {
           }
 
           if (slope < this.bushSlope &&
-            this.terrainPositions[lookupOffset + 1] > this.bushMinHeight &&
+            this.terrainPositions[lookupOffset + 2] > this.bushMinHeight &&
               this.bushPositions.length < this.bushDensity) {
             this.bushPositions.push({
               x: this.terrainPositions[lookupOffset],
@@ -375,13 +391,19 @@ class Terrain extends Drawable {
           if (slope < this.treeSlope &&
             this.terrainPositions[lookupOffset + 1] > this.treeMinHeight &&
               this.treePositions.length < this.treeDensity && 
-              lookupOffset - lastTreePosition > 100) {
+              (this.minimumTreeDistance(
+                this.terrainPositions[lookupOffset], 
+                this.terrainPositions[lookupOffset+2], 
+                this.terrainPositions[lookupOffset+1]) > 20)) {
+                  console.log(this.minimumTreeDistance(
+                    this.terrainPositions[lookupOffset], 
+                    this.terrainPositions[lookupOffset+2], 
+                    this.terrainPositions[lookupOffset+1]));
             this.treePositions.push({
               x: this.terrainPositions[lookupOffset],
-              y: this.terrainPositions[lookupOffset + 1],
-              z: this.terrainPositions[lookupOffset + 2]
+              y: this.terrainPositions[lookupOffset + 2],
+              z: this.terrainPositions[lookupOffset + 1]
             });
-            lastTreePosition = lookupOffset;
           }
 
           

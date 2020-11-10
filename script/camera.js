@@ -372,6 +372,18 @@ class Camera {
     gl.uniformMatrix4fv(this.uMVMatrix, false, modelViewMatrix);
   }
 
+  rotateX(amount) {
+    mat4.rotateX(this.cameraMatrix, this.cameraMatrix, amount);
+  }
+
+  rotateY(amount) {
+    mat4.rotateY(this.cameraMatrix, this.cameraMatrix, amount);
+  }
+
+  rotateZ(amount) {
+    mat4.rotateZ(this.cameraMatrix, this.cameraMatrix, amount);
+  }
+
   prepareCameraFrame(gl, controls) {
     this.useCameraShader(gl);
     gl.viewport(0, 0, gl.canvas.clientWidth, gl.canvas.clientHeight);

@@ -40,7 +40,7 @@ function main() {
   let cloud3 = new Cloud(true);
   let cloud4 = new Cloud(true);
   let shark = new Shark();
-  let tuna = new Tuna();
+  //let tuna = new Tuna();
   let throttleLOD = 10.0;
   let lastLOD = 0;
   let targetFPS = 15;
@@ -69,7 +69,7 @@ function main() {
   drawables = drawables.concat(bushes);
   drawables = drawables.concat(trees);
   
-  drawables.push(tuna);
+  //drawables.push(tuna);
   for (model of drawables) {
     model.initBuffers(gl);
   }
@@ -79,7 +79,7 @@ function main() {
   cloud3.setPosition(gl, -1280, 400, 100);
   cloud4.setPosition(gl, 1280, 400, -100);
   shark.setPosition(gl, 50, -3, -116);
-  tuna.setPosition(gl, 0, 4, 90);
+  //tuna.setPosition(gl, 0, 4, 90);
   for (i = 0; i < fishCount; i++) {
     fish[i].setPosition(gl, 100*Math.sin(10*i), -3, 100*Math.cos(10*i));
   }

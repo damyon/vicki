@@ -81,6 +81,35 @@ const getBufferFromName = (gl, gltf, buffers, mesh, name) => {
         length: bufferData.data.length,
     };
 };
+
+const getPositionBufferFromName = (gl, gltf, buffers, mesh, x, y, z) => {
+    if (mesh.primitives[0].attributes['POSITION'] === undefined) {
+        return null;
+    }
+    const accessor = getAccessor(gltf, mesh, 'POSITION');
+    const bufferData = readBufferFromFile(gltf, buffers, accessor);
+
+    let i = 0, swap = 0;
+    for (i = 0; i < bufferData.data.length; i+= bufferData.size) {
+        bufferData.data[i] += x;
+        bufferData.data[i+1] += y;
+        bufferData.data[i+2] += z;
+
+        swap = bufferData.data[i+1];
+        bufferData.data[i+1] = bufferData.data[i+2];
+        bufferData.data[i+2] = swap;
+    }
+    
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, bufferData.data, gl.STATIC_DRAW);
+    return {
+        buffer,
+        size: bufferData.size,
+        type: bufferData.componentType,
+        length: bufferData.data.length,
+    };
+};
 const loadNodes = (index, node) => {
     const transform = mat4.create();
     if (node.translation !== undefined)
@@ -163,6 +192,7 @@ const loadMesh = (gl, gltf, mesh, buffers) => {
         joints: getBufferFromName(gl, gltf, buffers, mesh, 'JOINTS_0'),
         weights: getBufferFromName(gl, gltf, buffers, mesh, 'WEIGHTS_0'),
         material: mesh.primitives[0].material,
+        mesh: mesh,
     };
 };
 const loadMaterial = (gl, material, path, images) => __awaiter(void 0, void 0, void 0, function* () {
@@ -256,6 +286,8 @@ const loadModel = (gl, uri) => __awaiter(void 0, void 0, void 0, function* () {
         animations,
         skins,
         materials,
+        gltf,
+        buffers,
     };
 });
 /**
