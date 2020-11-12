@@ -82,7 +82,7 @@ const getBufferFromName = (gl, gltf, buffers, mesh, name) => {
     };
 };
 
-const getPositionBufferFromName = (gl, gltf, buffers, mesh, x, y, z) => {
+const getPositionBufferFromName = (gl, gltf, buffers, mesh, x, y, z, scale, doSwap) => {
     if (mesh.primitives[0].attributes['POSITION'] === undefined) {
         return null;
     }
@@ -91,13 +91,19 @@ const getPositionBufferFromName = (gl, gltf, buffers, mesh, x, y, z) => {
 
     let i = 0, swap = 0;
     for (i = 0; i < bufferData.data.length; i+= bufferData.size) {
+        bufferData.data[i] *= scale;
+        bufferData.data[i+1] *= scale;
+        bufferData.data[i+2] *= scale;
+
         bufferData.data[i] += x;
         bufferData.data[i+1] += y;
         bufferData.data[i+2] += z;
-
-        swap = bufferData.data[i+1];
-        bufferData.data[i+1] = bufferData.data[i+2];
-        bufferData.data[i+2] = swap;
+        
+        if (doSwap) {
+            swap = bufferData.data[i+1];
+            bufferData.data[i+1] = bufferData.data[i+2];
+            bufferData.data[i+2] = swap;
+        }
     }
     
     const buffer = gl.createBuffer();

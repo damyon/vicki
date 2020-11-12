@@ -16,9 +16,9 @@ class Terrain extends Drawable {
     this.bushPositions = [];
     this.treePositions = [];
     this.terrainPositions = [];
-    this.bushDensity = 256;
-    this.bushMinHeight = 0.2;
-    this.bushSlope = 0.01;
+    this.bushDensity = 40;
+    this.bushMinHeight = 1;
+    this.bushSlope = 2;
     this.treeDensity = 50;
     this.treeMinHeight = 2;
     this.treeSlope = 2;
@@ -300,6 +300,23 @@ class Terrain extends Drawable {
     return smallest;
   }
 
+  minimumBushDistance(bushX, bushY, bushZ) {
+    let smallest = 1000, i = 0;
+
+    for (i = 0; i < this.bushPositions.length; i++) {
+      let x = this.bushPositions[i].x,
+          y = this.bushPositions[i].y,
+          z = this.bushPositions[i].z;
+      let distance = Math.abs(x - bushX) + Math.abs(y - bushY) + Math.abs(z - bushZ);
+
+      if (distance < smallest) {
+        smallest = distance;
+      }
+    }
+
+    return smallest;
+  }
+
   loadHeightmap(gl, filename) {
     const image = new Image();
     const canvas = document.createElement('canvas');
@@ -319,8 +336,7 @@ class Terrain extends Drawable {
       let heightOffset = -2;
       let heightScale = 6;
       let heightMapDimensions = 512;
-      let lastTreePosition = 0;
-
+      
       one = - this.terrainSize;
       raw = this.flip(raw, this.terrainLOD + 1);
       raw = this.spin(raw, this.terrainLOD + 1);
@@ -379,12 +395,16 @@ class Terrain extends Drawable {
           }
 
           if (slope < this.bushSlope &&
-            this.terrainPositions[lookupOffset + 2] > this.bushMinHeight &&
-              this.bushPositions.length < this.bushDensity) {
+            this.terrainPositions[lookupOffset + 1] > this.bushMinHeight &&
+              this.bushPositions.length < this.bushDensity && 
+              (this.minimumBushDistance(
+                this.terrainPositions[lookupOffset], 
+                this.terrainPositions[lookupOffset+2], 
+                this.terrainPositions[lookupOffset+1]) > 20)) {
             this.bushPositions.push({
               x: this.terrainPositions[lookupOffset],
-              y: this.terrainPositions[lookupOffset + 1],
-              z: this.terrainPositions[lookupOffset + 2]
+              y: this.terrainPositions[lookupOffset + 2],
+              z: this.terrainPositions[lookupOffset + 1]
             });
           }
 
@@ -395,10 +415,6 @@ class Terrain extends Drawable {
                 this.terrainPositions[lookupOffset], 
                 this.terrainPositions[lookupOffset+2], 
                 this.terrainPositions[lookupOffset+1]) > 20)) {
-                  console.log(this.minimumTreeDistance(
-                    this.terrainPositions[lookupOffset], 
-                    this.terrainPositions[lookupOffset+2], 
-                    this.terrainPositions[lookupOffset+1]));
             this.treePositions.push({
               x: this.terrainPositions[lookupOffset],
               y: this.terrainPositions[lookupOffset + 2],

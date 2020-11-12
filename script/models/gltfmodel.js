@@ -6,6 +6,9 @@ class GLTFModel extends Drawable {
     this.x = 0;
     this.y = 0;
     this.z = 0;
+    this.scale = 1.0;
+    this.doSwap = true;
+    this.heightOffset = 0;
 
     this.blend = 1;
     
@@ -23,7 +26,7 @@ class GLTFModel extends Drawable {
   setPosition(gl, x, y, z) {
     this.x = x;
     this.y = y;
-    this.z = z - 1;
+    this.z = z + this.heightOffset;
 
     // Recalculate the current Position Buffer;
     if (this.currentPositionBuffer) {
@@ -36,7 +39,9 @@ class GLTFModel extends Drawable {
       this.gltfModel.meshes[0].mesh, 
       this.x, 
       this.y, 
-      this.z);
+      this.z,
+      this.scale,
+      this.doSwap);
     }
   }
 
@@ -72,9 +77,6 @@ class GLTFModel extends Drawable {
     // buffer into the vertexPosition attribute
     if (shadow) {
       gl.uniform1i(camera.isWater, 0);
-      // BAD
-      //camera.rotateX(-Math.PI/2);
-      //camera.translate(gl, this.x, this.y, this.z);
     }
   
     if (this.gltfModel) {
@@ -130,13 +132,6 @@ class GLTFModel extends Drawable {
         
         gl.drawElements(gl.TRIANGLES, mesh.elementCount, gl.UNSIGNED_SHORT, 0);
       }
-    }
-
-    if (shadow) {
-      //.translate(gl, -this.x, -this.y, -this.z);
-      // BAD
-      //camera.rotateX(Math.PI/2);
-      //this.odd += 0.01;
     }
 
   }
