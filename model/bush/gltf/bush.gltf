@@ -1,0 +1,219 @@
+{
+    "asset": {
+        "generator": "COLLADA2GLTF",
+        "version": "2.0"
+    },
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "scene": 0,
+    "nodes": [
+        {
+            "children": [
+                1
+            ],
+            "matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -1.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "name": "Z_UP"
+        },
+        {
+            "mesh": 0,
+            "children": [
+                2
+            ],
+            "name": "SketchUp"
+        },
+        {
+            "matrix": [
+                0.5296686887741089,
+                -0.8482046127319336,
+                2.775557892435137e-17,
+                0.0,
+                0.341933012008667,
+                0.2135230004787445,
+                0.915144681930542,
+                0.0,
+                -0.7762299180030823,
+                -0.4847235083580017,
+                0.4031256139278412,
+                0.0,
+                -2.9828896522521979,
+                -1.9885671138763428,
+                1.9888200759887696,
+                1.0
+            ],
+            "camera": 0,
+            "name": "skp_camera_Last_Saved_SketchUp_View"
+        }
+    ],
+    "cameras": [
+        {
+            "perspective": {
+                "yfov": 0.6108646988868713,
+                "zfar": 25.399999618530278,
+                "znear": 0.02539999969303608
+            },
+            "type": "perspective",
+            "name": "skp_camera_Last_Saved_SketchUp_View"
+        }
+    ],
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 1,
+                        "POSITION": 2,
+                        "TEXCOORD_0": 3
+                    },
+                    "indices": 0,
+                    "mode": 4,
+                    "material": 0
+                }
+            ],
+            "name": "ID3"
+        }
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 240,
+            "max": [
+                179
+            ],
+            "min": [
+                0
+            ],
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 180,
+            "max": [
+                0.9745007157325744,
+                0.9969763159751892,
+                1.0
+            ],
+            "min": [
+                -0.9745007157325744,
+                -0.9969763159751892,
+                -1.0
+            ],
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 2160,
+            "componentType": 5126,
+            "count": 180,
+            "max": [
+                0.9947193264961244,
+                1.0908679962158204,
+                1.1999998092651368
+            ],
+            "min": [
+                -0.9947193264961244,
+                -1.0908679962158204,
+                0.0
+            ],
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 180,
+            "max": [
+                0.5133575797080994,
+                1.4467697143554688
+            ],
+            "min": [
+                -0.5133575797080994,
+                0.4395862817764282
+            ],
+            "type": "VEC2"
+        }
+    ],
+    "materials": [
+        {
+            "pbrMetallicRoughness": {
+                "baseColorTexture": {
+                    "index": 0
+                },
+                "metallicFactor": 0.0
+            },
+            "name": "ID5"
+        }
+    ],
+    "textures": [
+        {
+            "sampler": 0,
+            "source": 0
+        }
+    ],
+    "images": [
+        {
+            "uri": "Suede_Green.jpg"
+        }
+    ],
+    "samplers": [
+        {
+            "magFilter": 9729,
+            "minFilter": 9986,
+            "wrapS": 10497,
+            "wrapT": 10497
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 5760,
+            "byteLength": 480,
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 4320,
+            "byteStride": 12,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 4320,
+            "byteLength": 1440,
+            "byteStride": 8,
+            "target": 34962
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 6240,
+            "uri": "48070d36-5f13-4101-b935-fc9ddc2e062e0.bin"
+        }
+    ]
+}
