@@ -16,12 +16,14 @@ class Terrain extends Drawable {
     this.bushPositions = [];
     this.treePositions = [];
     this.terrainPositions = [];
-    this.bushDensity = 40;
-    this.bushMinHeight = 1;
-    this.bushSlope = 2;
+    this.bushDensity = 140;
+    this.bushMinHeight = 2;
+    this.bushSlope = 4;
+    this.bushSpacing = 8;
     this.treeDensity = 50;
     this.treeMinHeight = 2;
     this.treeSlope = 2;
+    this.treeSpacing = 30;
     this.foamDensity = 64;
     this.foamMinHeight = -0.3;
     this.foamMaxHeight = 0.1;
@@ -400,7 +402,7 @@ class Terrain extends Drawable {
               (this.minimumBushDistance(
                 this.terrainPositions[lookupOffset], 
                 this.terrainPositions[lookupOffset+2], 
-                this.terrainPositions[lookupOffset+1]) > 20)) {
+                this.terrainPositions[lookupOffset+1]) > this.bushSpacing)) {
             this.bushPositions.push({
               x: this.terrainPositions[lookupOffset],
               y: this.terrainPositions[lookupOffset + 2],
@@ -414,7 +416,7 @@ class Terrain extends Drawable {
               (this.minimumTreeDistance(
                 this.terrainPositions[lookupOffset], 
                 this.terrainPositions[lookupOffset+2], 
-                this.terrainPositions[lookupOffset+1]) > 20)) {
+                this.terrainPositions[lookupOffset+1]) > this.treeSpacing)) {
             this.treePositions.push({
               x: this.terrainPositions[lookupOffset],
               y: this.terrainPositions[lookupOffset + 2],
