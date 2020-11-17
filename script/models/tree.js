@@ -5,7 +5,7 @@ class Tree extends GLTFModel {
     super();
     this.scale = 1.6 + Math.random();
     this.heightOffset = -2;
-    this.blend = 1;
+    this.blend = 0;
     this.modelPath = 'model/tree/scene.gltf';
   }
 

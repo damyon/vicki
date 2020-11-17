@@ -10,14 +10,16 @@ class Terrain extends Drawable {
     this.heightsLoaded = new Promise((resolve, reject) => {
       this.heightsResolver = resolve;
     });
-    this.rockDensity = 64;
-    this.rockSlope = 0.6;
+    this.rockDensity = 164;
+    this.rockSlope = 14;
+    this.rockSpacing = 18;
+    this.rockMinHeight = 1;
     this.rockPositions = [];
     this.bushPositions = [];
     this.treePositions = [];
     this.terrainPositions = [];
     this.bushDensity = 140;
-    this.bushMinHeight = 2;
+    this.bushMinHeight = 0.3;
     this.bushSlope = 4;
     this.bushSpacing = 8;
     this.treeDensity = 50;
@@ -319,6 +321,23 @@ class Terrain extends Drawable {
     return smallest;
   }
 
+  minimumRockDistance(rockX, rockY, rockZ) {
+    let smallest = 1000, i = 0;
+
+    for (i = 0; i < this.rockPositions.length; i++) {
+      let x = this.rockPositions[i].x,
+          y = this.rockPositions[i].y,
+          z = this.rockPositions[i].z;
+      let distance = Math.abs(x - rockX) + Math.abs(y - rockY) + Math.abs(z - rockZ);
+
+      if (distance < smallest) {
+        smallest = distance;
+      }
+    }
+
+    return smallest;
+  }
+
   loadHeightmap(gl, filename) {
     const image = new Image();
     const canvas = document.createElement('canvas');
@@ -386,13 +405,17 @@ class Terrain extends Drawable {
           let slope = this.terrainPositions[lookupOffset + 1] - aveOthers;
 
           slope = Math.abs(slope);
-          if (slope > this.rockSlope &&
-              aveOthers > 1.5 && 
-              this.rockPositions.length < this.rockDensity) {
+          if (slope < this.rockSlope &&
+            this.terrainPositions[lookupOffset + 1] > this.rockMinHeight &&
+              this.rockPositions.length < this.rockDensity && 
+              (this.minimumRockDistance(
+                this.terrainPositions[lookupOffset], 
+                this.terrainPositions[lookupOffset+2], 
+                this.terrainPositions[lookupOffset+1]) > this.rockSpacing)) {
             this.rockPositions.push({
               x: this.terrainPositions[lookupOffset],
-              y: this.terrainPositions[lookupOffset + 1],
-              z: this.terrainPositions[lookupOffset + 2]
+              y: this.terrainPositions[lookupOffset + 2],
+              z: this.terrainPositions[lookupOffset + 1]
             });
           }
 
