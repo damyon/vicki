@@ -81,7 +81,7 @@ function main() {
     fish[i].setPosition(gl, 100*Math.sin(10*i), -3, 100*Math.cos(10*i));
   }
 
-  boat.setPositionRotation(gl, 0, 12, 70, 0);
+  boat.setPositionRotation(gl, 0, 102, 3, Math.PI);
   // Move the rock.
   terrain.afterHeightsLoaded(function(gl, terrain, rocks) {
     terrain.setRockPositions(gl, rocks);
@@ -186,8 +186,8 @@ function main() {
    
     sceneCamera.setRock(-(Math.sin((now / 10) - 0.2) / 6));
     sceneControls.processKeys(terrain, boat.boatWidth, boat.boatLength);
-    boat.setPositionRotation(gl, -sceneControls.x - 0.8, 6 + (Math.sin(now / 10) / 10), -sceneControls.z, sceneControls.boatY);
-    
+    boat.setPositionRotation(gl, -sceneControls.x, -sceneControls.z, (Math.sin(now / 10) / 10) + 1, sceneControls.boatY + Math.PI);
+  
     drawShadowMap(sceneCamera, sceneControls, sceneDrawables, deltaTime, absTime);
     drawModels(sceneCamera, sceneControls, sceneDrawables, deltaTime, absTime);
 

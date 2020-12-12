@@ -82,7 +82,7 @@ const getBufferFromName = (gl, gltf, buffers, mesh, name) => {
     };
 };
 
-const getPositionBufferFromName = (gl, gltf, buffers, mesh, x, y, z, scale, doSwap) => {
+const getPositionBufferFromName = (gl, gltf, buffers, mesh, x, y, z, rotate, scale, doSwap) => {
     if (mesh.primitives[0].attributes['POSITION'] === undefined) {
         return null;
     }
@@ -90,30 +90,43 @@ const getPositionBufferFromName = (gl, gltf, buffers, mesh, x, y, z, scale, doSw
     const bufferData = readBufferFromFile(gltf, buffers, accessor);
 
     let i = 0, swap = 0;
-    for (i = 0; i < bufferData.data.length; i+= bufferData.size) {
-        bufferData.data[i] *= scale;
-        bufferData.data[i+1] *= scale;
-        bufferData.data[i+2] *= scale;
+    let newData = new Float32Array(bufferData.data);
 
-        bufferData.data[i] += x;
-        bufferData.data[i+1] += y;
-        bufferData.data[i+2] += z;
+    for (i = 0; i < bufferData.data.length; i+= bufferData.size) {
+        
+        if (rotate) {
+            let c = Math.cos(rotate);
+            let s = Math.sin(rotate);
+
+            let xr = newData[i];
+            let yr = newData[i + 1];
+
+            newData[i] = xr * c - yr * s;
+            newData[i + 1] = xr * s + yr * c;
+        }
+        newData[i] *= scale;
+        newData[i+1] *= scale;
+        newData[i+2] *= scale;
+
+        newData[i] += x;
+        newData[i+1] += y;
+        newData[i+2] += z;
         
         if (doSwap) {
-            swap = bufferData.data[i+1];
-            bufferData.data[i+1] = bufferData.data[i+2];
-            bufferData.data[i+2] = swap;
+            swap = newData[i+1];
+            newData[i+1] = newData[i+2];
+            newData[i+2] = swap;
         }
     }
     
     const buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, bufferData.data, gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, newData, gl.STATIC_DRAW);
     return {
         buffer,
         size: bufferData.size,
         type: bufferData.componentType,
-        length: bufferData.data.length,
+        length: newData.length,
     };
 };
 const loadNodes = (index, node) => {

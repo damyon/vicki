@@ -6,6 +6,7 @@ class GLTFModel extends Drawable {
     this.x = 0;
     this.y = 0;
     this.z = 0;
+    this.rotate = 0;
     this.scale = 1.0;
     this.doSwap = true;
     this.heightOffset = 0;
@@ -14,9 +15,23 @@ class GLTFModel extends Drawable {
     
     this.gltfModel = null;
 
-    this.modelPath = 'model/a/BoxTextured.gltf';
+    this.modelPath = '';
 
-    this.currentPositionBuffer = null;
+    this.currentPositionBuffers = [];
+  }
+
+  /**
+   * Move and spin.
+   *  
+   * @param {*} gl 
+   * @param {*} x 
+   * @param {*} y 
+   * @param {*} z 
+   * @param {*} rotate 
+   */
+  setPositionRotation(gl, x, y, z, rotate) {
+    this.rotate = rotate;
+    this.setPosition(gl, x, y, z);
   }
 
   /**
@@ -27,21 +42,29 @@ class GLTFModel extends Drawable {
     this.x = x;
     this.y = y;
     this.z = z + this.heightOffset;
+    let i = 0;
 
     // Recalculate the current Position Buffer;
-    if (this.currentPositionBuffer) {
-      gl.deleteBuffer(this.currentPositionBuffer);
+    if (this.currentPositionBuffers.length) {
+      for (i = 0; i < this.currentPositionBuffers.length; i++) {  
+        gl.deleteBuffer(this.currentPositionBuffers[i].buffer);
+      }
     }
     if (this.gltfModel) {
-      this.currentPositionBuffer = getPositionBufferFromName(gl, 
-      this.gltfModel.gltf, 
-      this.gltfModel.buffers, 
-      this.gltfModel.meshes[0].mesh, 
-      this.x, 
-      this.y, 
-      this.z,
-      this.scale,
-      this.doSwap);
+      for (i = 0; i < this.gltfModel.meshes.length; i++) {
+        this.currentPositionBuffers[i] = getPositionBufferFromName(
+          gl, 
+          this.gltfModel.gltf, 
+          this.gltfModel.buffers, 
+          this.gltfModel.meshes[i].mesh, 
+          this.x, 
+          this.y, 
+          this.z,
+          this.rotate,
+          this.scale,
+          this.doSwap
+        );
+      }
     }
   }
 
@@ -85,8 +108,8 @@ class GLTFModel extends Drawable {
         const mesh = this.gltfModel.meshes[index];
     
         // Points.
-        if (this.currentPositionBuffer) {
-          gl.bindBuffer(gl.ARRAY_BUFFER, this.currentPositionBuffer.buffer);
+        if (this.currentPositionBuffers.length) {
+          gl.bindBuffer(gl.ARRAY_BUFFER, this.currentPositionBuffers[index].buffer);
         } else {
           gl.bindBuffer(gl.ARRAY_BUFFER, mesh.positions.buffer);
         }
@@ -131,6 +154,7 @@ class GLTFModel extends Drawable {
         }
         
         gl.drawElements(gl.TRIANGLES, mesh.elementCount, gl.UNSIGNED_SHORT, 0);
+        
       }
     }
 

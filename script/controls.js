@@ -11,7 +11,7 @@ class Controls {
     
     this.x = 0;
     this.y = -6;
-    this.z = -100;
+    this.z = -70;
     
     this.maxSpeed = 1;
     this.forwardSpeed = 0;

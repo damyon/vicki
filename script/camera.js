@@ -174,9 +174,9 @@ class Camera {
 
         gl_FragColor = vec4(ambientLight * texelColor.rgb + directionalLightColor * amountInLight * uColor, texelColor.a);
 
-        gl_FragColor.r = floor(gl_FragColor.r / 0.05) * 0.05;
-        gl_FragColor.g = floor(gl_FragColor.g / 0.05) * 0.05;
-        gl_FragColor.b = floor(gl_FragColor.b / 0.05) * 0.05;
+        //gl_FragColor.r = floor(gl_FragColor.r / 0.05) * 0.05;
+        //gl_FragColor.g = floor(gl_FragColor.g / 0.05) * 0.05;
+        //gl_FragColor.b = floor(gl_FragColor.b / 0.05) * 0.05;
 
         vec4 n[9];
         float lineWidth = 0.2;

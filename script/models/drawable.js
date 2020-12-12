@@ -41,7 +41,7 @@ class Drawable {
     gl.uniform1i(camera.isSand, 0);
     var modelViewMatrix = mat4.create();
 
-    mat4.rotateY(modelViewMatrix, modelViewMatrix, this.rorateY);
+    mat4.rotateY(modelViewMatrix, modelViewMatrix, this.rotateY);
     mat4.translate(modelViewMatrix, modelViewMatrix, [this.positionX, this.positionY, this.positionZ]);
 
     var lightModelViewMatrix = mat4.create();
