@@ -40,6 +40,7 @@ function main() {
   let cloud3 = new Cloud(true);
   let cloud4 = new Cloud(true);
   let shark = new Shark();
+  let bush = new VoxelModel();
   let throttleLOD = 10.0;
   let lastLOD = 0;
   let targetFPS = 15;
@@ -59,6 +60,7 @@ function main() {
     cloud3,
     cloud4,
     boat,
+    bush,
   ];
   for (i = 0; i < fishCount; i++) {
     drawables.unshift(fish[i]);
