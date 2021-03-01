@@ -83,6 +83,8 @@ function main() {
     fish[i].setPosition(gl, 100*Math.sin(10*i), -3, 100*Math.cos(10*i));
   }
 
+  
+
   boat.setPositionRotation(gl, 0, 102, 3, Math.PI);
   // Move the rock.
   terrain.afterHeightsLoaded(function(gl, terrain, rocks) {
