@@ -67,16 +67,33 @@ class Terrain extends Drawable {
     return trees;
   }
 
+   /**
+   * Create a list of leaves depending on the density of the terrain.
+   */
+  createLeaves() {
+    let leaves = [], i = 0;
+
+    for (i = 0; i < this.treeDensity; i++) {
+      leaves.push(new Leaves(i));
+    }
+
+    return leaves;
+  }
+
   setTreePositions(gl, trees) {
     let i = 0;
 
     for (i = 0; i < this.treeDensity && i < this.treePositions.length; i++) {
       let x = this.treePositions[i].x,
           y = this.treePositions[i].y,
-          z = this.treePositions[i].z;
+          z = this.treePositions[i].z - 1;
 
       trees[i].setPosition(gl, x, y, z);
     }
+  }
+
+  setLeafPositions(gl, leaves) {
+    this.setTreePositions(gl, leaves);
   }
 
   /**
@@ -98,7 +115,7 @@ class Terrain extends Drawable {
     for (i = 0; i < this.rockDensity && i < this.rockPositions.length; i++) {
       let x = this.rockPositions[i].x,
           y = this.rockPositions[i].y,
-          z = this.rockPositions[i].z;
+          z = this.rockPositions[i].z - 1;
 
       rocks[i].setPosition(gl, x, y, z);
     }
@@ -110,7 +127,7 @@ class Terrain extends Drawable {
     for (i = 0; i < this.bushDensity && i < this.bushPositions.length; i++) {
       let x = this.bushPositions[i].x,
           y = this.bushPositions[i].y,
-          z = this.bushPositions[i].z;
+          z = this.bushPositions[i].z - 1;
 
       bushes[i].setPosition(gl, x, y, z);
     }

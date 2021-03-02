@@ -4,12 +4,10 @@ class VoxelModel extends Drawable {
   constructor(index) {
     super();
     this.x = 0;
-    this.y = 3.5;
-    this.z = 40;
-    this.rotate = Math.PI/6;
-    this.doSwap = true;
-    this.heightOffset = 0;
-    this.textures = [];
+    this.y = 0;
+    this.z = 0;
+    this.rotate = 0;
+    this.texture = null;
     this.blend = 0;
     this.vertexCount = 0;
     this.buffers = false;
@@ -18,7 +16,6 @@ class VoxelModel extends Drawable {
     });
     this.modelPath = '';
     this.json = [];
-    this.currentPositionBuffers = [];
   }
 
   afterTextureLoaded(callback) {
@@ -48,6 +45,9 @@ class VoxelModel extends Drawable {
     this.y = y;
     this.z = z;
 
+    if (!this.buffers) {
+      return;
+    }
     let translatedPositions = [], i = 0, c = 0, s = 0;
     gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.position);
     translatedPositions = this.positions.slice();
@@ -56,11 +56,6 @@ class VoxelModel extends Drawable {
     c = Math.cos(this.rotate);
     s = Math.sin(this.rotate);
     
-    // Move - half
-    for (i = 0; i < this.getVertexCount(); i++) {
-    //  translatedPositions[i * 3] -=0.25*this.size;
-    }
-
     // Local rotate
     for (i = 0; i < this.getVertexCount(); i++) {
       let x = translatedPositions[i * 3];
@@ -70,16 +65,11 @@ class VoxelModel extends Drawable {
       translatedPositions[i * 3 + 2] = x * s + z * c;
     }
     
-    // Move + half
-    for (i = 0; i < this.getVertexCount(); i++) {
-      //translatedPositions[i * 3] += 0.25*this.size;
-    }
-    
     // Now translate.
     for (i = 0; i < this.positions.length / 3; i++) {
       translatedPositions[i * 3] += this.x;
-      translatedPositions[i * 3 + 1] += this.y;
-      translatedPositions[i * 3 + 2] += this.z;
+      translatedPositions[i * 3 + 1] += this.z;
+      translatedPositions[i * 3 + 2] += this.y;
     }
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(translatedPositions), gl.STATIC_DRAW);
@@ -114,10 +104,10 @@ class VoxelModel extends Drawable {
       const unit = this.size / json.width;
       let offset = 0, offsetX = 0, offsetY = 0, offsetZ = 0, one = 0, i = 0;
 
-      for (z = 0; z < json.height; z++) {
-        for (x = 0; x < json.width; x++) {
-          for (y = 0; y < json.depth; y++) {
-            if (json.slices[z][y][x]) {
+      for (x = 0; x < json.width; x++) {
+        for (y = 0; y < json.depth; y++) {
+          for (z = 0; z < json.height; z++) {
+            if (json.slices[json.depth - y - 1][z][x]) {
               offsetX = x * unit;
               offsetY = y * unit;
               offsetZ = z * unit;
@@ -183,7 +173,7 @@ class VoxelModel extends Drawable {
       for (z = 0; z < json.height; z++) {
         for (x = 0; x < json.width; x++) {
           for (y = 0; y < json.depth; y++) {
-            if (json.slices[z][y][x]) {
+            if (json.slices[json.depth - y - 1][z][x]) {
               
                 textureCoordinates[offset++] = 0; // X
                 textureCoordinates[offset++] = 0; // Y
@@ -233,7 +223,7 @@ class VoxelModel extends Drawable {
       for (z = 0; z < json.height; z++) {
         for (x = 0; x < json.width; x++) {
           for (y = 0; y < json.depth; y++) {
-            if (json.slices[z][y][x]) {
+            if (json.slices[json.depth - y - 1][z][x]) {
               // Bottom
               indices[offset++] = start + 0;
               indices[offset++] = start + 2;
@@ -339,8 +329,6 @@ class VoxelModel extends Drawable {
       return;
     }
 
-    this.setPositionRotation(gl, this.x, this.y, this.z, this.rotate + 0.1);
-    
     {
       const numComponents = 3;
       const type = gl.FLOAT;

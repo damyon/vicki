@@ -33,6 +33,7 @@ function main() {
   let rocks = terrain.createRocks();
   let bushes = terrain.createBushes();
   let trees = terrain.createTrees();
+  let leaves = terrain.createLeaves();
   let fish = [];
   let boat = new Boat();
   let cloud1 = new Cloud(false);
@@ -40,7 +41,6 @@ function main() {
   let cloud3 = new Cloud(true);
   let cloud4 = new Cloud(true);
   let shark = new Shark();
-  let bush = new VoxelModel();
   let throttleLOD = 10.0;
   let lastLOD = 0;
   let targetFPS = 15;
@@ -59,8 +59,7 @@ function main() {
     cloud2,
     cloud3,
     cloud4,
-    boat,
-    bush,
+    boat
   ];
   for (i = 0; i < fishCount; i++) {
     drawables.unshift(fish[i]);
@@ -69,7 +68,8 @@ function main() {
   drawables = drawables.concat(rocks);
   drawables = drawables.concat(bushes);
   drawables = drawables.concat(trees);
-  
+  drawables = drawables.concat(leaves);
+
   for (model of drawables) {
     model.initBuffers(gl);
   }
@@ -83,14 +83,13 @@ function main() {
     fish[i].setPosition(gl, 100*Math.sin(10*i), -3, 100*Math.cos(10*i));
   }
 
-  
-
   boat.setPositionRotation(gl, 0, 102, 3, Math.PI);
   // Move the rock.
   terrain.afterHeightsLoaded(function(gl, terrain, rocks) {
     terrain.setRockPositions(gl, rocks);
     terrain.setBushPositions(gl, bushes);
     terrain.setTreePositions(gl, trees);
+    terrain.setLeafPositions(gl, leaves);
   }.bind(this, gl, terrain, rocks))
 
   /**
