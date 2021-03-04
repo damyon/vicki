@@ -1,6 +1,8 @@
 class Leaves extends VoxelModel {
   constructor() {
     super();
+
+    this.blend = 1;
   }
 
   /**

@@ -189,7 +189,8 @@ class Camera {
         vec4 edgeColor = vec4( 1.0 - sobel.rgb, 1.0 );
 
         if (edgeColor.r + edgeColor.g + edgeColor.b < outlineCutoff && isWater == 0) {
-          gl_FragColor = vec4(0.1, 0.1, 0.1, 0.9);
+          // This adds a dark border on edges like a cartoon - it is a bit noisy.
+         // gl_FragColor = vec4(0.1, 0.1, 0.1, 0.9);
         }
         
       }

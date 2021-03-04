@@ -111,7 +111,11 @@ class VoxelModel extends Drawable {
               offsetX = x * unit;
               offsetY = y * unit;
               offsetZ = z * unit;
-              this.vertexCount += 36;
+              this.vertexCount += 3 * 2 * 6;
+              // Bottom (CW start bottom left)
+              this.positions[offset++] = offsetX;
+              this.positions[offset++] = offsetY;
+              this.positions[offset++] = offsetZ + unit;
 
               this.positions[offset++] = offsetX;
               this.positions[offset++] = offsetY;
@@ -125,17 +129,44 @@ class VoxelModel extends Drawable {
               this.positions[offset++] = offsetY;
               this.positions[offset++] = offsetZ + unit;
 
+              // Front Face
+              this.positions[offset++] = offsetX;
+              this.positions[offset++] = offsetY;
+              this.positions[offset++] = offsetZ;
+
+              this.positions[offset++] = offsetX;
+              this.positions[offset++] = offsetY + unit;
+              this.positions[offset++] = offsetZ;
+
+              this.positions[offset++] = offsetX + unit;
+              this.positions[offset++] = offsetY + unit;
+              this.positions[offset++] = offsetZ;
+
+              this.positions[offset++] = offsetX + unit;
+              this.positions[offset++] = offsetY;
+              this.positions[offset++] = offsetZ;
+
+              // Left
               this.positions[offset++] = offsetX;
               this.positions[offset++] = offsetY;
               this.positions[offset++] = offsetZ + unit;
 
               this.positions[offset++] = offsetX;
               this.positions[offset++] = offsetY + unit;
-              this.positions[offset++] = offsetZ;
+              this.positions[offset++] = offsetZ + unit;
 
-              this.positions[offset++] = offsetX + unit;
+              this.positions[offset++] = offsetX;
               this.positions[offset++] = offsetY + unit;
               this.positions[offset++] = offsetZ;
+
+              this.positions[offset++] = offsetX;
+              this.positions[offset++] = offsetY;
+              this.positions[offset++] = offsetZ;
+
+              // Back
+              this.positions[offset++] = offsetX + unit;
+              this.positions[offset++] = offsetY;
+              this.positions[offset++] = offsetZ + unit;
 
               this.positions[offset++] = offsetX + unit;
               this.positions[offset++] = offsetY + unit;
@@ -144,6 +175,45 @@ class VoxelModel extends Drawable {
               this.positions[offset++] = offsetX;
               this.positions[offset++] = offsetY + unit;
               this.positions[offset++] = offsetZ + unit;
+
+              this.positions[offset++] = offsetX;
+              this.positions[offset++] = offsetY;
+              this.positions[offset++] = offsetZ + unit;
+              
+              // Right
+              this.positions[offset++] = offsetX + unit;
+              this.positions[offset++] = offsetY;
+              this.positions[offset++] = offsetZ;
+
+              this.positions[offset++] = offsetX + unit;
+              this.positions[offset++] = offsetY + unit;
+              this.positions[offset++] = offsetZ;
+
+              this.positions[offset++] = offsetX + unit;
+              this.positions[offset++] = offsetY + unit;
+              this.positions[offset++] = offsetZ + unit;
+
+              this.positions[offset++] = offsetX + unit;
+              this.positions[offset++] = offsetY;
+              this.positions[offset++] = offsetZ + unit;
+
+              // Top
+              this.positions[offset++] = offsetX;
+              this.positions[offset++] = offsetY + unit;
+              this.positions[offset++] = offsetZ;
+
+              this.positions[offset++] = offsetX;
+              this.positions[offset++] = offsetY + unit;
+              this.positions[offset++] = offsetZ + unit;
+
+              this.positions[offset++] = offsetX + unit;
+              this.positions[offset++] = offsetY + unit;
+              this.positions[offset++] = offsetZ + unit;
+
+              this.positions[offset++] = offsetX + unit;
+              this.positions[offset++] = offsetY + unit;
+              this.positions[offset++] = offsetZ;
+
             }
           }
         }
@@ -175,31 +245,20 @@ class VoxelModel extends Drawable {
           for (y = 0; y < json.depth; y++) {
             if (json.slices[json.depth - y - 1][z][x]) {
               
-                textureCoordinates[offset++] = 0; // X
-                textureCoordinates[offset++] = 0; // Y
+                // Repeat for 6 faces.
+                for (face = 0; face < 6; face++) {
+                  textureCoordinates[offset++] = 0; // X
+                  textureCoordinates[offset++] = 0; // Y
 
-                textureCoordinates[offset++] = one; // X
-                textureCoordinates[offset++] = 0; // Y
+                  textureCoordinates[offset++] = 0; // X
+                  textureCoordinates[offset++] = one; // Y
 
-                textureCoordinates[offset++] = one; // X
-                textureCoordinates[offset++] = one; // Y
+                  textureCoordinates[offset++] = one; // X
+                  textureCoordinates[offset++] = one; // Y
 
-                textureCoordinates[offset++] = 0; // X
-                textureCoordinates[offset++] = one; // Y
-
-                textureCoordinates[offset++] = one; // X
-                textureCoordinates[offset++] = one; // Y
-
-                textureCoordinates[offset++] = 0; // X
-                textureCoordinates[offset++] = one; // Y
-
-                textureCoordinates[offset++] = 0; // X
-                textureCoordinates[offset++] = 0; // Y
-
-                textureCoordinates[offset++] = one; // X
-                textureCoordinates[offset++] = 0; // Y
-                
-              
+                  textureCoordinates[offset++] = one; // X
+                  textureCoordinates[offset++] = 0; // Y
+                } 
             }
           }
         }
@@ -224,62 +283,18 @@ class VoxelModel extends Drawable {
         for (x = 0; x < json.width; x++) {
           for (y = 0; y < json.depth; y++) {
             if (json.slices[json.depth - y - 1][z][x]) {
-              // Bottom
-              indices[offset++] = start + 0;
-              indices[offset++] = start + 2;
-              indices[offset++] = start + 1;
-      
-              indices[offset++] = start + 0;
-              indices[offset++] = start + 3;
-              indices[offset++] = start + 2;
-
-              // Front
-              indices[offset++] = start + 0;
-              indices[offset++] = start + 5;
-              indices[offset++] = start + 1;
-
-              indices[offset++] = start + 0;
-              indices[offset++] = start + 4;
-              indices[offset++] = start + 5;
-              
-              // Right
-              indices[offset++] = start + 1;
-              indices[offset++] = start + 6;
-              indices[offset++] = start + 2;
-
-              indices[offset++] = start + 1;
-              indices[offset++] = start + 5;
-              indices[offset++] = start + 6;
-
-              // Back
-              indices[offset++] = start + 2;
-              indices[offset++] = start + 6;
-              indices[offset++] = start + 3;
-
-              indices[offset++] = start + 3;
-              indices[offset++] = start + 7;
-              indices[offset++] = start + 6;
-
-              // Left
-              indices[offset++] = start + 3;
-              indices[offset++] = start + 4;
-              indices[offset++] = start + 0;
-
-              indices[offset++] = start + 3;
-              indices[offset++] = start + 7;
-              indices[offset++] = start + 4;
-
-              // Top
-              indices[offset++] = start + 4;
-              indices[offset++] = start + 7;
-              indices[offset++] = start + 5;
-
-              indices[offset++] = start + 5;
-              indices[offset++] = start + 6;
-              indices[offset++] = start + 7;
-              
-              // 8 vertices in a cube.
-              start += 8;
+              // Repeat for 6 faces.
+              for (face = 0; face < 6; face++) {
+                
+                indices[offset++] = start + 0;
+                indices[offset++] = start + 1;
+                indices[offset++] = start + 2;
+        
+                indices[offset++] = start + 0;
+                indices[offset++] = start + 2;
+                indices[offset++] = start + 3;
+                start += 4;
+              }
             }
           }
         }

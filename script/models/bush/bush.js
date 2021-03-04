@@ -2,6 +2,8 @@ class Bush extends VoxelModel {
   constructor() {
     super();
     this.rotate = Math.random();
+
+    this.blend = 1;
   }
 
   /**
