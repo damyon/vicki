@@ -8,6 +8,7 @@ class VoxelModel extends Drawable {
     this.z = 0;
     this.rotate = 0;
     this.texture = null;
+    this.globalAngle = 0;
     this.blend = 0;
     this.vertexCount = 0;
     this.buffers = false;
@@ -16,6 +17,11 @@ class VoxelModel extends Drawable {
     });
     this.modelPath = '';
     this.json = [];
+  }
+
+  setGlobalRotation(gl, globalAngle) {
+    this.globalAngle = globalAngle;
+    this.setPosition(gl, this.x, this.y, this.z);
   }
 
   afterTextureLoaded(callback) {
@@ -64,12 +70,25 @@ class VoxelModel extends Drawable {
       translatedPositions[i * 3] = x * c - z * s;
       translatedPositions[i * 3 + 2] = x * s + z * c;
     }
+
+     // Now global rotation.
+     c = Math.cos(this.globalAngle);
+     s = Math.sin(this.globalAngle);
+ 
+     // Global rotate
+     for (i = 0; i < this.getVertexCount(); i++) {
+       let x = translatedPositions[i * 3];
+       let z = translatedPositions[i * 3 + 2];
+ 
+       translatedPositions[i * 3] = x * c - z * s;
+       translatedPositions[i * 3 + 2] = x * s + z * c;
+     }
     
     // Now translate.
     for (i = 0; i < this.positions.length / 3; i++) {
       translatedPositions[i * 3] += this.x;
-      translatedPositions[i * 3 + 1] += this.z;
-      translatedPositions[i * 3 + 2] += this.y;
+      translatedPositions[i * 3 + 1] += this.y;
+      translatedPositions[i * 3 + 2] += this.z;
     }
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(translatedPositions), gl.STATIC_DRAW);
