@@ -128,8 +128,8 @@ class Camera {
 
       void main(void) {
         highp vec4 texelColor = texture2D(uSampler, vTextureCoord);
-        highp vec3 ambientLight = vec3(0.5, 0.5, 0.5);
-        highp vec3 directionalLightColor = vec3(0.2, 0.2, 0.2);
+        highp vec3 ambientLight = vec3(0.6, 0.6, 0.6);
+        highp vec3 directionalLightColor = vec3(0.1, 0.1, 0.1);
         vec3 fragmentDepth = shadowPos.xyz;
         vec3 worldDepth = depthPos.xyz;
         float stepU = 1.0 / uCanvasWidth;
@@ -308,7 +308,7 @@ class Camera {
   createLightViewMatrices(gl) {
     this.lightProjectionMatrix = mat4.ortho([], -80, 80, -80, 80, -80.0, 80);
     this.lightModelViewMatrix = mat4.lookAt([], 
-      [0, 20, 10], // Light position
+      [1, 20, 1], // Light position
       [0, 0, 0], // Light target
       [0, 1, 0]); // Up
 

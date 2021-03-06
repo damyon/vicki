@@ -36,10 +36,10 @@ function main() {
   let leaves = terrain.createLeaves();
   let fish = [];
   let boat = new Boat();
-  let cloud1 = new Cloud(false);
-  let cloud2 = new Cloud(false);
-  let cloud3 = new Cloud(true);
-  let cloud4 = new Cloud(true);
+  let cloud1 = new Cloud();
+  let cloud2 = new Cloud();
+  let cloud3 = new Cloud();
+  let cloud4 = new Cloud();
   let shark = new Shark();
   let throttleLOD = 10.0;
   let lastLOD = 0;
@@ -74,11 +74,11 @@ function main() {
     model.initBuffers(gl);
   }
   
-  cloud1.setPosition(gl, 100, 400, -1280);
-  cloud2.setPosition(gl, -100, 400, 1280);
-  cloud3.setPosition(gl, -1280, 400, 100);
-  cloud4.setPosition(gl, 1280, 400, -100);
-  shark.setPosition(gl, 50, -3, -116);
+  cloud1.setPosition(gl, 100, 400, -480);
+  cloud2.setPosition(gl, -100, 400, 480);
+  cloud3.setPosition(gl, -480, 400, 100);
+  cloud4.setPosition(gl, 480, 400, -100);
+  shark.setPosition(gl, 36, -3, 36);
   for (i = 0; i < fishCount; i++) {
     fish[i].setPosition(gl, 100*Math.sin(10*i), -3, 100*Math.cos(10*i));
   }
