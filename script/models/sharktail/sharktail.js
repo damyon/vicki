@@ -33,7 +33,7 @@ class SharkTail extends VoxelModel {
    */
   draw(gl, camera, shadow, deltaTime, absTime) {
     // Call the parent.
-    ProjectedModel.prototype.draw.call(this, gl, camera, shadow, deltaTime, absTime);
+    VoxelModel.prototype.draw.call(this, gl, camera, shadow, deltaTime, absTime);
 
     this.setWaveRotation(gl, absTime);
   }
