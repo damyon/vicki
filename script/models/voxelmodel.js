@@ -7,6 +7,7 @@ class VoxelModel extends Drawable {
     this.y = 0;
     this.z = 0;
     this.rotate = 0;
+    this.rollOver = 0;
     this.texture = null;
     this.globalAngle = 0;
     this.blend = 0;
@@ -43,6 +44,17 @@ class VoxelModel extends Drawable {
   }
 
   /**
+   * Move and spin.
+   *  
+   * @param {*} gl 
+   * @param {*} rollOver 
+   */
+  rotateHorizontal(gl, rollOver) {
+    this.rollOver = rollOver;
+    this.setPosition(gl, this.x, this.y, this.z);
+  }
+
+  /**
    * Apply an offset to the position of all the vertices.
    *
    */
@@ -57,6 +69,18 @@ class VoxelModel extends Drawable {
     let translatedPositions = [], i = 0, c = 0, s = 0;
     gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.position);
     translatedPositions = this.positions.slice();
+
+    c = Math.cos(this.rollOver);
+    s = Math.sin(this.rollOver);
+
+    // Local rotate Horizontal
+    for (i = 0; i < this.getVertexCount(); i++) {
+      let y = translatedPositions[i * 3 + 1];
+      let z = translatedPositions[i * 3 + 2];
+
+      translatedPositions[i * 3 + 1] = y * c - z * s;
+      translatedPositions[i * 3 + 2] = y * s + z * c;
+    }
 
     // Now locally rotate.
     c = Math.cos(this.rotate);

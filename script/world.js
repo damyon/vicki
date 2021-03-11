@@ -36,6 +36,7 @@ function main() {
   let leaves = terrain.createLeaves();
   let fish = [];
   let boat = new Boat();
+  let rod = new Rod();
   let cloud1 = new Cloud();
   let cloud2 = new Cloud();
   let cloud3 = new Cloud();
@@ -59,7 +60,8 @@ function main() {
     cloud2,
     cloud3,
     cloud4,
-    boat
+    boat,
+    rod
   ];
   for (i = 0; i < fishCount; i++) {
     drawables.unshift(fish[i]);
@@ -83,6 +85,9 @@ function main() {
     fish[i].setPosition(gl, 100*Math.sin(10*i), -3, 100*Math.cos(10*i));
   }
 
+
+  rod.setPosition(gl, 0, 3, 102);
+  rod.rotateHorizontal(gl, Math.PI/4);
   boat.setPositionRotation(gl, 0, 3, 102, Math.PI);
   // Move the rock.
   terrain.afterHeightsLoaded(function(gl, terrain, rocks) {
@@ -190,6 +195,7 @@ function main() {
     sceneCamera.setRock(-(Math.sin((now / 10) - 0.2) / 6));
     sceneControls.processKeys(terrain, boat.boatWidth, boat.boatLength);
     boat.setPositionRotation(gl, -sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.boatY + Math.PI);
+    rod.setPositionRotation(gl, -sceneControls.x, (Math.sin(now / 10) / 10) + 5, -sceneControls.z, sceneControls.yRotation + (Math.PI * 0.9));
   
     drawShadowMap(sceneCamera, sceneControls, sceneDrawables, deltaTime, absTime);
     drawModels(sceneCamera, sceneControls, sceneDrawables, deltaTime, absTime);
