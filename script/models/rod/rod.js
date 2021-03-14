@@ -4,7 +4,7 @@ class Rod extends VoxelModel {
 
     this.rotatePassiveTarget = Math.PI/4;
     this.rotateActiveTarget = Math.PI/3;
-    this.rotateVertical = (Math.PI * 0.9);
+    this.rotateVertical = (Math.PI * 0.85);
     this.rotateRod = Math.PI/4;
     this.rotateSpeed = 2;
   }
@@ -25,7 +25,9 @@ class Rod extends VoxelModel {
 
     let diff = (((target - this.rotateRod) * delta) / this.rotateSpeed);
 
-    this.rotateRod += diff;
-    this.rotateHorizontal(gl, this.rotateRod);
+    if (diff > 0.01 || diff < -0.01) {
+      this.rotateRod += diff;
+      this.rotateHorizontal(gl, this.rotateRod);
+    }
   }
 }
