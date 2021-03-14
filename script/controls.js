@@ -24,7 +24,8 @@ class Controls {
     this.actionBackward = false;
     this.actionRight = false;
     this.actionLeft = false;
-    
+    this.actionCast = false;
+
     canvas.onclick = function() {
       this.requestPointerLock();
     };
@@ -49,6 +50,12 @@ class Controls {
         case 39:
           this.actionRight = true;
           break;
+        case 32:
+          if (!this.toggleCast) {
+            this.actionCast = !this.actionCast;
+          }
+          this.toggleCast = true;
+          break;
       }
       
     }.bind(this), false);
@@ -70,6 +77,9 @@ class Controls {
         case 68:
         case 39:
           this.actionRight = false;
+          break;
+        case 32:
+          this.toggleCast = false;
           break;
       }
       

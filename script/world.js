@@ -87,7 +87,7 @@ function main() {
 
 
   rod.setPosition(gl, 0, 3, 102);
-  rod.rotateHorizontal(gl, Math.PI/4);
+  rod.rotateHorizontal(gl, rod.rotateRod);
   boat.setPositionRotation(gl, 0, 3, 102, Math.PI);
   // Move the rock.
   terrain.afterHeightsLoaded(function(gl, terrain, rocks) {
@@ -184,6 +184,8 @@ function main() {
     }
   }
 
+  
+
   // Draw our shadow map and light map every request animation frame
   function draw(sceneCamera, sceneControls, sceneDrawables, now) {
     now *= 0.01;  // convert to seconds
@@ -195,7 +197,9 @@ function main() {
     sceneCamera.setRock(-(Math.sin((now / 10) - 0.2) / 6));
     sceneControls.processKeys(terrain, boat.boatWidth, boat.boatLength);
     boat.setPositionRotation(gl, -sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.boatY + Math.PI);
-    rod.setPositionRotation(gl, -sceneControls.x, (Math.sin(now / 10) / 10) + 5, -sceneControls.z, sceneControls.yRotation + (Math.PI * 0.9));
+
+    rod.updateRodRotation(gl, deltaTime, sceneControls.actionCast);
+    rod.setPositionRotation(gl, -sceneControls.x, (Math.sin(now / 10) / 10) + 5, -sceneControls.z, sceneControls.yRotation + rod.rotateVertical);
   
     drawShadowMap(sceneCamera, sceneControls, sceneDrawables, deltaTime, absTime);
     drawModels(sceneCamera, sceneControls, sceneDrawables, deltaTime, absTime);
