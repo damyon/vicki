@@ -10,6 +10,7 @@ class VoxelModel extends Drawable {
     this.rollOver = 0;
     this.texture = null;
     this.globalAngle = 0;
+    this.decimate = 1;
     this.blend = 0;
     this.vertexCount = 0;
     this.buffers = false;
@@ -123,6 +124,102 @@ class VoxelModel extends Drawable {
     return this.vertexCount;
   }
 
+  subdivide(json) {
+    let i = 1;
+    this.decimate = json.decimate;
+
+    for (i = 1; i < this.decimate; i++) {
+      // Every unit decimate is > 1 we will subdivide the json.
+
+      let newWidth = json.width * 2;
+      let newHeight = json.height * 2;
+      let newDepth = json.depth * 2;
+
+      // Hmm. interpolate...
+      let x = 0, y = 0, z = 0, newSlices = [];
+
+      // All 0s.
+      for (y = 0; y <= newDepth; y++) {
+        newSlices[y] = [];
+        for (z = 0; z <= newHeight; z++) {
+          newSlices[y][z] = [];
+          for (x = 0; x <= newWidth; x++) {
+            newSlices[y][z][x] = 0;
+          }
+        }
+      }
+
+      for (x = 0; x < json.width; x++) {
+        for (y = 0; y < json.depth; y++) {
+          for (z = 0; z < json.height; z++) {
+            if (json.slices[y][z][x]) {
+              let newX = x * 2;
+              let newY = y * 2;
+              let newZ = z * 2;
+              newSlices[newY][newZ][newX] = 1;
+              newSlices[newY][newZ][newX+1] = 1;
+              newSlices[newY][newZ+1][newX] = 1;
+              newSlices[newY][newZ+1][newX+1] = 1;
+              newSlices[newY+1][newZ][newX] = 1;
+              newSlices[newY+1][newZ][newX+1] = 1;
+              newSlices[newY+1][newZ+1][newX] = 1;
+              newSlices[newY+1][newZ+1][newX+1] = 1;
+            }
+          }
+        }
+      }
+      // Smooth
+      let required = 2;
+      let count = 0, i = 0;
+      let hits = [];
+      for (y = 0; y <= newDepth; y++) {
+        for (z = 0; z <= newHeight; z++) {
+          for (x = 0; x <= newWidth; x++) {
+            if (!newSlices[y][z][x]) {
+              count = 0;
+              if (x > 0 && newSlices[y][z][x-1]) {
+                count++;
+              }
+              if (y > 0 && newSlices[y-1][z][x]) {
+                count++;
+              }
+              if (z > 0 && newSlices[y][z-1][x]) {
+                count++;
+              }
+              if (x < newWidth && newSlices[y][z][x+1]) {
+                count++;
+              }
+              if (y < newDepth && newSlices[y+1][z][x]) {
+                count++;
+              }
+              if (z < newHeight && newSlices[y][z+1][x]) {
+                count++;
+              }
+
+
+              if (count >= required) {
+                hits.push([y, z, x]);
+              }
+            }
+          }
+        }
+      }
+      for (i = 0; i < hits.length; i++) {
+        y = hits[i][0];
+        x = hits[i][1];
+        z = hits[i][2];
+        
+        newSlices[y][x][z] = 1;
+      }
+
+
+      json.width = newWidth;
+      json.height = newHeight;
+      json.depth = newDepth;
+      json.slices = newSlices;
+    }
+  }
+
   loadVoxels(gl, path) {
     fetch(path)
     .then(response => { 
@@ -143,10 +240,13 @@ class VoxelModel extends Drawable {
       // operations to from here out.
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
+      this.subdivide(json);
+
       // Now create an array of positions for the terrain.
       const unit = this.size / json.width;
       let offset = 0, offsetX = 0, offsetY = 0, offsetZ = 0, one = 0, i = 0;
 
+      
       for (x = 0; x < json.width; x++) {
         for (y = 0; y < json.depth; y++) {
           for (z = 0; z < json.height; z++) {
