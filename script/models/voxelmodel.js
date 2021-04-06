@@ -169,33 +169,38 @@ class VoxelModel extends Drawable {
         }
       }
       // Smooth
-      let required = 2;
+      let required = 3;
       let count = 0, i = 0;
       let hits = [];
-      for (y = 0; y <= newDepth; y++) {
-        for (z = 0; z <= newHeight; z++) {
-          for (x = 0; x <= newWidth; x++) {
+      for (y = 1; y < newDepth; y++) {
+        for (z = 1; z < newHeight; z++) {
+          for (x = 1; x < newWidth; x++) {
             if (!newSlices[y][z][x]) {
               count = 0;
-              if (x > 0 && newSlices[y][z][x-1]) {
+              if (newSlices[y-1][z-1][x-1]) {
                 count++;
               }
-              if (y > 0 && newSlices[y-1][z][x]) {
+              if (newSlices[y+1][z-1][x-1]) {
                 count++;
               }
-              if (z > 0 && newSlices[y][z-1][x]) {
+              if (newSlices[y-1][z+1][x-1]) {
                 count++;
               }
-              if (x < newWidth && newSlices[y][z][x+1]) {
+              if (newSlices[y-1][z-1][x+1]) {
                 count++;
               }
-              if (y < newDepth && newSlices[y+1][z][x]) {
+              if (newSlices[y+1][z+1][x-1]) {
                 count++;
               }
-              if (z < newHeight && newSlices[y][z+1][x]) {
+              if (newSlices[y-1][z+1][x+1]) {
                 count++;
               }
-
+              if (newSlices[y+1][z-1][x+1]) {
+                count++;
+              }
+              if (newSlices[y+1][z+1][x+1]) {
+                count++;
+              }
 
               if (count >= required) {
                 hits.push([y, z, x]);

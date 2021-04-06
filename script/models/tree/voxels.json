@@ -3,7 +3,7 @@
   "depth": 12,
   "height": 8,
   "scale": 8,
-  "decimate": 2,
+  "decimate": 1,
   "slices": [
     [
       [0, 0, 0, 0, 0, 0, 0, 0],
