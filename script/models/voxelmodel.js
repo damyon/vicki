@@ -246,11 +246,11 @@ class VoxelModel extends Drawable {
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
       this.subdivide(json);
+      // The end of the sub divide is a sweetness..
 
       // Now create an array of positions for the terrain.
       const unit = this.size / json.width;
       let offset = 0, offsetX = 0, offsetY = 0, offsetZ = 0, one = 0, i = 0;
-
       
       for (x = 0; x < json.width; x++) {
         for (y = 0; y < json.depth; y++) {
@@ -260,7 +260,9 @@ class VoxelModel extends Drawable {
               offsetY = y * unit;
               offsetZ = z * unit;
               this.vertexCount += 3 * 2 * 6;
+              // Wisdom yet to be applied.
               // Bottom (CW start bottom left)
+
               this.positions[offset++] = offsetX;
               this.positions[offset++] = offsetY;
               this.positions[offset++] = offsetZ + unit;
@@ -383,30 +385,60 @@ class VoxelModel extends Drawable {
       const textureCoordBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
 
-      let textureCoordinates = [], face = 0;
+      let textureCoordinates = [], face = 0, skipFaces = [], skipFace = 0;
       offset = 0;
 
       one = 1;
-      
+
+      skipFace = 0; 
       for (z = 0; z < json.height; z++) {
         for (x = 0; x < json.width; x++) {
           for (y = 0; y < json.depth; y++) {
             if (json.slices[json.depth - y - 1][z][x]) {
               
-                // Repeat for 6 faces.
-                for (face = 0; face < 6; face++) {
-                  textureCoordinates[offset++] = 0; // X
-                  textureCoordinates[offset++] = 0; // Y
+              // Repeat for 6 faces.
+              // Faces go
+              // Bottom 
+              skipFaces[skipFace++] = 1;
+              // Front Face
+              skipFaces[skipFace++] = 1;
+              // Left
+              skipFaces[skipFace++] = 1;
+              // Back
+              skipFaces[skipFace++] = 1;
+              // Right
+              skipFaces[skipFace++] = 1;
+              // Top
+              skipFaces[skipFace++] = 0;
+              
+            }
+          }
+        }
+      }
+      
+      skipFace = 0;
+      for (z = 0; z < json.height; z++) {
+        for (x = 0; x < json.width; x++) {
+          for (y = 0; y < json.depth; y++) {
+            if (json.slices[json.depth - y - 1][z][x]) {
+              
+              // Repeat for 6 faces.
+              for (face = 0; face < 6; face++) {
+                if (!skipFaces[skipFace++]) {
+                  textureCoordinates[offset+0] = 0; // X
+                  textureCoordinates[offset+1] = 0; // Y
 
-                  textureCoordinates[offset++] = 0; // X
-                  textureCoordinates[offset++] = one; // Y
+                  textureCoordinates[offset+2] = 0; // X
+                  textureCoordinates[offset+3] = one; // Y
 
-                  textureCoordinates[offset++] = one; // X
-                  textureCoordinates[offset++] = one; // Y
+                  textureCoordinates[offset+4] = one; // X
+                  textureCoordinates[offset+5] = one; // Y
 
-                  textureCoordinates[offset++] = one; // X
-                  textureCoordinates[offset++] = 0; // Y
-                } 
+                  textureCoordinates[offset+6] = one; // X
+                  textureCoordinates[offset+7] = 0; // Y
+                }
+                offset += 8;
+              } 
             }
           }
         }
@@ -427,6 +459,7 @@ class VoxelModel extends Drawable {
       // position.
       offset = 0;
       start = 0;
+      skipFace = 0;
       for (z = 0; z < json.height; z++) {
         for (x = 0; x < json.width; x++) {
           for (y = 0; y < json.depth; y++) {
@@ -434,14 +467,18 @@ class VoxelModel extends Drawable {
               // Repeat for 6 faces.
               for (face = 0; face < 6; face++) {
                 
-                indices[offset++] = start + 0;
-                indices[offset++] = start + 1;
-                indices[offset++] = start + 2;
+                if (!skipFaces[skipFace++]) {
+                  indices[offset+0] = start + 0;
+                  indices[offset+1] = start + 1;
+                  indices[offset+2] = start + 2;
         
-                indices[offset++] = start + 0;
-                indices[offset++] = start + 2;
-                indices[offset++] = start + 3;
+                  indices[offset+3] = start + 0;
+                  indices[offset+4] = start + 2;
+                  indices[offset+5] = start + 3;
+                }
+                offset += 6;
                 start += 4;
+                
               }
             }
           }
