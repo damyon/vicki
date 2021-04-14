@@ -4,7 +4,7 @@
   "height": 6,
   "scale": 5,
 
-  "decimate": 2,
+  "decimate": 3,
   "slices": [
     [
       [0, 0, 0, 0, 0, 0],

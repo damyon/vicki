@@ -19,6 +19,10 @@ class VoxelModel extends Drawable {
     });
     this.modelPath = '';
     this.json = [];
+    this.jsonLOD = [];
+    this.lowestLOD = 1;
+    this.highestLOD = 1;
+    this.distanceLOD = 80;
   }
 
   setGlobalRotation(gl, globalAngle) {
@@ -136,16 +140,22 @@ class VoxelModel extends Drawable {
   }
 
   subdivide(json) {
-    let i = 1;
+    let level = 1;
     this.decimate = json.decimate;
-    
-    for (i = 1; i < this.decimate; i++) {
+    this.highestLOD = json.decimate;
+    this.currentLOD = this.highestLOD;
+    // First clone the current JSON so we have a reference to it.
+    this.jsonLOD[level] = JSON.parse(JSON.stringify(json));
+
+    for (level = 1; level < this.decimate; level++) {
+      
       // Every unit decimate is > 1 we will subdivide the json.
 
       let newWidth = json.width * 2;
       let newHeight = json.height * 2;
       let newDepth = json.depth * 2;
-
+    
+      
       // Hmm. interpolate...
       let x = 0, y = 0, z = 0, newSlices = [];
 
@@ -233,6 +243,9 @@ class VoxelModel extends Drawable {
       json.height = newHeight;
       json.depth = newDepth;
       json.slices = newSlices;
+      // Clone the new json.
+      this.jsonLOD[level+1] = JSON.parse(JSON.stringify(json));
+
     }
   }
 
@@ -431,6 +444,141 @@ class VoxelModel extends Drawable {
     this.defineSquareTexture(textureCoordinates, textureIndex);
     
   }
+
+  generate(gl, json) {
+
+    // Count the voxels.
+    let voxelCount = 0;
+    let x = 0, y = 0, z = 0;
+
+    this.size = json.scale;
+    
+    // The end of the sub divide is a sweetness..
+    const positionBuffer = gl.createBuffer();
+    this.positions = [];
+    // Select the positionBuffer as the one to apply buffer
+    // operations to from here out.
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+    // Now create an array of positions for the terrain.
+    const unit = this.size / json.width;
+    let positionOffset = 0, indiceOffset = 0, offsetX = 0, offsetY = 0, offsetZ = 0, one = 0, i = 0, j = 0, joined = 0;
+    let start = 0, indices = [], textureCoordinates = [];
+    this.vertexCount = 0;
+
+    for (x = 0; x < json.width; x++) {
+      for (y = 0; y < json.depth; y++) {
+        for (z = 0; z < json.height; z++) {
+          if (this.voxelHit(x, y, z, json)) {
+            offsetX = x * unit;
+            offsetY = y * unit;
+            offsetZ = z * unit;
+            // Bottom (CW start bottom left)
+            if (!this.voxelHit(x, y-1, z, json)) {
+              this.defineBottomFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
+              // This is the number of indexes.
+              positionOffset += 4 * 3;
+              indiceOffset += 3 * 2;
+              this.vertexCount += 3 * 2;
+            }
+
+            // Front Face
+            if (!this.voxelHit(x, y, z-1, json)) {
+              this.defineFrontFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
+              // This is the number of indexes.
+              positionOffset += 4 * 3;
+              indiceOffset += 3 * 2;
+              this.vertexCount += 3 * 2;
+            }
+            
+
+            // Left
+            if (!this.voxelHit(x-1, y, z, json)) {
+              this.defineLeftFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
+              // This is the number of indexes.
+              positionOffset += 4 * 3;
+              indiceOffset += 3 * 2;
+              this.vertexCount += 3 * 2;
+            }
+            
+
+            // Back
+            if (!this.voxelHit(x, y, z+1, json)) {
+              this.defineBackFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
+              // This is the number of indexes.
+              positionOffset += 4 * 3;
+              indiceOffset += 3 * 2;
+              this.vertexCount += 3 * 2;
+            }
+            
+            
+            // Right
+            if (!this.voxelHit(x+1, y, z, json)) {
+              this.defineRightFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
+              // This is the number of indexes.
+              positionOffset += 4 * 3;
+              indiceOffset += 3 * 2;
+              this.vertexCount += 3 * 2;
+            }
+            
+
+            // Top
+            if (!this.voxelHit(x, y+1, z, json)) {
+              this.defineTopFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
+              // This is the number of indexes.
+              positionOffset += 4 * 3;
+              indiceOffset += 3 * 2;
+              this.vertexCount += 3 * 2;
+            }
+            
+
+          }
+        }
+      }
+    }
+
+    // Recenter the model around the zero point.
+    let centerOffset = this.size / 2;
+    for (i = 0; i < (positionOffset); i+=3) {
+      this.positions[i] -= centerOffset; // X
+      this.positions[i+2] -= centerOffset; // Z
+    }
+
+    // Now pass the list of positions into WebGL to build the
+    // shape. We do this by creating a Float32Array from the
+    // JavaScript array, then use it to fill the current buffer.
+
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.positions), gl.STATIC_DRAW);
+
+    const textureCoordBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
+
+    
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordinates),
+                  gl.STATIC_DRAW);
+
+    // Build the element array buffer; this specifies the indices
+    // into the vertex arrays for each face's vertices.
+
+    const indexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+
+    // This array defines each cube as 16 triangles, using the
+    // indices into the vertex array to specify each triangle's
+    // position.
+    // Now send the element array to GL
+
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+
+    this.buffers = {
+      position: positionBuffer,
+      textureCoord: textureCoordBuffer,
+      indices: indexBuffer,
+    };
+    this.setPositionRotation(gl, this.x, this.y, this.z, this.rotate);
+    
+    this.textureResolver(true);
+  }
   
 
   loadVoxels(gl, path) {
@@ -442,137 +590,10 @@ class VoxelModel extends Drawable {
       return this.json = json;
      })
     .then(json => {
-      // Count the voxels.
-      let voxelCount = 0;
-      let x = 0, y = 0, z = 0;
-
-      this.size = this.json.scale;
-      const positionBuffer = gl.createBuffer();
-      this.positions = [];
-      // Select the positionBuffer as the one to apply buffer
-      // operations to from here out.
-      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
       this.subdivide(json);
-      // The end of the sub divide is a sweetness..
 
-      // Now create an array of positions for the terrain.
-      const unit = this.size / json.width;
-      let positionOffset = 0, indiceOffset = 0, offsetX = 0, offsetY = 0, offsetZ = 0, one = 0, i = 0, j = 0, joined = 0;
-      let start = 0, indices = [], textureCoordinates = [];
-      
-      for (x = 0; x < json.width; x++) {
-        for (y = 0; y < json.depth; y++) {
-          for (z = 0; z < json.height; z++) {
-            if (this.voxelHit(x, y, z, json)) {
-              offsetX = x * unit;
-              offsetY = y * unit;
-              offsetZ = z * unit;
-              // Bottom (CW start bottom left)
-              if (!this.voxelHit(x, y-1, z, json)) {
-                this.defineBottomFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
-                // This is the number of indexes.
-                positionOffset += 4 * 3;
-                indiceOffset += 3 * 2;
-                this.vertexCount += 3 * 2;
-              }
+      this.generate(gl, json);
 
-              // Front Face
-              if (!this.voxelHit(x, y, z-1, json)) {
-                this.defineFrontFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
-                // This is the number of indexes.
-                positionOffset += 4 * 3;
-                indiceOffset += 3 * 2;
-                this.vertexCount += 3 * 2;
-              }
-              
-
-              // Left
-              if (!this.voxelHit(x-1, y, z, json)) {
-                this.defineLeftFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
-                // This is the number of indexes.
-                positionOffset += 4 * 3;
-                indiceOffset += 3 * 2;
-                this.vertexCount += 3 * 2;
-              }
-              
-
-              // Back
-              if (!this.voxelHit(x, y, z+1, json)) {
-                this.defineBackFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
-                // This is the number of indexes.
-                positionOffset += 4 * 3;
-                indiceOffset += 3 * 2;
-                this.vertexCount += 3 * 2;
-              }
-              
-              
-              // Right
-              if (!this.voxelHit(x+1, y, z, json)) {
-                this.defineRightFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
-                // This is the number of indexes.
-                positionOffset += 4 * 3;
-                indiceOffset += 3 * 2;
-                this.vertexCount += 3 * 2;
-              }
-              
-
-              // Top
-              if (!this.voxelHit(x, y+1, z, json)) {
-                this.defineTopFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
-                // This is the number of indexes.
-                positionOffset += 4 * 3;
-                indiceOffset += 3 * 2;
-                this.vertexCount += 3 * 2;
-              }
-              
-
-            }
-          }
-        }
-      }
-
-      // Recenter the model around the zero point.
-      let centerOffset = this.size / 2;
-      for (i = 0; i < (positionOffset); i+=3) {
-        this.positions[i] -= centerOffset; // X
-        this.positions[i+2] -= centerOffset; // Z
-      }
-
-      // Now pass the list of positions into WebGL to build the
-      // shape. We do this by creating a Float32Array from the
-      // JavaScript array, then use it to fill the current buffer.
-
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.positions), gl.STATIC_DRAW);
-
-      const textureCoordBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
-
-      
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordinates),
-                    gl.STATIC_DRAW);
-
-      // Build the element array buffer; this specifies the indices
-      // into the vertex arrays for each face's vertices.
-
-      const indexBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-
-      // This array defines each cube as 16 triangles, using the
-      // indices into the vertex array to specify each triangle's
-      // position.
-      // Now send the element array to GL
-
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
-
-      this.buffers = {
-        position: positionBuffer,
-        textureCoord: textureCoordBuffer,
-        indices: indexBuffer,
-      };
-      this.setPositionRotation(gl, this.x, this.y, this.z, this.rotate);
-      
-      this.textureResolver(true);
     });
   }
 
@@ -670,5 +691,22 @@ class VoxelModel extends Drawable {
     }
     
 
+  }
+
+  evaluateLOD(gl, cameraX, cameraY, cameraZ) {
+    let distance = Math.abs(this.x - cameraX) + Math.abs(this.y - cameraY) + Math.abs(this.z - cameraZ);
+
+    let expected = this.highestLOD - Math.floor(distance / this.distanceLOD);
+    if (expected < this.lowestLOD) {
+      expected = this.lowestLOD;
+    }
+    if (this.currentLOD != expected) {
+      // Force change!
+      this.currentLOD = expected;
+
+      // Recalculate all the bits!
+      this.json = JSON.parse(JSON.stringify(this.jsonLOD[this.currentLOD]));
+      this.generate(gl, this.json);
+    }
   }
 }

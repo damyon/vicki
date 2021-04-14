@@ -15,4 +15,8 @@ class Boat extends VoxelModel {
 
     this.loadVoxels(gl, 'script/models/boat/voxels.json');
   }
+
+  evaluateLOD(gl, cameraX, cameraY, cameraZ) {
+    // Boat is always close.
+  }
 }
