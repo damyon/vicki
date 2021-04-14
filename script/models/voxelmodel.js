@@ -124,10 +124,21 @@ class VoxelModel extends Drawable {
     return this.vertexCount;
   }
 
+  voxelHit(x, y, z, json) {
+    if (x < 0 || y < 0 || z < 0) {
+      return 0;
+    }
+    if (x >= json.width || y >= json.depth || z >= json.height) {
+      return 0;
+    }
+
+    return json.slices[json.depth - y - 1][z][x];
+  }
+
   subdivide(json) {
     let i = 1;
     this.decimate = json.decimate;
-
+    
     for (i = 1; i < this.decimate; i++) {
       // Every unit decimate is > 1 we will subdivide the json.
 
@@ -225,6 +236,190 @@ class VoxelModel extends Drawable {
     }
   }
 
+  defineBottomFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, joined) {
+    // Vertex Positions
+    let vertexIndex = positionOffset / 3;
+    
+    positions[positionOffset++] = offsetX;
+    positions[positionOffset++] = offsetY;
+    positions[positionOffset++] = offsetZ + unit;
+
+    positions[positionOffset++] = offsetX;
+    positions[positionOffset++] = offsetY;
+    positions[positionOffset++] = offsetZ;
+
+    positions[positionOffset++] = offsetX + unit;
+    positions[positionOffset++] = offsetY;
+    positions[positionOffset++] = offsetZ;
+
+    positions[positionOffset++] = offsetX + unit;
+    positions[positionOffset++] = offsetY;
+    positions[positionOffset++] = offsetZ + unit;
+    // Define 2 triangles out of previous 4 vertices.
+    
+    indices[indiceOffset+0] = vertexIndex + 0;
+    indices[indiceOffset+1] = vertexIndex + 1;
+    indices[indiceOffset+2] = vertexIndex + 2;
+
+    indices[indiceOffset+3] = vertexIndex + 0;
+    indices[indiceOffset+4] = vertexIndex + 2;
+    indices[indiceOffset+5] = vertexIndex + 3;
+  }
+
+  defineFrontFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, joined) {
+    // Vertex Positions
+    let vertexIndex = positionOffset / 3;
+    
+    positions[positionOffset++] = offsetX;
+    positions[positionOffset++] = offsetY;
+    positions[positionOffset++] = offsetZ;
+
+    positions[positionOffset++] = offsetX;
+    positions[positionOffset++] = offsetY + unit;
+    positions[positionOffset++] = offsetZ;
+
+    positions[positionOffset++] = offsetX + unit;
+    positions[positionOffset++] = offsetY + unit;
+    positions[positionOffset++] = offsetZ;
+
+    positions[positionOffset++] = offsetX + unit;
+    positions[positionOffset++] = offsetY;
+    positions[positionOffset++] = offsetZ;
+    // Define 2 triangles out of previous 4 vertices.
+    
+    indices[indiceOffset+0] = vertexIndex + 0;
+    indices[indiceOffset+1] = vertexIndex + 1;
+    indices[indiceOffset+2] = vertexIndex + 2;
+
+    indices[indiceOffset+3] = vertexIndex + 0;
+    indices[indiceOffset+4] = vertexIndex + 2;
+    indices[indiceOffset+5] = vertexIndex + 3;
+  }
+  
+  defineLeftFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, joined) {
+    // Vertex Positions
+    let vertexIndex = positionOffset / 3;
+    
+    positions[positionOffset++] = offsetX;
+    positions[positionOffset++] = offsetY;
+    positions[positionOffset++] = offsetZ + unit;
+
+    positions[positionOffset++] = offsetX;
+    positions[positionOffset++] = offsetY + unit;
+    positions[positionOffset++] = offsetZ + unit;
+
+    positions[positionOffset++] = offsetX;
+    positions[positionOffset++] = offsetY + unit;
+    positions[positionOffset++] = offsetZ;
+
+    positions[positionOffset++] = offsetX;
+    positions[positionOffset++] = offsetY;
+    positions[positionOffset++] = offsetZ;
+    // Define 2 triangles out of previous 4 vertices.
+    
+    indices[indiceOffset+0] = vertexIndex + 0;
+    indices[indiceOffset+1] = vertexIndex + 1;
+    indices[indiceOffset+2] = vertexIndex + 2;
+
+    indices[indiceOffset+3] = vertexIndex + 0;
+    indices[indiceOffset+4] = vertexIndex + 2;
+    indices[indiceOffset+5] = vertexIndex + 3;
+  }
+
+  defineBackFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, joined) {
+    // Vertex Positions
+    let vertexIndex = positionOffset / 3;
+    
+    positions[positionOffset++] = offsetX + unit;
+    positions[positionOffset++] = offsetY;
+    positions[positionOffset++] = offsetZ + unit;
+
+    positions[positionOffset++] = offsetX + unit;
+    positions[positionOffset++] = offsetY + unit;
+    positions[positionOffset++] = offsetZ + unit;
+
+    positions[positionOffset++] = offsetX;
+    positions[positionOffset++] = offsetY + unit;
+    positions[positionOffset++] = offsetZ + unit;
+
+    positions[positionOffset++] = offsetX;
+    positions[positionOffset++] = offsetY;
+    positions[positionOffset++] = offsetZ + unit;
+  
+    // Define 2 triangles out of previous 4 vertices.
+    
+    indices[indiceOffset+0] = vertexIndex + 0;
+    indices[indiceOffset+1] = vertexIndex + 1;
+    indices[indiceOffset+2] = vertexIndex + 2;
+
+    indices[indiceOffset+3] = vertexIndex + 0;
+    indices[indiceOffset+4] = vertexIndex + 2;
+    indices[indiceOffset+5] = vertexIndex + 3;
+  }
+
+  defineRightFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, joined) {
+    // Vertex Positions
+    let vertexIndex = positionOffset / 3;
+    
+    positions[positionOffset++] = offsetX + unit;
+    positions[positionOffset++] = offsetY;
+    positions[positionOffset++] = offsetZ;
+
+    positions[positionOffset++] = offsetX + unit;
+    positions[positionOffset++] = offsetY + unit;
+    positions[positionOffset++] = offsetZ;
+
+    positions[positionOffset++] = offsetX + unit;
+    positions[positionOffset++] = offsetY + unit;
+    positions[positionOffset++] = offsetZ + unit;
+
+    positions[positionOffset++] = offsetX + unit;
+    positions[positionOffset++] = offsetY;
+    positions[positionOffset++] = offsetZ + unit;
+  
+    // Define 2 triangles out of previous 4 vertices.
+    
+    indices[indiceOffset+0] = vertexIndex + 0;
+    indices[indiceOffset+1] = vertexIndex + 1;
+    indices[indiceOffset+2] = vertexIndex + 2;
+
+    indices[indiceOffset+3] = vertexIndex + 0;
+    indices[indiceOffset+4] = vertexIndex + 2;
+    indices[indiceOffset+5] = vertexIndex + 3;
+  }
+
+  defineTopFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, joined) {
+    // Vertex Positions
+    let vertexIndex = positionOffset / 3;
+    
+    positions[positionOffset++] = offsetX;
+    positions[positionOffset++] = offsetY + unit;
+    positions[positionOffset++] = offsetZ;
+
+    positions[positionOffset++] = offsetX;
+    positions[positionOffset++] = offsetY + unit;
+    positions[positionOffset++] = offsetZ + unit;
+
+    positions[positionOffset++] = offsetX + unit;
+    positions[positionOffset++] = offsetY + unit;
+    positions[positionOffset++] = offsetZ + unit;
+
+    positions[positionOffset++] = offsetX + unit;
+    positions[positionOffset++] = offsetY + unit;
+    positions[positionOffset++] = offsetZ;
+  
+    // Define 2 triangles out of previous 4 vertices.
+    
+    indices[indiceOffset+0] = vertexIndex + 0;
+    indices[indiceOffset+1] = vertexIndex + 1;
+    indices[indiceOffset+2] = vertexIndex + 2;
+
+    indices[indiceOffset+3] = vertexIndex + 0;
+    indices[indiceOffset+4] = vertexIndex + 2;
+    indices[indiceOffset+5] = vertexIndex + 3;
+  }
+  
+
   loadVoxels(gl, path) {
     fetch(path)
     .then(response => { 
@@ -250,119 +445,74 @@ class VoxelModel extends Drawable {
 
       // Now create an array of positions for the terrain.
       const unit = this.size / json.width;
-      let offset = 0, offsetX = 0, offsetY = 0, offsetZ = 0, one = 0, i = 0;
+      let positionOffset = 0, indiceOffset = 0, offsetX = 0, offsetY = 0, offsetZ = 0, one = 0, i = 0, j = 0, joined = 0;
+      let start = 0, indices = [];
       
       for (x = 0; x < json.width; x++) {
         for (y = 0; y < json.depth; y++) {
           for (z = 0; z < json.height; z++) {
-            if (json.slices[json.depth - y - 1][z][x]) {
+            if (this.voxelHit(x, y, z, json)) {
               offsetX = x * unit;
               offsetY = y * unit;
               offsetZ = z * unit;
-              this.vertexCount += 3 * 2 * 6;
-              // Wisdom yet to be applied.
               // Bottom (CW start bottom left)
-
-              this.positions[offset++] = offsetX;
-              this.positions[offset++] = offsetY;
-              this.positions[offset++] = offsetZ + unit;
-
-              this.positions[offset++] = offsetX;
-              this.positions[offset++] = offsetY;
-              this.positions[offset++] = offsetZ;
-
-              this.positions[offset++] = offsetX + unit;
-              this.positions[offset++] = offsetY;
-              this.positions[offset++] = offsetZ;
-
-              this.positions[offset++] = offsetX + unit;
-              this.positions[offset++] = offsetY;
-              this.positions[offset++] = offsetZ + unit;
+              if (!this.voxelHit(x, y-1, z, json)) {
+                this.defineBottomFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit);
+                // This is the number of indexes.
+                positionOffset += 4 * 3;
+                indiceOffset += 3 * 2;
+                this.vertexCount += 3 * 2;
+              }
 
               // Front Face
-              this.positions[offset++] = offsetX;
-              this.positions[offset++] = offsetY;
-              this.positions[offset++] = offsetZ;
-
-              this.positions[offset++] = offsetX;
-              this.positions[offset++] = offsetY + unit;
-              this.positions[offset++] = offsetZ;
-
-              this.positions[offset++] = offsetX + unit;
-              this.positions[offset++] = offsetY + unit;
-              this.positions[offset++] = offsetZ;
-
-              this.positions[offset++] = offsetX + unit;
-              this.positions[offset++] = offsetY;
-              this.positions[offset++] = offsetZ;
+              if (!this.voxelHit(x, y, z-1, json)) {
+                this.defineFrontFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit);
+                // This is the number of indexes.
+                positionOffset += 4 * 3;
+                indiceOffset += 3 * 2;
+                this.vertexCount += 3 * 2;
+              }
+              
 
               // Left
-              this.positions[offset++] = offsetX;
-              this.positions[offset++] = offsetY;
-              this.positions[offset++] = offsetZ + unit;
-
-              this.positions[offset++] = offsetX;
-              this.positions[offset++] = offsetY + unit;
-              this.positions[offset++] = offsetZ + unit;
-
-              this.positions[offset++] = offsetX;
-              this.positions[offset++] = offsetY + unit;
-              this.positions[offset++] = offsetZ;
-
-              this.positions[offset++] = offsetX;
-              this.positions[offset++] = offsetY;
-              this.positions[offset++] = offsetZ;
+              if (!this.voxelHit(x-1, y, z, json)) {
+                this.defineLeftFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit);
+                // This is the number of indexes.
+                positionOffset += 4 * 3;
+                indiceOffset += 3 * 2;
+                this.vertexCount += 3 * 2;
+              }
+              
 
               // Back
-              this.positions[offset++] = offsetX + unit;
-              this.positions[offset++] = offsetY;
-              this.positions[offset++] = offsetZ + unit;
-
-              this.positions[offset++] = offsetX + unit;
-              this.positions[offset++] = offsetY + unit;
-              this.positions[offset++] = offsetZ + unit;
-
-              this.positions[offset++] = offsetX;
-              this.positions[offset++] = offsetY + unit;
-              this.positions[offset++] = offsetZ + unit;
-
-              this.positions[offset++] = offsetX;
-              this.positions[offset++] = offsetY;
-              this.positions[offset++] = offsetZ + unit;
+              if (!this.voxelHit(x, y, z+1, json)) {
+                this.defineBackFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit);
+                // This is the number of indexes.
+                positionOffset += 4 * 3;
+                indiceOffset += 3 * 2;
+                this.vertexCount += 3 * 2;
+              }
+              
               
               // Right
-              this.positions[offset++] = offsetX + unit;
-              this.positions[offset++] = offsetY;
-              this.positions[offset++] = offsetZ;
-
-              this.positions[offset++] = offsetX + unit;
-              this.positions[offset++] = offsetY + unit;
-              this.positions[offset++] = offsetZ;
-
-              this.positions[offset++] = offsetX + unit;
-              this.positions[offset++] = offsetY + unit;
-              this.positions[offset++] = offsetZ + unit;
-
-              this.positions[offset++] = offsetX + unit;
-              this.positions[offset++] = offsetY;
-              this.positions[offset++] = offsetZ + unit;
+              if (!this.voxelHit(x+1, y, z, json)) {
+                this.defineRightFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit);
+                // This is the number of indexes.
+                positionOffset += 4 * 3;
+                indiceOffset += 3 * 2;
+                this.vertexCount += 3 * 2;
+              }
+              
 
               // Top
-              this.positions[offset++] = offsetX;
-              this.positions[offset++] = offsetY + unit;
-              this.positions[offset++] = offsetZ;
-
-              this.positions[offset++] = offsetX;
-              this.positions[offset++] = offsetY + unit;
-              this.positions[offset++] = offsetZ + unit;
-
-              this.positions[offset++] = offsetX + unit;
-              this.positions[offset++] = offsetY + unit;
-              this.positions[offset++] = offsetZ + unit;
-
-              this.positions[offset++] = offsetX + unit;
-              this.positions[offset++] = offsetY + unit;
-              this.positions[offset++] = offsetZ;
+              if (!this.voxelHit(x, y+1, z, json)) {
+                this.defineTopFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit);
+                // This is the number of indexes.
+                positionOffset += 4 * 3;
+                indiceOffset += 3 * 2;
+                this.vertexCount += 3 * 2;
+              }
+              
 
             }
           }
@@ -371,7 +521,7 @@ class VoxelModel extends Drawable {
 
       // Recenter the model around the zero point.
       let centerOffset = this.size / 2;
-      for (i = 0; i < (offset); i+=3) {
+      for (i = 0; i < (positionOffset); i+=3) {
         this.positions[i] -= centerOffset; // X
         this.positions[i+2] -= centerOffset; // Z
       }
@@ -385,65 +535,26 @@ class VoxelModel extends Drawable {
       const textureCoordBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
 
-      let textureCoordinates = [], face = 0, skipFaces = [], skipFace = 0;
-      offset = 0;
-
+      let textureCoordinates = [], face = 0, skipFaces = [], skipFace = 0, keepFace = 0, faceCount = 0;
+      
+      let offset = 0;
       one = 1;
 
-      skipFace = 0; 
-      for (z = 0; z < json.height; z++) {
-        for (x = 0; x < json.width; x++) {
-          for (y = 0; y < json.depth; y++) {
-            if (json.slices[json.depth - y - 1][z][x]) {
-              
-              // Repeat for 6 faces.
-              // Faces go
-              // Bottom 
-              skipFaces[skipFace++] = 1;
-              // Front Face
-              skipFaces[skipFace++] = 1;
-              // Left
-              skipFaces[skipFace++] = 1;
-              // Back
-              skipFaces[skipFace++] = 1;
-              // Right
-              skipFaces[skipFace++] = 1;
-              // Top
-              skipFaces[skipFace++] = 0;
-              
-            }
-          }
-        }
-      }
-      
-      skipFace = 0;
-      for (z = 0; z < json.height; z++) {
-        for (x = 0; x < json.width; x++) {
-          for (y = 0; y < json.depth; y++) {
-            if (json.slices[json.depth - y - 1][z][x]) {
-              
-              // Repeat for 6 faces.
-              for (face = 0; face < 6; face++) {
-                if (!skipFaces[skipFace++]) {
-                  textureCoordinates[offset+0] = 0; // X
-                  textureCoordinates[offset+1] = 0; // Y
+      // Set all texture coordinates.
+      for (face = 0; face < positionOffset; face+=(4 * 3)) {
+        textureCoordinates[offset++] = 0; // X
+        textureCoordinates[offset++] = 0; // Y
 
-                  textureCoordinates[offset+2] = 0; // X
-                  textureCoordinates[offset+3] = one; // Y
+        textureCoordinates[offset++] = 0; // X
+        textureCoordinates[offset++] = one; // Y
 
-                  textureCoordinates[offset+4] = one; // X
-                  textureCoordinates[offset+5] = one; // Y
+        textureCoordinates[offset++] = one; // X
+        textureCoordinates[offset++] = one; // Y
 
-                  textureCoordinates[offset+6] = one; // X
-                  textureCoordinates[offset+7] = 0; // Y
-                }
-                offset += 8;
-              } 
-            }
-          }
-        }
-      }
-
+        textureCoordinates[offset++] = one; // X
+        textureCoordinates[offset++] = 0; // Y  
+      } 
+    
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordinates),
                     gl.STATIC_DRAW);
 
@@ -451,40 +562,11 @@ class VoxelModel extends Drawable {
       // into the vertex arrays for each face's vertices.
 
       const indexBuffer = gl.createBuffer();
-      let start = 0, indices = [];
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
       // This array defines each cube as 16 triangles, using the
       // indices into the vertex array to specify each triangle's
       // position.
-      offset = 0;
-      start = 0;
-      skipFace = 0;
-      for (z = 0; z < json.height; z++) {
-        for (x = 0; x < json.width; x++) {
-          for (y = 0; y < json.depth; y++) {
-            if (json.slices[json.depth - y - 1][z][x]) {
-              // Repeat for 6 faces.
-              for (face = 0; face < 6; face++) {
-                
-                if (!skipFaces[skipFace++]) {
-                  indices[offset+0] = start + 0;
-                  indices[offset+1] = start + 1;
-                  indices[offset+2] = start + 2;
-        
-                  indices[offset+3] = start + 0;
-                  indices[offset+4] = start + 2;
-                  indices[offset+5] = start + 3;
-                }
-                offset += 6;
-                start += 4;
-                
-              }
-            }
-          }
-        }
-      }
-
       // Now send the element array to GL
 
       gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
