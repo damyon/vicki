@@ -249,18 +249,23 @@ class VoxelModel extends Drawable {
     }
   }
 
-  defineSquareTexture(textureCoordinates, textureIndex) {
-    textureCoordinates[textureIndex++] = 0; // X
-    textureCoordinates[textureIndex++] = 0; // Y
+  defineSquareTexture(textureCoordinates, textureIndex, x, y, unit, width, depth) {
+    let xstart = x / width;
+    let ystart = y / depth;
+    let xend = (x + unit) / width;
+    let yend = (y + unit) / depth;
 
-    textureCoordinates[textureIndex++] = 0; // X
-    textureCoordinates[textureIndex++] = 1; // Y
+    textureCoordinates[textureIndex++] = xstart; // X
+    textureCoordinates[textureIndex++] = ystart; // Y
 
-    textureCoordinates[textureIndex++] = 1; // X
-    textureCoordinates[textureIndex++] = 1; // Y
+    textureCoordinates[textureIndex++] = xstart; // X
+    textureCoordinates[textureIndex++] = yend; // Y
 
-    textureCoordinates[textureIndex++] = 1; // X
-    textureCoordinates[textureIndex++] = 0; // Y  
+    textureCoordinates[textureIndex++] = xend; // X
+    textureCoordinates[textureIndex++] = yend; // Y
+
+    textureCoordinates[textureIndex++] = xend; // X
+    textureCoordinates[textureIndex++] = ystart; // Y  
   }
 
   defineSquareIndices(indices, indiceOffset, vertexIndex) {
@@ -273,7 +278,7 @@ class VoxelModel extends Drawable {
     indices[indiceOffset+5] = vertexIndex + 3;
   }
 
-  defineBottomFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates) {
+  defineBottomFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json) {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
@@ -298,10 +303,10 @@ class VoxelModel extends Drawable {
     this.defineSquareIndices(indices, indiceOffset, vertexIndex);
 
     // Texture coordinates are always the same.
-    this.defineSquareTexture(textureCoordinates, textureIndex);
+    this.defineSquareTexture(textureCoordinates, textureIndex, offsetX, offsetZ, unit, json.width, json.height);
   }
 
-  defineFrontFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates) {
+  defineFrontFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json) {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
@@ -326,10 +331,10 @@ class VoxelModel extends Drawable {
     this.defineSquareIndices(indices, indiceOffset, vertexIndex);
 
     // Texture coordinates are always the same.
-    this.defineSquareTexture(textureCoordinates, textureIndex);
+    this.defineSquareTexture(textureCoordinates, textureIndex, offsetX, offsetY, unit, json.width, json.depth);
   }
   
-  defineLeftFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates) {
+  defineLeftFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json) {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
@@ -354,10 +359,10 @@ class VoxelModel extends Drawable {
     this.defineSquareIndices(indices, indiceOffset, vertexIndex);
 
     // Texture coordinates are always the same.
-    this.defineSquareTexture(textureCoordinates, textureIndex);
+    this.defineSquareTexture(textureCoordinates, textureIndex, offsetY, offsetZ, unit, json.depth, json.height);
   }
 
-  defineBackFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates) {
+  defineBackFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json) {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
@@ -375,73 +380,73 @@ class VoxelModel extends Drawable {
     positions[positionOffset++] = offsetZ + unit;
 
     positions[positionOffset++] = offsetX;
-    positions[positionOffset++] = offsetY;
-    positions[positionOffset++] = offsetZ + unit;
-  
-    // Define 2 triangles out of previous 4 vertices.
-    
-    this.defineSquareIndices(indices, indiceOffset, vertexIndex);
-
-    // Texture coordinates are always the same.
-    this.defineSquareTexture(textureCoordinates, textureIndex);
-  }
-
-  defineRightFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates) {
-    // Vertex Positions
-    let vertexIndex = positionOffset / 3;
-    let textureIndex = vertexIndex * 2;
-    
-    positions[positionOffset++] = offsetX + unit;
-    positions[positionOffset++] = offsetY;
-    positions[positionOffset++] = offsetZ;
-
-    positions[positionOffset++] = offsetX + unit;
-    positions[positionOffset++] = offsetY + unit;
-    positions[positionOffset++] = offsetZ;
-
-    positions[positionOffset++] = offsetX + unit;
-    positions[positionOffset++] = offsetY + unit;
-    positions[positionOffset++] = offsetZ + unit;
-
-    positions[positionOffset++] = offsetX + unit;
     positions[positionOffset++] = offsetY;
     positions[positionOffset++] = offsetZ + unit;
   
     // Define 2 triangles out of previous 4 vertices.
     
-    this.defineSquareIndices(indices, indiceOffset, vertexIndex);
+    this.defineSquareIndices(indices, indiceOffset, vertexIndex, offsetX, offsetZ, unit, json.width, json.height);
 
     // Texture coordinates are always the same.
     this.defineSquareTexture(textureCoordinates, textureIndex);
   }
 
-  defineTopFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates) {
+  defineRightFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json) {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
     
-    positions[positionOffset++] = offsetX;
-    positions[positionOffset++] = offsetY + unit;
+    positions[positionOffset++] = offsetX + unit;
+    positions[positionOffset++] = offsetY;
     positions[positionOffset++] = offsetZ;
 
-    positions[positionOffset++] = offsetX;
+    positions[positionOffset++] = offsetX + unit;
     positions[positionOffset++] = offsetY + unit;
-    positions[positionOffset++] = offsetZ + unit;
+    positions[positionOffset++] = offsetZ;
 
     positions[positionOffset++] = offsetX + unit;
     positions[positionOffset++] = offsetY + unit;
     positions[positionOffset++] = offsetZ + unit;
 
     positions[positionOffset++] = offsetX + unit;
-    positions[positionOffset++] = offsetY + unit;
-    positions[positionOffset++] = offsetZ;
+    positions[positionOffset++] = offsetY;
+    positions[positionOffset++] = offsetZ + unit;
   
     // Define 2 triangles out of previous 4 vertices.
     
     this.defineSquareIndices(indices, indiceOffset, vertexIndex);
 
     // Texture coordinates are always the same.
-    this.defineSquareTexture(textureCoordinates, textureIndex);
+    this.defineSquareTexture(textureCoordinates, textureIndex, offsetY, offsetZ, unit, json.depth, json.height);
+  }
+
+  defineTopFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json) {
+    // Vertex Positions
+    let vertexIndex = positionOffset / 3;
+    let textureIndex = vertexIndex * 2;
+    
+    positions[positionOffset++] = offsetX;
+    positions[positionOffset++] = offsetY + unit;
+    positions[positionOffset++] = offsetZ;
+
+    positions[positionOffset++] = offsetX;
+    positions[positionOffset++] = offsetY + unit;
+    positions[positionOffset++] = offsetZ + unit;
+
+    positions[positionOffset++] = offsetX + unit;
+    positions[positionOffset++] = offsetY + unit;
+    positions[positionOffset++] = offsetZ + unit;
+
+    positions[positionOffset++] = offsetX + unit;
+    positions[positionOffset++] = offsetY + unit;
+    positions[positionOffset++] = offsetZ;
+  
+    // Define 2 triangles out of previous 4 vertices.
+    
+    this.defineSquareIndices(indices, indiceOffset, vertexIndex);
+
+    // Texture coordinates are always the same.
+    this.defineSquareTexture(textureCoordinates, textureIndex, offsetX, offsetZ, unit, json.width, json.height);
     
   }
 
@@ -475,7 +480,7 @@ class VoxelModel extends Drawable {
             offsetZ = z * unit;
             // Bottom (CW start bottom left)
             if (!this.voxelHit(x, y-1, z, json)) {
-              this.defineBottomFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
+              this.defineBottomFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;
@@ -484,7 +489,7 @@ class VoxelModel extends Drawable {
 
             // Front Face
             if (!this.voxelHit(x, y, z-1, json)) {
-              this.defineFrontFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
+              this.defineFrontFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;
@@ -494,7 +499,7 @@ class VoxelModel extends Drawable {
 
             // Left
             if (!this.voxelHit(x-1, y, z, json)) {
-              this.defineLeftFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
+              this.defineLeftFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;
@@ -504,7 +509,7 @@ class VoxelModel extends Drawable {
 
             // Back
             if (!this.voxelHit(x, y, z+1, json)) {
-              this.defineBackFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
+              this.defineBackFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;
@@ -514,7 +519,7 @@ class VoxelModel extends Drawable {
             
             // Right
             if (!this.voxelHit(x+1, y, z, json)) {
-              this.defineRightFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
+              this.defineRightFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;
@@ -524,7 +529,7 @@ class VoxelModel extends Drawable {
 
             // Top
             if (!this.voxelHit(x, y+1, z, json)) {
-              this.defineTopFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates);
+              this.defineTopFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;

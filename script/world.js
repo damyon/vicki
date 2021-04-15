@@ -43,10 +43,14 @@ function main() {
   let cloud4 = new Cloud();
   let shark = new Shark();
   let throttleLOD = 10.0;
-  let lastLOD = 0;
   let targetFPS = 15;
   let fishCount = 5;
   let i = 0;
+  let lastLOD = [];
+
+  for (i = 0; i < 10; i++) {
+    lastLOD[i] = 0;
+  }
 
   for (i = 0; i < fishCount; i++) {
     fish.push(new Dhufish());
@@ -137,7 +141,7 @@ function main() {
   }
 
   // Draw our model and floor onto the scene
-  function drawModels(sceneCamera, sceneControls, sceneDrawables, deltaTime, absTime) {
+  function drawModels(sceneCamera, sceneControls, sceneDrawables, deltaTime, absTime, sceneLastLOD) {
     sceneCamera.prepareCameraFrame(gl, sceneControls);
 
     var modelViewMatrix = mat4.create();
@@ -145,13 +149,19 @@ function main() {
     gl.uniformMatrix4fv(sceneCamera.uMVMatrix, false, modelViewMatrix);
 
     gl.uniform3fv(sceneCamera.uColor, [1.0, 1.0, 0.8]);
+    let modelIndex = 0;
+    let updateIndex = -1;
+    for (model of sceneDrawables) {
+      modelIndex = ((modelIndex + 1) % 10);
 
-    if ((absTime - lastLOD) / 10 > throttleLOD) {
-      for (model of sceneDrawables) {
-        model.evaluateLOD(gl, sceneControls.x, sceneControls.y, sceneControls.z);
-      }
+      if (((absTime + modelIndex) - sceneLastLOD[modelIndex]) / 10 > throttleLOD) {
       
-      lastLOD = absTime;
+        model.evaluateLOD(gl, sceneControls.x, sceneControls.y, sceneControls.z);
+        updateIndex = modelIndex;
+      }
+    }
+    if (updateIndex > 0) {
+      sceneLastLOD[updateIndex] = absTime;
     }
 
     for (model of sceneDrawables) {
@@ -187,7 +197,7 @@ function main() {
   
 
   // Draw our shadow map and light map every request animation frame
-  function draw(sceneCamera, sceneControls, sceneDrawables, now) {
+  function draw(sceneCamera, sceneControls, sceneDrawables, drawLastLOD, now) {
     now *= 0.01;  // convert to seconds
     const deltaTime = now - then;
     then = now;
@@ -202,15 +212,15 @@ function main() {
     rod.setPositionRotation(gl, -sceneControls.x, (Math.sin(now / 10) / 10) + 5, -sceneControls.z, sceneControls.yRotation + rod.rotateVertical);
   
     drawShadowMap(sceneCamera, sceneControls, sceneDrawables, deltaTime, absTime);
-    drawModels(sceneCamera, sceneControls, sceneDrawables, deltaTime, absTime);
+    drawModels(sceneCamera, sceneControls, sceneDrawables, deltaTime, absTime, drawLastLOD);
 
     absTime += deltaTime;
 
     // We don't want full throttle.
     let delay = 1000 / targetFPS;
     window.setTimeout(function() {
-      window.requestAnimationFrame(draw.bind(this, sceneCamera, sceneControls, sceneDrawables));
+      window.requestAnimationFrame(draw.bind(this, sceneCamera, sceneControls, sceneDrawables, lastLOD));
     }, delay);
   }
-  draw(camera, controls, drawables, 0);
+  draw(camera, controls, drawables, lastLOD, 0);
 }
