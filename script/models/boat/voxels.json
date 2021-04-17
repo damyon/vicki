@@ -3,6 +3,7 @@
   "depth": 3,
   "height": 12,
   "scale": 8,
+  "textureScale": 50,
   "decimate": 2,
   "slices": [
     [

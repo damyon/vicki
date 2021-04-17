@@ -23,6 +23,7 @@ class VoxelModel extends Drawable {
     this.lowestLOD = 1;
     this.highestLOD = 1;
     this.distanceLOD = 80;
+    this.textureScale = 10;
   }
 
   setGlobalRotation(gl, globalAngle) {
@@ -258,6 +259,12 @@ class VoxelModel extends Drawable {
     let ystart = y / depth;
     let xend = (x + unit) / width;
     let yend = (y + unit) / depth;
+    let scale = this.textureScale;
+
+    xstart *= scale;
+    ystart *= scale;
+    xend *= scale;
+    yend *= scale;
 
     textureCoordinates[textureIndex++] = xstart; // X
     textureCoordinates[textureIndex++] = ystart; // Y
@@ -335,7 +342,7 @@ class VoxelModel extends Drawable {
     this.defineSquareIndices(indices, indiceOffset, vertexIndex);
 
     // Texture coordinates are always the same.
-    this.defineSquareTexture(textureCoordinates, textureIndex, offsetX, offsetY, unit, json.width, json.depth);
+    this.defineSquareTexture(textureCoordinates, textureIndex, offsetX, offsetY, unit, json.width, json.depth * 4);
   }
   
   defineLeftFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json) {
@@ -363,7 +370,7 @@ class VoxelModel extends Drawable {
     this.defineSquareIndices(indices, indiceOffset, vertexIndex);
 
     // Texture coordinates are always the same.
-    this.defineSquareTexture(textureCoordinates, textureIndex, offsetY, offsetZ, unit, json.depth, json.height);
+    this.defineSquareTexture(textureCoordinates, textureIndex, offsetZ, offsetY, unit, json.height, json.depth * 4);
   }
 
   defineBackFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json) {
@@ -389,10 +396,10 @@ class VoxelModel extends Drawable {
   
     // Define 2 triangles out of previous 4 vertices.
     
-    this.defineSquareIndices(indices, indiceOffset, vertexIndex, offsetX, offsetZ, unit, json.width, json.height);
+    this.defineSquareIndices(indices, indiceOffset, vertexIndex);
 
     // Texture coordinates are always the same.
-    this.defineSquareTexture(textureCoordinates, textureIndex);
+    this.defineSquareTexture(textureCoordinates, textureIndex, offsetX, offsetZ, unit, json.width, json.depth * 4);
   }
 
   defineRightFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json) {
@@ -421,7 +428,7 @@ class VoxelModel extends Drawable {
     this.defineSquareIndices(indices, indiceOffset, vertexIndex);
 
     // Texture coordinates are always the same.
-    this.defineSquareTexture(textureCoordinates, textureIndex, offsetY, offsetZ, unit, json.depth, json.height);
+    this.defineSquareTexture(textureCoordinates, textureIndex, offsetZ, offsetY, unit, json.height, json.depth * 4);
   }
 
   defineTopFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json) {
@@ -461,6 +468,9 @@ class VoxelModel extends Drawable {
     let x = 0, y = 0, z = 0;
 
     this.size = json.scale;
+    if (json.textureScale) {
+      this.textureScale = json.textureScale;
+    }
     
     // The end of the sub divide is a sweetness..
     const positionBuffer = gl.createBuffer();
