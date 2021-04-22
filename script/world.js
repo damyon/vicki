@@ -194,8 +194,9 @@ function main() {
     }
   }
 
-  
+  var server = new Server();
 
+  
   // Draw our shadow map and light map every request animation frame
   function draw(sceneCamera, sceneControls, sceneDrawables, drawLastLOD, now) {
     now *= 0.01;  // convert to seconds
@@ -206,11 +207,14 @@ function main() {
    
     sceneCamera.setRock(-(Math.sin((now / 10) - 0.2) / 6));
     sceneControls.processKeys(terrain, boat.boatWidth, boat.boatLength);
+
+    // START EMIT
     boat.setPositionRotation(gl, -sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.boatY + Math.PI);
 
     rod.updateRodRotation(gl, deltaTime, sceneControls.actionCast);
     rod.setPositionRotation(gl, -sceneControls.x, (Math.sin(now / 10) / 10) + 5, -sceneControls.z, sceneControls.yRotation + rod.rotateVertical);
-  
+    // END EMIT
+
     drawShadowMap(sceneCamera, sceneControls, sceneDrawables, deltaTime, absTime);
     drawModels(sceneCamera, sceneControls, sceneDrawables, deltaTime, absTime, drawLastLOD);
 
