@@ -28,6 +28,7 @@ class Rod extends VoxelModel {
     if (diff > 0.01 || diff < -0.01) {
       this.rotateRod += diff;
       this.rotateHorizontal(gl, this.rotateRod);
+      this.setPosition(gl, this.x, this.y, this.z);
     }
   }
 }

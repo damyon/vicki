@@ -34,6 +34,11 @@ class VoxelModel extends Drawable {
     return this.textureLoaded.then(callback);
   }
 
+  // Vertices will not be updated by this method, call setPosition after.
+  setRotation(gl, rotate) {
+    this.rotate = rotate;
+  }
+
   /**
    * Move and spin.
    *  
@@ -49,14 +54,13 @@ class VoxelModel extends Drawable {
   }
 
   /**
-   * Move and spin.
+   * Vertices will not be updated by this method, call setPosition after.
    *  
    * @param {*} gl 
    * @param {*} rollOver 
    */
   rotateHorizontal(gl, rollOver) {
     this.rollOver = rollOver;
-    this.setPosition(gl, this.x, this.y, this.z);
   }
 
   /**
@@ -710,7 +714,11 @@ class VoxelModel extends Drawable {
       this.currentLOD = expected;
 
       // Recalculate all the bits!
-      this.json = JSON.parse(JSON.stringify(this.jsonLOD[this.currentLOD]));
+      try {
+        this.json = JSON.parse(JSON.stringify(this.jsonLOD[this.currentLOD]));
+      } catch (e) {
+        // oops!
+      }
       this.generate(gl, this.json);
     }
   }

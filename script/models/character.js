@@ -123,9 +123,9 @@ class Character extends Drawable {
 
   draw(gl, camera, shadow, deltaTime, absTime) {
     let element = null;
-    this.updatePathThrottle(absTime);
+    //this.updatePathThrottle(absTime);
 
-    this.moveForward(gl, deltaTime, absTime);
+    //this.moveForward(gl, deltaTime, absTime);
 
     if (shadow) {
       gl.uniform1i(camera.isSand, 0);
