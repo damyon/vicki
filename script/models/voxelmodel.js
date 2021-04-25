@@ -297,7 +297,7 @@ class VoxelModel extends Drawable {
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
     
-    let smoothUnit = unit / 2;
+    let smoothUnit = unit / 4;
     let smoothFront = !frontHit ? smoothUnit : 0;
     let smoothBack = !backHit ? - smoothUnit : 0;
     let smoothLeft = !leftHit ? smoothUnit : 0;
@@ -331,7 +331,7 @@ class VoxelModel extends Drawable {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
-    let smoothUnit = unit / 2;
+    let smoothUnit = unit / 4;
     let smoothBottom = !bottomHit ? smoothUnit : 0;
     let smoothTop = !topHit ? - smoothUnit : 0;
     let smoothLeft = !leftHit ? smoothUnit : 0;
@@ -364,7 +364,7 @@ class VoxelModel extends Drawable {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
-    let smoothUnit = unit / 2;
+    let smoothUnit = unit / 4;
     let smoothBottom = !bottomHit ? smoothUnit : 0;
     let smoothTop = !topHit ? - smoothUnit : 0;
     let smoothBack = !backHit ? smoothUnit : 0;
@@ -397,7 +397,7 @@ class VoxelModel extends Drawable {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
-    let smoothUnit = unit / 2;
+    let smoothUnit = unit / 4;
     let smoothBottom = !bottomHit ? smoothUnit : 0;
     let smoothTop = !topHit ? - smoothUnit : 0;
     let smoothLeft = !leftHit ? smoothUnit : 0;
@@ -431,7 +431,7 @@ class VoxelModel extends Drawable {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
-    let smoothUnit = unit / 2;
+    let smoothUnit = unit / 4;
     let smoothBottom = !bottomHit ? smoothUnit : 0;
     let smoothTop = !topHit ? - smoothUnit : 0;
     let smoothBack = !backHit ? smoothUnit : 0;
@@ -465,7 +465,7 @@ class VoxelModel extends Drawable {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
-    let smoothUnit = unit / 2;
+    let smoothUnit = unit / 4;
     let smoothFront = !frontHit ? smoothUnit : 0;
     let smoothBack = !backHit ? - smoothUnit : 0;
     let smoothLeft = !leftHit ? smoothUnit : 0;
