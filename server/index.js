@@ -61,7 +61,7 @@ function clientDrivenAnimator(model) {
 }
 
 // AT INTERVALS, RESEND ALL THE DRAWABLES POSITIONS WITH AN UPDATESTATE EVENT
-let stateUpdateInterval = 100;
+let stateUpdateInterval = 200;
 
 
 function updateCharacterPath(model) {

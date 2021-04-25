@@ -150,7 +150,10 @@ class VoxelModel extends Drawable {
     this.highestLOD = json.decimate;
     this.currentLOD = this.highestLOD;
     // First clone the current JSON so we have a reference to it.
-    this.jsonLOD[level] = JSON.parse(JSON.stringify(json));
+    try {
+      this.jsonLOD[level] = JSON.parse(JSON.stringify(json));
+    } catch (e) {
+    }
 
     for (level = 1; level < this.decimate; level++) {
       
@@ -472,7 +475,6 @@ class VoxelModel extends Drawable {
       this.textureScale = json.textureScale;
     }
     
-    // The end of the sub divide is a sweetness..
     const positionBuffer = gl.createBuffer();
     this.positions = [];
     // Select the positionBuffer as the one to apply buffer

@@ -4,8 +4,8 @@ class Camera {
   constructor() {
 
     this.shadowDepthTextureSize = 4096;
-    // We create a vertex shader from the light's point of view. You never see this in the
-    // demo. It is used behind the scenes to create a texture that we can use to test testing whether
+    // We create a vertex shader from the light's point of view. 
+    // It is used behind the scenes to create a texture that we can use to test testing whether
     // or not a point is inside of our outside of the shadow
     this.lightVertexGLSL = `
       attribute vec3 aVertexPosition;
@@ -159,8 +159,6 @@ class Camera {
 
         if (isWater == 1) {
           amountInLight = 0.5;
-
-          
         } else if (isWater == 2) {
           amountInLight = 1.9;
         }
@@ -172,8 +170,14 @@ class Camera {
         }
         amountInLight = min(amountInLight, 1.8);
 
+        if (worldPos.x < -120.0 || worldPos.x > 120.0 ||
+          worldPos.z < -120.0 || worldPos.z > 120.0) {
+          amountInLight = max(amountInLight, 0.50);
+        }
+
         gl_FragColor = vec4(ambientLight * texelColor.rgb + directionalLightColor * amountInLight * uColor, texelColor.a);
 
+        // Cartoon shader...
         //gl_FragColor.r = floor(gl_FragColor.r / 0.05) * 0.05;
         //gl_FragColor.g = floor(gl_FragColor.g / 0.05) * 0.05;
         //gl_FragColor.b = floor(gl_FragColor.b / 0.05) * 0.05;
@@ -306,7 +310,7 @@ class Camera {
   }
 
   createLightViewMatrices(gl) {
-    this.lightProjectionMatrix = mat4.ortho([], -80, 80, -80, 80, -80.0, 80);
+    this.lightProjectionMatrix = mat4.ortho([], -120, 120, -120, 120, -40.0, 40);
     this.lightModelViewMatrix = mat4.lookAt([], 
       [1, 20, 1], // Light position
       [0, 0, 0], // Light target
@@ -317,6 +321,21 @@ class Camera {
 
     gl.uniformMatrix4fv(this.shadowProjectionMatrix, false, this.lightProjectionMatrix);
     gl.uniformMatrix4fv(this.shadowModelViewMatrix, false, this.lightModelViewMatrix);
+  }
+
+  updateLightViewMatrices(gl, controls) {
+    // Move the light camera relative to the scene camera.
+    this.lightProjectionMatrix = mat4.ortho([], -180, 180, -180, 180, -80.0, 80);
+    this.lightModelViewMatrix = mat4.lookAt([], 
+      [1, 20, 1], // Light position
+      [0, 0, 0], // Light target
+      [0, 1, 0]); // Up
+
+    this.shadowProjectionMatrix = gl.getUniformLocation(this.lightShaderProgram, 'uPMatrix');
+    this.shadowModelViewMatrix = gl.getUniformLocation(this.lightShaderProgram, 'uMVMatrix');
+
+    gl.uniformMatrix4fv(this.shadowProjectionMatrix, false, this.lightProjectionMatrix);
+    gl.uniformMatrix4fv(this.shadowModelViewMatrix, false, this.lightModelViewMatrix);  
   }
 
   bindCameraUniforms(gl) {
@@ -347,8 +366,9 @@ class Camera {
     gl.uniformMatrix4fv(this.uPMatrix, false, mat4.perspective([], aspect, 1, 0.01, 3000));
   }
 
-  prepareShadowFrame(gl) {
+  prepareShadowFrame(gl, controls) {
     this.useLightShader(gl);
+    //this.updateLightViewMatrices(gl, controls);
 
     // Draw to our off screen drawing buffer
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.shadowFramebuffer);
