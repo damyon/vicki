@@ -292,26 +292,33 @@ class VoxelModel extends Drawable {
     indices[indiceOffset+5] = vertexIndex + 3;
   }
 
-  defineBottomFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json) {
+  defineBottomFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, frontHit, leftHit, rightHit, backHit) {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
     
-    positions[positionOffset++] = offsetX;
-    positions[positionOffset++] = offsetY;
-    positions[positionOffset++] = offsetZ + unit;
+    let smoothUnit = unit / 2;
+    let smoothFront = !frontHit ? smoothUnit : 0;
+    let smoothBack = !backHit ? - smoothUnit : 0;
+    let smoothLeft = !leftHit ? smoothUnit : 0;
+    let smoothRight = !rightHit ? - smoothUnit : 0;
 
-    positions[positionOffset++] = offsetX;
-    positions[positionOffset++] = offsetY;
-    positions[positionOffset++] = offsetZ;
+    positions[positionOffset++] = offsetX + smoothLeft;
+    positions[positionOffset++] = offsetY + (smoothLeft || smoothBack ? smoothUnit : 0);
+    positions[positionOffset++] = offsetZ + unit + smoothBack;
 
-    positions[positionOffset++] = offsetX + unit;
-    positions[positionOffset++] = offsetY;
-    positions[positionOffset++] = offsetZ;
+    positions[positionOffset++] = offsetX + smoothLeft;
+    positions[positionOffset++] = offsetY + (smoothLeft || smoothFront ? smoothUnit : 0);
+    positions[positionOffset++] = offsetZ + smoothFront;
 
-    positions[positionOffset++] = offsetX + unit;
-    positions[positionOffset++] = offsetY;
-    positions[positionOffset++] = offsetZ + unit;
+    positions[positionOffset++] = offsetX + unit + smoothRight;
+    positions[positionOffset++] = offsetY + (smoothRight || smoothFront ? smoothUnit : 0);
+    positions[positionOffset++] = offsetZ + smoothFront;
+
+    positions[positionOffset++] = offsetX + unit + smoothRight;
+    positions[positionOffset++] = offsetY + (smoothRight || smoothBack ? smoothUnit : 0);
+    positions[positionOffset++] = offsetZ + unit + smoothBack;
+
     // Define 2 triangles out of previous 4 vertices.
     
     this.defineSquareIndices(indices, indiceOffset, vertexIndex);
@@ -320,26 +327,31 @@ class VoxelModel extends Drawable {
     this.defineSquareTexture(textureCoordinates, textureIndex, offsetX, offsetZ, unit, json.width, json.height);
   }
 
-  defineFrontFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json) {
+  defineFrontFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, leftHit, topHit, rightHit, bottomHit) {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
+    let smoothUnit = unit / 2;
+    let smoothBottom = !bottomHit ? smoothUnit : 0;
+    let smoothTop = !topHit ? - smoothUnit : 0;
+    let smoothLeft = !leftHit ? smoothUnit : 0;
+    let smoothRight = !rightHit ? - smoothUnit : 0;
     
-    positions[positionOffset++] = offsetX;
-    positions[positionOffset++] = offsetY;
-    positions[positionOffset++] = offsetZ;
+    positions[positionOffset++] = offsetX + smoothLeft;
+    positions[positionOffset++] = offsetY + smoothBottom;
+    positions[positionOffset++] = offsetZ + (smoothLeft || smoothBottom ? smoothUnit : 0);
 
-    positions[positionOffset++] = offsetX;
-    positions[positionOffset++] = offsetY + unit;
-    positions[positionOffset++] = offsetZ;
+    positions[positionOffset++] = offsetX + smoothLeft;
+    positions[positionOffset++] = offsetY + unit + smoothTop;
+    positions[positionOffset++] = offsetZ + (smoothLeft || smoothTop ? smoothUnit : 0);
 
-    positions[positionOffset++] = offsetX + unit;
-    positions[positionOffset++] = offsetY + unit;
-    positions[positionOffset++] = offsetZ;
+    positions[positionOffset++] = offsetX + unit + smoothRight;
+    positions[positionOffset++] = offsetY + unit + smoothTop;
+    positions[positionOffset++] = offsetZ + (smoothRight || smoothTop ? smoothUnit : 0);
 
-    positions[positionOffset++] = offsetX + unit;
-    positions[positionOffset++] = offsetY;
-    positions[positionOffset++] = offsetZ;
+    positions[positionOffset++] = offsetX + unit + smoothRight;
+    positions[positionOffset++] = offsetY + smoothBottom;
+    positions[positionOffset++] = offsetZ + (smoothRight || smoothBottom ? smoothUnit : 0);
     // Define 2 triangles out of previous 4 vertices.
     
     this.defineSquareIndices(indices, indiceOffset, vertexIndex);
@@ -348,26 +360,31 @@ class VoxelModel extends Drawable {
     this.defineSquareTexture(textureCoordinates, textureIndex, offsetX, offsetY, unit, json.width, json.depth * 4);
   }
   
-  defineLeftFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json) {
+  defineLeftFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, topHit, frontHit, backHit, bottomHit) {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
+    let smoothUnit = unit / 2;
+    let smoothBottom = !bottomHit ? smoothUnit : 0;
+    let smoothTop = !topHit ? - smoothUnit : 0;
+    let smoothBack = !backHit ? smoothUnit : 0;
+    let smoothFront = !frontHit ? - smoothUnit : 0;
     
-    positions[positionOffset++] = offsetX;
-    positions[positionOffset++] = offsetY;
-    positions[positionOffset++] = offsetZ + unit;
+    positions[positionOffset++] = offsetX + (smoothBack || smoothBottom ? smoothUnit : 0);
+    positions[positionOffset++] = offsetY + smoothBottom;
+    positions[positionOffset++] = offsetZ + unit + smoothBack;
 
-    positions[positionOffset++] = offsetX;
-    positions[positionOffset++] = offsetY + unit;
-    positions[positionOffset++] = offsetZ + unit;
+    positions[positionOffset++] = offsetX + (smoothBack || smoothTop ? smoothUnit : 0);
+    positions[positionOffset++] = offsetY + unit + smoothTop;
+    positions[positionOffset++] = offsetZ + unit + smoothBack;
 
-    positions[positionOffset++] = offsetX;
-    positions[positionOffset++] = offsetY + unit;
-    positions[positionOffset++] = offsetZ;
+    positions[positionOffset++] = offsetX + (smoothFront || smoothTop ? smoothUnit : 0);
+    positions[positionOffset++] = offsetY + unit + smoothTop;
+    positions[positionOffset++] = offsetZ + smoothFront;
 
-    positions[positionOffset++] = offsetX;
-    positions[positionOffset++] = offsetY;
-    positions[positionOffset++] = offsetZ;
+    positions[positionOffset++] = offsetX + (smoothFront || smoothBottom ? smoothUnit : 0);
+    positions[positionOffset++] = offsetY + smoothBottom;
+    positions[positionOffset++] = offsetZ + smoothFront;
     // Define 2 triangles out of previous 4 vertices.
     
     this.defineSquareIndices(indices, indiceOffset, vertexIndex);
@@ -376,26 +393,31 @@ class VoxelModel extends Drawable {
     this.defineSquareTexture(textureCoordinates, textureIndex, offsetZ, offsetY, unit, json.height, json.depth * 4);
   }
 
-  defineBackFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json) {
+  defineBackFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, leftHit, topHit, rightHit, bottomHit) {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
-    
-    positions[positionOffset++] = offsetX + unit;
-    positions[positionOffset++] = offsetY;
-    positions[positionOffset++] = offsetZ + unit;
+    let smoothUnit = unit / 2;
+    let smoothBottom = !bottomHit ? smoothUnit : 0;
+    let smoothTop = !topHit ? - smoothUnit : 0;
+    let smoothLeft = !leftHit ? smoothUnit : 0;
+    let smoothRight = !rightHit ? - smoothUnit : 0;
 
-    positions[positionOffset++] = offsetX + unit;
-    positions[positionOffset++] = offsetY + unit;
-    positions[positionOffset++] = offsetZ + unit;
+    positions[positionOffset++] = offsetX + unit + smoothRight;
+    positions[positionOffset++] = offsetY + smoothBottom;
+    positions[positionOffset++] = offsetZ + unit - (smoothRight || smoothBottom ? smoothUnit : 0);
 
-    positions[positionOffset++] = offsetX;
-    positions[positionOffset++] = offsetY + unit;
-    positions[positionOffset++] = offsetZ + unit;
+    positions[positionOffset++] = offsetX + unit + smoothRight;
+    positions[positionOffset++] = offsetY + unit + smoothTop;
+    positions[positionOffset++] = offsetZ + unit - (smoothRight || smoothTop ? smoothUnit : 0);
 
-    positions[positionOffset++] = offsetX;
-    positions[positionOffset++] = offsetY;
-    positions[positionOffset++] = offsetZ + unit;
+    positions[positionOffset++] = offsetX + smoothLeft;
+    positions[positionOffset++] = offsetY + unit + smoothTop;
+    positions[positionOffset++] = offsetZ + unit - (smoothLeft || smoothTop ? smoothUnit : 0);
+
+    positions[positionOffset++] = offsetX + smoothLeft;
+    positions[positionOffset++] = offsetY + smoothBottom;
+    positions[positionOffset++] = offsetZ + unit - (smoothLeft || smoothBottom ? smoothUnit : 0);
   
     // Define 2 triangles out of previous 4 vertices.
     
@@ -405,26 +427,31 @@ class VoxelModel extends Drawable {
     this.defineSquareTexture(textureCoordinates, textureIndex, offsetX, offsetZ, unit, json.width, json.depth * 4);
   }
 
-  defineRightFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json) {
+  defineRightFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, topHit, frontHit, backHit, bottomHit) {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
+    let smoothUnit = unit / 2;
+    let smoothBottom = !bottomHit ? smoothUnit : 0;
+    let smoothTop = !topHit ? - smoothUnit : 0;
+    let smoothBack = !backHit ? smoothUnit : 0;
+    let smoothFront = !frontHit ? - smoothUnit : 0;
     
-    positions[positionOffset++] = offsetX + unit;
-    positions[positionOffset++] = offsetY;
-    positions[positionOffset++] = offsetZ;
+    positions[positionOffset++] = offsetX + unit - (smoothFront || smoothBottom ? smoothUnit : 0);
+    positions[positionOffset++] = offsetY + smoothBottom;
+    positions[positionOffset++] = offsetZ + smoothFront;
 
-    positions[positionOffset++] = offsetX + unit;
-    positions[positionOffset++] = offsetY + unit;
-    positions[positionOffset++] = offsetZ;
+    positions[positionOffset++] = offsetX + unit - (smoothFront || smoothTop ? smoothUnit : 0);
+    positions[positionOffset++] = offsetY + unit + smoothTop;
+    positions[positionOffset++] = offsetZ + smoothFront;
 
-    positions[positionOffset++] = offsetX + unit;
-    positions[positionOffset++] = offsetY + unit;
-    positions[positionOffset++] = offsetZ + unit;
+    positions[positionOffset++] = offsetX + unit - (smoothBack || smoothTop ? smoothUnit : 0);
+    positions[positionOffset++] = offsetY + unit + smoothTop;
+    positions[positionOffset++] = offsetZ + unit + smoothBack;
 
-    positions[positionOffset++] = offsetX + unit;
-    positions[positionOffset++] = offsetY;
-    positions[positionOffset++] = offsetZ + unit;
+    positions[positionOffset++] = offsetX + unit - (smoothBack || smoothBottom ? smoothUnit : 0);
+    positions[positionOffset++] = offsetY + smoothBottom;
+    positions[positionOffset++] = offsetZ + unit + smoothBack;
   
     // Define 2 triangles out of previous 4 vertices.
     
@@ -434,26 +461,32 @@ class VoxelModel extends Drawable {
     this.defineSquareTexture(textureCoordinates, textureIndex, offsetZ, offsetY, unit, json.height, json.depth * 4);
   }
 
-  defineTopFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json) {
+  defineTopFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, frontHit, leftHit, rightHit, backHit) {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
+    let smoothUnit = unit / 2;
+    let smoothFront = !frontHit ? smoothUnit : 0;
+    let smoothBack = !backHit ? - smoothUnit : 0;
+    let smoothLeft = !leftHit ? smoothUnit : 0;
+    let smoothRight = !rightHit ? - smoothUnit : 0;
+
     
-    positions[positionOffset++] = offsetX;
-    positions[positionOffset++] = offsetY + unit;
-    positions[positionOffset++] = offsetZ;
+    positions[positionOffset++] = offsetX + smoothLeft;
+    positions[positionOffset++] = offsetY + unit - (smoothFront || smoothLeft ? smoothUnit : 0);
+    positions[positionOffset++] = offsetZ + smoothFront;
 
-    positions[positionOffset++] = offsetX;
-    positions[positionOffset++] = offsetY + unit;
-    positions[positionOffset++] = offsetZ + unit;
+    positions[positionOffset++] = offsetX + smoothLeft;
+    positions[positionOffset++] = offsetY + unit - (smoothBack || smoothLeft ? smoothUnit : 0);
+    positions[positionOffset++] = offsetZ + unit + smoothBack;
 
-    positions[positionOffset++] = offsetX + unit;
-    positions[positionOffset++] = offsetY + unit;
-    positions[positionOffset++] = offsetZ + unit;
+    positions[positionOffset++] = offsetX + unit + smoothRight;
+    positions[positionOffset++] = offsetY + unit - (smoothBack || smoothRight ? smoothUnit : 0);
+    positions[positionOffset++] = offsetZ + unit + smoothBack;
 
-    positions[positionOffset++] = offsetX + unit;
-    positions[positionOffset++] = offsetY + unit;
-    positions[positionOffset++] = offsetZ;
+    positions[positionOffset++] = offsetX + unit + smoothRight;
+    positions[positionOffset++] = offsetY + unit - (smoothFront || smoothRight ? smoothUnit : 0);
+    positions[positionOffset++] = offsetZ + smoothFront;
   
     // Define 2 triangles out of previous 4 vertices.
     
@@ -496,7 +529,13 @@ class VoxelModel extends Drawable {
             offsetZ = z * unit;
             // Bottom (CW start bottom left)
             if (!this.voxelHit(x, y-1, z, json)) {
-              this.defineBottomFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json);
+              // Smoothing.
+              let frontHit = this.voxelHit(x, y, z-1, json);
+              let leftHit = this.voxelHit(x-1, y, z, json);
+              let rightHit = this.voxelHit(x+1, y, z, json);
+              let backHit = this.voxelHit(x, y, z+1, json);
+
+              this.defineBottomFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, frontHit, leftHit, rightHit, backHit);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;
@@ -505,7 +544,13 @@ class VoxelModel extends Drawable {
 
             // Front Face
             if (!this.voxelHit(x, y, z-1, json)) {
-              this.defineFrontFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json);
+              // Smoothing.
+              let topHit = this.voxelHit(x, y+1, z, json);
+              let leftHit = this.voxelHit(x-1, y, z, json);
+              let rightHit = this.voxelHit(x+1, y, z, json);
+              let bottomHit = this.voxelHit(x, y-1, z, json);
+
+              this.defineFrontFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, leftHit, topHit, rightHit, bottomHit);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;
@@ -515,7 +560,13 @@ class VoxelModel extends Drawable {
 
             // Left
             if (!this.voxelHit(x-1, y, z, json)) {
-              this.defineLeftFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json);
+              // Smoothing.
+              let topHit = this.voxelHit(x, y+1, z, json);
+              let frontHit = this.voxelHit(x, y, z-1, json);
+              let backHit = this.voxelHit(x, y, z+1, json);
+              let bottomHit = this.voxelHit(x, y-1, z, json);
+
+              this.defineLeftFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, topHit, frontHit, backHit, bottomHit);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;
@@ -525,7 +576,13 @@ class VoxelModel extends Drawable {
 
             // Back
             if (!this.voxelHit(x, y, z+1, json)) {
-              this.defineBackFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json);
+              // Smoothing.
+              let topHit = this.voxelHit(x, y+1, z, json);
+              let leftHit = this.voxelHit(x-1, y, z, json);
+              let rightHit = this.voxelHit(x+1, y, z, json);
+              let bottomHit = this.voxelHit(x, y-1, z, json);
+
+              this.defineBackFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, leftHit, topHit, rightHit, bottomHit);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;
@@ -535,7 +592,13 @@ class VoxelModel extends Drawable {
             
             // Right
             if (!this.voxelHit(x+1, y, z, json)) {
-              this.defineRightFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json);
+              // Smoothing.
+              let topHit = this.voxelHit(x, y+1, z, json);
+              let frontHit = this.voxelHit(x, y, z-1, json);
+              let backHit = this.voxelHit(x, y, z+1, json);
+              let bottomHit = this.voxelHit(x, y-1, z, json);
+              
+              this.defineRightFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, topHit, frontHit, backHit, bottomHit);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;
@@ -545,7 +608,13 @@ class VoxelModel extends Drawable {
 
             // Top
             if (!this.voxelHit(x, y+1, z, json)) {
-              this.defineTopFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json);
+              // Smoothing.
+              let frontHit = this.voxelHit(x, y, z-1, json);
+              let leftHit = this.voxelHit(x-1, y, z, json);
+              let rightHit = this.voxelHit(x+1, y, z, json);
+              let backHit = this.voxelHit(x, y, z+1, json);
+
+              this.defineTopFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, frontHit, leftHit, rightHit, backHit);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;
