@@ -8,7 +8,9 @@ const io = new Server(server);
 const { v4: uuidv4 } = require('uuid');
 
 app.use('/', express.static(__dirname +'/..'));
-let state = initState();
+let fishCount = 8;
+let sharkCount = 3;
+let state = initState(fishCount, sharkCount);
 
 io.on('connection', (socket) => {
   let clientID = uuidv4();
@@ -31,9 +33,8 @@ io.on('connection', (socket) => {
       animator: clientDrivenAnimator      
     };
     initClientDrivenAnimator(state[clientID]);
-  
     
-    callback(clientID, Object.keys(state).length);
+    callback(clientID, Object.keys(state).length - fishCount - sharkCount);
   });
 
   socket.on("BOATSTATE", (position) => {
@@ -123,8 +124,8 @@ function initCharacterAnimator(model) {
   model.globalRotation = 0;
 }
 
-function initState() {
-  let i = 0, fishCount = 5, init = {}, sharkCount = 2;
+function initState(fishCount, sharkCount) {
+  let i = 0, init = {};
 
   for (i = 0; i < fishCount; i++) {
     let stateID = uuidv4();
