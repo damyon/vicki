@@ -42,7 +42,7 @@ class Server {
         if ("roll" in value) {
           this.map[key].rotateHorizontal(gl, value.roll);
         }
-        this.map[key].setPosition(gl, value.x, value.y, value.z);
+        this.map[key].setTargetPosition(gl, value.x, value.y, value.z);
         
       }
       // Delete stuff that is in map but no longer in state.

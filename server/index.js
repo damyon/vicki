@@ -17,7 +17,7 @@ io.on('connection', (socket) => {
   console.log('a user connected: ' + clientID);
   
   socket.on('disconnect', () => {
-    console.log('user disconnected' + clientID);
+    console.log('user disconnected: ' + clientID);
     delete state[clientID];
   });
 
@@ -61,7 +61,7 @@ function clientDrivenAnimator(model) {
 }
 
 // AT INTERVALS, RESEND ALL THE DRAWABLES POSITIONS WITH AN UPDATESTATE EVENT
-let stateUpdateInterval = 200;
+let stateUpdateInterval = 100;
 
 
 function updateCharacterPath(model) {

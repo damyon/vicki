@@ -17,6 +17,56 @@ class Character extends Drawable {
     this.z = 0;
   }
 
+  setTargetPosition(gl, x, y, z) {
+    let delay = 2;
+    let diffX = (x - this.x) / delay;
+    let diffY = (y - this.y) / delay;
+    let diffZ = (z - this.z) / delay;
+
+    let cutoff = 0.1;
+    if (this.lastDiffX == undefined) {
+      this.lastDiffX = 0;
+    }
+    if (this.lastDiffY == undefined) {
+      this.lastDiffY = 0;
+    }
+    if (this.lastDiffZ == undefined) {
+      this.lastDiffZ = 0;
+    }
+    
+    if (this.lastDiffX > - cutoff && this.lastDiffX < cutoff) {
+      this.lastDiffX = 0;
+    }
+    if (this.lastDiffY > - cutoff && this.lastDiffY < cutoff) {
+      this.lastDiffY = 0;
+    }
+    if (this.lastDiffZ > - cutoff && this.lastDiffZ < cutoff) {
+      this.lastDiffZ = 0;
+    }
+
+    if (diffX != 0 && this.lastDiffX != 0) {
+      if (Math.sign(diffX) != Math.sign(this.lastDiffX)) {
+        return;
+      }
+    }
+    if (diffY != 0 && this.lastDiffY != 0) {
+      if (Math.sign(diffY) != Math.sign(this.lastDiffY)) {
+        return;
+      }
+    }
+    if (diffZ != 0 && this.lastDiffZ != 0) {
+      if (Math.sign(diffZ) != Math.sign(this.lastDiffZ)) {
+        return;
+      }
+    }
+ 
+    this.lastDiffX = diffX;
+    this.lastDiffY = diffY;
+    this.lastDiffZ = diffZ;
+
+    this.setPosition(gl, this.x + diffX, this.y + diffY, this.z + diffZ);
+  }
+
   updatePathThrottle(elapsed) {
     if ((elapsed - this.lastPath) / 10 > this.pathThrottle) {
       this.updatePath();

@@ -18,6 +18,12 @@ class Drawable {
     return;
   }
 
+  setPosition(gl, x, y, z) {
+  }
+
+  setTargetPosition(gl, x, y, z) {
+  }
+
   initBuffers(gl) {
   }
 
