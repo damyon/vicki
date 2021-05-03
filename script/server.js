@@ -10,7 +10,8 @@ class Server {
     this.classMap = {
       'Dhufish': Dhufish,
       'Shark': Shark,
-      'Boat': Boat
+      'Boat': Boat,
+      'Rod': Rod
     };
 
     this.socket.emit("CONNECT", (clientID, load) => {
@@ -67,5 +68,9 @@ class Server {
 
   updateBoatPositionRotation(x, y, z, rotate) {
     this.socket.emit("BOATSTATE", { x: x, y: y, z: z, rotate: rotate});
+  }
+
+  updateRodPositionRotation(x, y, z, rotate) {
+    this.socket.emit("RODSTATE", { x: x, y: y, z: z, rotate: rotate});
   }
 }

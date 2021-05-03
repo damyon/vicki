@@ -4,6 +4,7 @@
   "height": 5,
   "scale": 0.2,
   "decimate": 1,
+  "smooth": 0,
   "textureScale": 50,
   "slices": [
     [

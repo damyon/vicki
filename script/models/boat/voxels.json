@@ -5,7 +5,7 @@
   "scale": 8,
   "textureScale": 50,
   "decimate": 2,
-  "smooth": 0,
+  "smooth": 1,
   "slices": [
     [
       [0, 0, 1, 1, 1, 1, 0, 0],

@@ -19,6 +19,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('user disconnected: ' + clientID);
     delete state[clientID];
+    delete state[clientID + '-rod'];
   });
 
   // PSEUDO LOGIN
@@ -32,7 +33,17 @@ io.on('connection', (socket) => {
       rotation: Math.PI,
       animator: clientDrivenAnimator      
     };
+    state[clientID + '-rod'] = {
+      type: 'Rod',
+      x: 10 * state.length,
+      y: 0,
+      z: 102,
+      rotation: Math.PI,
+      roll: Math.PI/3,
+      animator: clientDrivenAnimator      
+    };
     initClientDrivenAnimator(state[clientID]);
+    initClientDrivenAnimator(state[clientID + '-rod']);
     
     callback(clientID, Object.keys(state).length - fishCount - sharkCount);
   });
@@ -43,6 +54,15 @@ io.on('connection', (socket) => {
       state[clientID].y = position.y;
       state[clientID].z = position.z;
       state[clientID].rotate = position.rotate;
+    }
+  });
+
+  socket.on("RODSTATE", (position) => {
+    if (state[clientID + '-rod']) {
+      state[clientID + '-rod'].x = position.x;
+      state[clientID + '-rod'].y = position.y;
+      state[clientID + '-rod'].z = position.z;
+      state[clientID + '-rod'].rotate = position.rotate;
     }
   });
   // RESPOND TO AN INPUT EVENT BY UPDATING ONE BOAT + ROD

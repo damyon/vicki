@@ -343,460 +343,270 @@ class VoxelModel extends Drawable {
     indices[indiceOffset+5] = vertexIndex + 3;
   }
 
-  defineBottomFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, frontHit, leftHit, rightHit, backHit, frontOuterHit, leftOuterHit, rightOuterHit, backOuterHit, smooth) {
+  generatePositionKey(positions, positionOffset) {
+    return positions[positionOffset] + ':' + positions[positionOffset+1] + ':' + positions[positionOffset+2];
+  }
+
+  defineWeb(positions, webOffset, web) {
+    let key = '', i = 0, a, b;
+    
+    // We are recording that all 3 corners are connected to each other.
+    for (i = 0; i < 4; i++) {
+      key = this.generatePositionKey(positions, webOffset + (i*3));
+
+      if (!(key in web)) {
+        web[key] = [];
+      }
+      a = i > 0 ? i-1 : 3;
+      b = (i+1) % 4;
+      web[key].push(positions.slice(webOffset + (a*3), webOffset + 3 + (a*3))); // 0
+      web[key].push(positions.slice(webOffset + (i*3), webOffset + 3 + (i*3))); // 1
+      web[key].push(positions.slice(webOffset + (b*3), webOffset + 3 + (b*3))); // 2
+    }
+  }
+
+  defineBottomFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, web) {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
+    let webOffset = positionOffset;
     
-    let smoothUnit = unit / 4;
-    if (!smooth) {
-      smoothUnit = 0;
-    }
-    let smoothFront = !frontHit ? smoothUnit : 0;
-    let smoothBack = !backHit ? - smoothUnit : 0;
-    let smoothLeft = !leftHit ? smoothUnit : 0;
-    let smoothRight = !rightHit ? - smoothUnit : 0;
-    let leftConcaveException = leftOuterHit;
-    let frontConcaveException = frontOuterHit;
-    let backConcaveException = backOuterHit;
-    let rightConcaveException = rightOuterHit;
-    let oneLeft, oneBack, oneRight, oneFront, inset = 0;
+    let oneLeft, oneBack, oneRight, oneFront, oneBottom;
 
     // Next concave headache.
-    inset = smoothLeft || smoothBack;
-    oneLeft = offsetX + smoothLeft;
-    if (backConcaveException) {
-      oneLeft = offsetX;
-      inset = 0;
-    }
-
-    oneBack = offsetZ + unit + smoothBack;
-    if (leftConcaveException) {
-      oneBack = offsetZ + unit;
-      inset = 0;
-    }
+    oneLeft = offsetX;
+    oneBack = offsetZ + unit;
+    oneBottom = offsetY;
     positions[positionOffset++] = oneLeft; // Left
-    positions[positionOffset++] = offsetY + (inset ? smoothUnit : 0);
+    positions[positionOffset++] = oneBottom;
     positions[positionOffset++] = oneBack; // Back
 
     // Next concave headache.
-    inset = smoothLeft || smoothFront;
-    oneLeft = offsetX + smoothLeft;
-    if (frontConcaveException) {
-      oneLeft = offsetX;
-      inset = 0;
-    }
-
-    oneFront = offsetZ + smoothFront;
-    if (leftConcaveException) {
-      oneFront = offsetZ;
-      inset = 0;
-    }
+    oneLeft = offsetX;
+    oneFront = offsetZ;
+    oneBottom = offsetY;
     positions[positionOffset++] = oneLeft; // Left
-    positions[positionOffset++] = offsetY + (inset ? smoothUnit : 0);
+    positions[positionOffset++] = oneBottom;
     positions[positionOffset++] = oneFront; // Front
 
     // Next concave headache.
-    inset = smoothRight || smoothFront;
-    oneRight = offsetX + unit + smoothRight;
-    if (frontConcaveException) {
-      oneRight = offsetX + unit;
-      inset = 0;
-    }
-
-    oneFront = offsetZ + smoothFront;
-    if (rightConcaveException) {
-      oneFront = offsetZ;
-      inset = 0;
-    }
+    oneRight = offsetX + unit;
+    oneFront = offsetZ;
+    oneBottom = offsetY;
+   
     positions[positionOffset++] = oneRight; // Right
-    positions[positionOffset++] = offsetY + (inset ? smoothUnit : 0);
+    positions[positionOffset++] = oneBottom;
     positions[positionOffset++] = oneFront; // Front
 
     // Next concave headache.
-    inset = smoothRight || smoothBack;
-    oneRight = offsetX + unit + smoothRight;
-    if (backConcaveException) {
-      oneRight = offsetX + unit;
-      inset = 0;
-    }
-
-    oneBack = offsetZ + unit + smoothBack;
-    if (rightConcaveException) {
-      oneBack = offsetZ + unit;
-      inset = 0;
-    }
+    oneRight = offsetX + unit;
+    oneBack = offsetZ + unit;
+    oneBottom = offsetY;
+   
     positions[positionOffset++] = oneRight; // Right
-    positions[positionOffset++] = offsetY + (inset ? smoothUnit : 0);
+    positions[positionOffset++] = oneBottom;
     positions[positionOffset++] = oneBack; // Back
 
     // Define 2 triangles out of previous 4 vertices.
     
     this.defineSquareIndices(indices, indiceOffset, vertexIndex);
+
+    this.defineWeb(positions, webOffset, web);
 
     // Texture coordinates are always the same.
     this.defineSquareTexture(textureCoordinates, textureIndex, offsetX, offsetZ, unit, json.width, json.height);
   }
 
-  defineFrontFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, leftHit, topHit, rightHit, bottomHit, leftOuterHit, topOuterHit, rightOuterHit, bottomOuterHit, smooth) {
+  defineFrontFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, web) {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
-    let smoothUnit = unit / 4;
-    if (!smooth) {
-      smoothUnit = 0;
-    }
-    let smoothBottom = !bottomHit ? smoothUnit : 0;
-    let smoothTop = !topHit ? - smoothUnit : 0;
-    let smoothLeft = !leftHit ? smoothUnit : 0;
-    let smoothRight = !rightHit ? - smoothUnit : 0;
-    let leftConcaveException = leftOuterHit;
-    let topConcaveException = topOuterHit;
-    let bottomConcaveException = bottomOuterHit;
-    let rightConcaveException = rightOuterHit;
-    let oneLeft, oneBottom, oneRight, oneTop, inset = 0;
+    let webOffset = positionOffset;
+    let oneLeft, oneBottom, oneRight, oneTop, oneFront;
     
     // OW! concave hurts.
-    inset = smoothLeft || smoothBottom;
-    oneLeft = offsetX + smoothLeft;
-    if (bottomConcaveException) {
-      oneLeft = offsetX;
-      inset = 0;
-    }
-
-    oneBottom = offsetY + smoothBottom;
-    if (leftConcaveException) {
-      oneBottom = offsetY;
-      inset = 0;
-    }
+    oneLeft = offsetX;
+    oneBottom = offsetY;
+    oneFront = offsetZ;
+    
     positions[positionOffset++] = oneLeft;  // Left
     positions[positionOffset++] = oneBottom; // Bottom
-    positions[positionOffset++] = offsetZ + (inset ? smoothUnit : 0); // Left or Bottom
+    positions[positionOffset++] = oneFront;
 
     // Next concave headache.
-    inset = smoothLeft || smoothTop;
-    oneLeft = offsetX + smoothLeft;
-    if (topConcaveException) {
-      oneLeft = offsetX;
-      inset = 0;
-    }
-
-    oneTop = offsetY + unit + smoothTop;
-    if (leftConcaveException) {
-      oneTop = offsetY + unit;
-      inset = 0;
-    }
+    oneLeft = offsetX;
+    oneTop = offsetY + unit;
+    oneFront = offsetZ;
+    
     positions[positionOffset++] = oneLeft; // Left
     positions[positionOffset++] = oneTop; // Top
-    positions[positionOffset++] = offsetZ + (inset ? smoothUnit : 0);
+    positions[positionOffset++] = oneFront;
 
     // Next concave headache.
-    inset = smoothRight || smoothTop;
-    oneRight = offsetX + unit + smoothRight;
-    if (topConcaveException) {
-      oneRight = offsetX + unit;
-      inset = 0;
-    }
-
-    oneTop = offsetY + unit + smoothTop;
-    if (rightConcaveException) {
-      oneTop = offsetY + unit;
-      inset = 0;
-    }
+    oneRight = offsetX + unit;
+    oneTop = offsetY + unit;
+    oneFront = offsetZ;
+    
     positions[positionOffset++] = oneRight; // Right
     positions[positionOffset++] = oneTop; // Top
-    positions[positionOffset++] = offsetZ + (inset ? smoothUnit : 0);
+    positions[positionOffset++] = oneFront;
 
     // Next concave headache.
-    inset = smoothRight || smoothBottom;
-    oneRight = offsetX + unit + smoothRight;
-    if (bottomConcaveException) {
-      oneRight = offsetX + unit;
-      inset = 0;
-    }
-
-    oneBottom = offsetY + smoothBottom;
-    if (rightConcaveException) {
-      oneBottom = offsetY;
-      inset = 0;
-    }
+    oneRight = offsetX + unit;
+    oneBottom = offsetY;
+    oneFront = offsetZ;
+    
     positions[positionOffset++] = oneRight; // Right
     positions[positionOffset++] = oneBottom; // Bottom
-    positions[positionOffset++] = offsetZ + (inset ? smoothUnit : 0);
+    positions[positionOffset++] = oneFront;
     // Define 2 triangles out of previous 4 vertices.
     
     this.defineSquareIndices(indices, indiceOffset, vertexIndex);
 
+    this.defineWeb(positions, webOffset, web);
     // Texture coordinates are always the same.
     this.defineSquareTexture(textureCoordinates, textureIndex, offsetX, offsetY, unit, json.width, json.depth * 4);
   }
   
-  defineLeftFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, topHit, frontHit, backHit, bottomHit, topOuterHit, frontOuterHit, backOuterHit, bottomOuterHit, smooth) {
+  defineLeftFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, web) {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
-    let smoothUnit = unit / 4;
-    if (!smooth) {
-      smoothUnit = 0;
-    }
-    let smoothBottom = !bottomHit ? smoothUnit : 0;
-    let smoothTop = !topHit ? - smoothUnit : 0;
-    let smoothBack = !backHit ? smoothUnit : 0;
-    let smoothFront = !frontHit ? - smoothUnit : 0;
-    let frontConcaveException = frontOuterHit;
-    let topConcaveException = topOuterHit;
-    let bottomConcaveException = bottomOuterHit;
-    let backConcaveException = backOuterHit;
-    let oneBottom, oneTop, oneBack, oneFront, inset = 0;
+    let webOffset = positionOffset;
+    let oneBottom, oneTop, oneBack, oneFront, oneLeft;
     
     // Next concave headache.
-    inset = smoothBottom || smoothBack;
-    oneBottom = offsetY + smoothBottom;
-    if (backConcaveException) {
-      oneBottom = offsetY;
-      inset = 0;
-    }
-
-    oneBack = offsetZ + unit + smoothBack;
-    if (bottomConcaveException) {
-      oneBack = offsetZ + unit;
-      inset = 0;
-    }
-    positions[positionOffset++] = offsetX + (inset ? smoothUnit : 0);
+    oneBottom = offsetY;
+    oneBack = offsetZ + unit;
+    oneLeft = offsetX;
+    
+    positions[positionOffset++] = oneLeft;
     positions[positionOffset++] = oneBottom; // Bottom
     positions[positionOffset++] = oneBack; // Back
 
     // Next concave headache.
-    inset = smoothTop || smoothBack;
-    oneTop = offsetY + unit + smoothTop;
-    if (backConcaveException) {
-      oneTop = offsetY + unit;
-      inset = 0;
-    }
-
-    oneBack = offsetZ + unit + smoothBack;
-    if (topConcaveException) {
-      oneBack = offsetZ + unit;
-      inset = 0;
-    }
-    positions[positionOffset++] = offsetX + (inset ? smoothUnit : 0);
+    oneTop = offsetY + unit;
+    oneBack = offsetZ + unit;
+    oneLeft = offsetX;
+    
+    positions[positionOffset++] = oneLeft;
     positions[positionOffset++] = oneTop; // Top
     positions[positionOffset++] = oneBack; // Back
+    
     // Next concave headache.
-    inset = smoothTop || smoothFront;
-    oneTop = offsetY + unit + smoothTop;
-    if (frontConcaveException) {
-      oneTop = offsetY + unit;
-      inset = 0;
-    }
-
-    oneFront = offsetZ + smoothFront;
-    if (topConcaveException) {
-      oneFront = offsetZ;
-      inset = 0;
-    }
-    positions[positionOffset++] = offsetX + (inset ? smoothUnit : 0);
+    oneTop = offsetY + unit;
+    oneFront = offsetZ;
+    oneLeft = offsetX;
+    
+    positions[positionOffset++] = oneLeft;
     positions[positionOffset++] = oneTop; // Top
     positions[positionOffset++] = oneFront; // Front
-    // Next concave headache.
-    inset = smoothBottom || smoothFront;
-    oneBottom = offsetY + smoothBottom;
-    if (frontConcaveException) {
-      oneBottom = offsetY;
-      inset = 0;
-    }
 
-    oneFront = offsetZ + smoothFront;
-    if (bottomConcaveException) {
-      oneFront = offsetZ;
-      inset = 0;
-    }
-    positions[positionOffset++] = offsetX + (inset ? smoothUnit : 0);
+    // Next concave headache.
+    oneBottom = offsetY;
+    oneFront = offsetZ;
+    oneLeft = offsetX;
+    
+    positions[positionOffset++] = oneLeft;
     positions[positionOffset++] = oneBottom; // Bottom
     positions[positionOffset++] = oneFront; // Front
     // Define 2 triangles out of previous 4 vertices.
     
     this.defineSquareIndices(indices, indiceOffset, vertexIndex);
 
+    this.defineWeb(positions, webOffset, web);
     // Texture coordinates are always the same.
     this.defineSquareTexture(textureCoordinates, textureIndex, offsetZ, offsetY, unit, json.height, json.depth * 4);
   }
 
-  defineBackFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, leftHit, topHit, rightHit, bottomHit, leftOuterHit, topOuterHit, rightOuterHit, bottomOuterHit, smooth) {
+  defineBackFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, web) {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
-    let smoothUnit = unit / 4;
-    if (!smooth) {
-      smoothUnit = 0;
-    }
-    let smoothBottom = !bottomHit ? smoothUnit : 0;
-    let smoothTop = !topHit ? - smoothUnit : 0;
-    let smoothLeft = !leftHit ? smoothUnit : 0;
-    let smoothRight = !rightHit ? - smoothUnit : 0;
-    let leftConcaveException = leftOuterHit;
-    let topConcaveException = topOuterHit;
-    let bottomConcaveException = bottomOuterHit;
-    let rightConcaveException = rightOuterHit;
-    let oneBottom, oneTop, oneLeft, oneRight, inset = 0;
+    let webOffset = positionOffset;
+    let oneBottom, oneTop, oneLeft, oneRight, oneBack;
 
     // Next concave headache.
-    inset = smoothBottom || smoothRight;
-    oneBottom = offsetY + smoothBottom;
-    if (rightConcaveException) {
-      oneBottom = offsetY;
-      inset = 0;
-    }
+    oneBottom = offsetY;
+    oneRight = offsetX + unit;
+    oneBack = offsetZ + unit;
 
-    oneRight = offsetX + unit + smoothRight;
-    if (bottomConcaveException) {
-      oneRight = offsetX + unit;
-      inset = 0;
-    }
     positions[positionOffset++] = oneRight; // Right
     positions[positionOffset++] = oneBottom; // Bottom
-    positions[positionOffset++] = offsetZ + unit - (inset ? smoothUnit : 0);
+    positions[positionOffset++] = oneBack;
 
     // Next concave headache.
-    inset = smoothTop || smoothRight;
-    oneTop = offsetY + unit + smoothTop;
-    if (rightConcaveException) {
-      oneTop = offsetY + unit;
-      inset = 0;
-    }
+    oneTop = offsetY + unit;
+    oneRight = offsetX + unit;
+    oneBack = offsetZ + unit;
 
-    oneRight = offsetX + unit + smoothRight;
-    if (topConcaveException) {
-      oneRight = offsetX + unit;
-      inset = 0;
-    }
     positions[positionOffset++] = oneRight; // Right
     positions[positionOffset++] = oneTop; // Top
-    positions[positionOffset++] = offsetZ + unit - (inset ? smoothUnit : 0);
-    // Next concave headache.
-    inset = smoothTop || smoothLeft;
-    oneTop = offsetY + unit + smoothTop;
-    if (leftConcaveException) {
-      oneTop = offsetY + unit;
-      inset = 0;
-    }
+    positions[positionOffset++] = oneBack;
 
-    oneLeft = offsetX + smoothLeft;
-    if (topConcaveException) {
-      oneLeft = offsetX;
-      inset = 0;
-    }
+    // Next concave headache.
+    oneTop = offsetY + unit;
+    oneLeft = offsetX;
+    oneBack = offsetZ + unit;
+
     positions[positionOffset++] = oneLeft; // Left
     positions[positionOffset++] = oneTop; // Top
-    positions[positionOffset++] = offsetZ + unit - (inset ? smoothUnit : 0);
-    // Next concave headache.
-    inset = smoothBottom || smoothLeft;
-    oneBottom = offsetY + smoothBottom;
-    if (leftConcaveException) {
-      oneBottom = offsetY;
-      inset = 0;
-    }
+    positions[positionOffset++] = oneBack;
 
-    oneLeft = offsetX + smoothLeft;
-    if (bottomConcaveException) {
-      oneLeft = offsetX;
-      inset = 0;
-    }
+    // Next concave headache.
+    oneBottom = offsetY;
+    oneLeft = offsetX;
+    oneBack = offsetZ + unit;
+
     positions[positionOffset++] = oneLeft; // Left
     positions[positionOffset++] = oneBottom; // Bottom
-    positions[positionOffset++] = offsetZ + unit - (inset ? smoothUnit : 0);
-  
+    positions[positionOffset++] = oneBack;
+
     // Define 2 triangles out of previous 4 vertices.
     
     this.defineSquareIndices(indices, indiceOffset, vertexIndex);
 
+    this.defineWeb(positions, webOffset, web);
     // Texture coordinates are always the same.
     this.defineSquareTexture(textureCoordinates, textureIndex, offsetX, offsetZ, unit, json.width, json.depth * 4);
   }
 
-  defineRightFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, topHit, frontHit, backHit, bottomHit, topOuterHit, frontOuterHit, backOuterHit, bottomOuterHit, smooth) {
+  defineRightFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, web) {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
-    let smoothUnit = unit / 4;
-    if (!smooth) {
-      smoothUnit = 0;
-    }
-    let smoothBottom = !bottomHit ? smoothUnit : 0;
-    let smoothTop = !topHit ? - smoothUnit : 0;
-    let smoothBack = !backHit ? smoothUnit : 0;
-    let smoothFront = !frontHit ? - smoothUnit : 0;
-    let backConcaveException = backOuterHit;
-    let topConcaveException = topOuterHit;
-    let bottomConcaveException = bottomOuterHit;
-    let frontConcaveException = frontOuterHit;
-    let oneBottom, oneTop, oneBack, oneFront, inset = 0;
+    let webOffset = positionOffset;
+    let oneBottom, oneTop, oneBack, oneFront, oneRight;
     
     // Next concave headache.
-    inset = smoothBottom || smoothFront;
-    oneBottom = offsetY + smoothBottom;
-    if (frontConcaveException) {
-      oneBottom = offsetY;
-      inset = 0;
-    }
-
-    oneFront = offsetZ + smoothFront;
-    if (bottomConcaveException) {
-      oneFront = offsetZ;
-      inset = 0;
-    }
-    positions[positionOffset++] = offsetX + unit - (inset ? smoothUnit : 0);
+    oneBottom = offsetY;
+    oneFront = offsetZ;
+    oneRight = offsetX + unit;
+    positions[positionOffset++] = oneRight;
     positions[positionOffset++] = oneBottom; // Bottom
     positions[positionOffset++] = oneFront; // Front
 
     // Next concave headache.
-    inset = smoothTop || smoothFront;
-    oneTop = offsetY + unit + smoothTop;
-    if (frontConcaveException) {
-      oneTop = offsetY + unit;
-      inset = 0;
-    }
-
-    oneFront = offsetZ + smoothFront;
-    if (topConcaveException) {
-      oneFront = offsetZ;
-      inset = 0;
-    }
-    positions[positionOffset++] = offsetX + unit - (inset ? smoothUnit : 0);
+    oneTop = offsetY + unit;
+    oneFront = offsetZ;
+    oneRight = offsetX + unit;
+    positions[positionOffset++] = oneRight;
     positions[positionOffset++] = oneTop; // Top
     positions[positionOffset++] = oneFront; // Front
 
     // Next concave headache.
-    inset = smoothTop || smoothBack;
-    oneTop = offsetY + unit + smoothTop;
-    if (backConcaveException) {
-      oneTop = offsetY + unit;
-      inset = 0;
-    }
-
-    oneBack = offsetZ + unit + smoothBack;
-    if (topConcaveException) {
-      oneBack = offsetZ + unit;
-      inset = 0;
-    }
-    positions[positionOffset++] = offsetX + unit - (inset ? smoothUnit : 0);
+    oneTop = offsetY + unit;
+    oneBack = offsetZ + unit;
+    oneRight = offsetX + unit;
+    positions[positionOffset++] = oneRight;
     positions[positionOffset++] = oneTop; // Top
     positions[positionOffset++] = oneBack; // Back
 
     // Next concave headache.
-    inset = smoothBottom || smoothBack;
-    oneBottom = offsetY + smoothBottom;
-    if (backConcaveException) {
-      oneBottom = offsetY;
-      inset = 0;
-    }
-
-    oneBack = offsetZ + unit + smoothBack;
-    if (bottomConcaveException) {
-      oneBack = offsetZ + unit;
-      inset = 0;
-    }
-    positions[positionOffset++] = offsetX + unit - (inset ? smoothUnit : 0);
+    oneBottom = offsetY;
+    oneBack = offsetZ + unit;
+    oneRight = offsetX + unit;
+    positions[positionOffset++] = oneRight;
     positions[positionOffset++] = oneBottom; // Bottom
     positions[positionOffset++] = oneBack; // Back
   
@@ -804,100 +614,55 @@ class VoxelModel extends Drawable {
     
     this.defineSquareIndices(indices, indiceOffset, vertexIndex);
 
+    this.defineWeb(positions, webOffset, web);
     // Texture coordinates are always the same.
     this.defineSquareTexture(textureCoordinates, textureIndex, offsetZ, offsetY, unit, json.height, json.depth * 4);
   }
 
-  defineTopFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, frontHit, leftHit, rightHit, backHit, frontOuterHit, leftOuterHit, rightOuterHit, backOuterHit, smooth) {
+  defineTopFace(positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, web) {
     // Vertex Positions
     let vertexIndex = positionOffset / 3;
     let textureIndex = vertexIndex * 2;
-    let smoothUnit = unit / 4;
-    if (!smooth) {
-      smoothUnit = 0;
-    }
-    let smoothFront = !frontHit ? smoothUnit : 0;
-    let smoothBack = !backHit ? - smoothUnit : 0;
-    let smoothLeft = !leftHit ? smoothUnit : 0;
-    let smoothRight = !rightHit ? - smoothUnit : 0;
-    let backConcaveException = backOuterHit;
-    let leftConcaveException = leftOuterHit;
-    let rightConcaveException = rightOuterHit;
-    let frontConcaveException = frontOuterHit;
-    let oneLeft, oneRight, oneBack, oneFront, inset = 0;
+    let webOffset = positionOffset;
+    let oneLeft, oneRight, oneBack, oneFront, oneTop;
 
     // Next concave headache.
-    inset = smoothLeft || smoothFront;
-    oneLeft = offsetX + smoothLeft;
-    if (frontConcaveException) {
-      oneLeft = offsetX;
-      inset = 0;
-    }
-
-    oneFront = offsetZ + smoothFront;
-    if (leftConcaveException) {
-      oneFront = offsetZ;
-      inset = 0;
-    }
+    oneLeft = offsetX;
+    oneFront = offsetZ;
+    oneTop = offsetY + unit;
     positions[positionOffset++] = oneLeft; // Left
-    positions[positionOffset++] = offsetY + unit - (inset ? smoothUnit : 0);
+    positions[positionOffset++] = oneTop;
     positions[positionOffset++] = oneFront; // Front
 
     // Next concave headache.
-    inset = smoothLeft || smoothBack;
-    oneLeft = offsetX + smoothLeft;
-    if (backConcaveException) {
-      oneLeft = offsetX;
-      inset = 0;
-    }
-
-    oneBack = offsetZ + unit + smoothBack;
-    if (leftConcaveException) {
-      oneBack = offsetZ + unit;
-      inset = 0;
-    }
+    oneLeft = offsetX;
+    oneBack = offsetZ + unit;
+    oneTop = offsetY + unit;
     positions[positionOffset++] = oneLeft; // Left
-    positions[positionOffset++] = offsetY + unit - (inset ? smoothUnit : 0);
+    positions[positionOffset++] = oneTop;
     positions[positionOffset++] = oneBack; // Back
 
     // Next concave headache.
-    inset = smoothRight || smoothBack;
-    oneRight = offsetX + unit + smoothRight;
-    if (backConcaveException) {
-      oneRight = offsetX + unit;
-      inset = 0;
-    }
-
-    oneBack = offsetZ + unit + smoothBack;
-    if (rightConcaveException) {
-      oneBack = offsetZ + unit;
-      inset = 0;
-    }
+    oneRight = offsetX + unit;
+    oneBack = offsetZ + unit;
+    oneTop = offsetY + unit;
     positions[positionOffset++] = oneRight; // Right
-    positions[positionOffset++] = offsetY + unit - (inset ? smoothUnit : 0);
+    positions[positionOffset++] = oneTop;
     positions[positionOffset++] = oneBack; // Back
 
     // Next concave headache.
-    inset = smoothRight || smoothFront;
-    oneRight = offsetX + unit + smoothRight;
-    if (frontConcaveException) {
-      oneRight = offsetX + unit;
-      inset = 0;
-    }
-
-    oneFront = offsetZ + smoothFront;
-    if (rightConcaveException) {
-      oneFront = offsetZ;
-      inset = 0;
-    }
+    oneRight = offsetX + unit;
+    oneFront = offsetZ;
+    oneTop = offsetY + unit;
     positions[positionOffset++] = oneRight; // Right
-    positions[positionOffset++] = offsetY + unit - (inset ? smoothUnit : 0);
+    positions[positionOffset++] = oneTop;
     positions[positionOffset++] = oneFront; // Front
   
     // Define 2 triangles out of previous 4 vertices.
     
     this.defineSquareIndices(indices, indiceOffset, vertexIndex);
 
+    this.defineWeb(positions, webOffset, web);
     // Texture coordinates are always the same.
     this.defineSquareTexture(textureCoordinates, textureIndex, offsetX, offsetZ, unit, json.width, json.height);
     
@@ -926,7 +691,7 @@ class VoxelModel extends Drawable {
     // Now create an array of positions for the terrain.
     const unit = this.size / json.width;
     let positionOffset = 0, indiceOffset = 0, offsetX = 0, offsetY = 0, offsetZ = 0, one = 0, i = 0, j = 0, joined = 0;
-    let start = 0, indices = [], textureCoordinates = [];
+    let start = 0, indices = [], textureCoordinates = [], web = [];
     this.vertexCount = 0;
 
     for (x = 0; x < json.width; x++) {
@@ -936,20 +701,11 @@ class VoxelModel extends Drawable {
             offsetX = x * unit;
             offsetY = y * unit;
             offsetZ = z * unit;
+
             // Bottom (CW start bottom left)
             if (!this.voxelHit(x, y-1, z, json)) {
-              // Smoothing.
-              let frontHit = this.voxelHit(x, y, z-1, json);
-              let leftHit = this.voxelHit(x-1, y, z, json);
-              let rightHit = this.voxelHit(x+1, y, z, json);
-              let backHit = this.voxelHit(x, y, z+1, json);
-
-              let frontOuterHit = this.voxelHit(x, y-1, z-1, json);
-              let leftOuterHit = this.voxelHit(x-1, y-1, z, json);
-              let rightOuterHit = this.voxelHit(x+1, y-1, z, json);
-              let backOuterHit = this.voxelHit(x, y-1, z+1, json);
-
-              this.defineBottomFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, frontHit, leftHit, rightHit, backHit, frontOuterHit, leftOuterHit, rightOuterHit, backOuterHit, smooth);
+              
+              this.defineBottomFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, web);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;
@@ -958,18 +714,8 @@ class VoxelModel extends Drawable {
 
             // Front Face
             if (!this.voxelHit(x, y, z-1, json)) {
-              // Smoothing.
-              let topHit = this.voxelHit(x, y+1, z, json);
-              let leftHit = this.voxelHit(x-1, y, z, json);
-              let rightHit = this.voxelHit(x+1, y, z, json);
-              let bottomHit = this.voxelHit(x, y-1, z, json);
-
-              let topOuterHit = this.voxelHit(x, y+1, z-1, json);
-              let leftOuterHit = this.voxelHit(x-1, y, z-1, json);
-              let rightOuterHit = this.voxelHit(x+1, y, z-1, json);
-              let bottomOuterHit = this.voxelHit(x, y-1, z-1, json);
-
-              this.defineFrontFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, leftHit, topHit, rightHit, bottomHit, leftOuterHit, topOuterHit, rightOuterHit, bottomOuterHit, smooth);
+              
+              this.defineFrontFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, web);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;
@@ -979,18 +725,8 @@ class VoxelModel extends Drawable {
 
             // Left
             if (!this.voxelHit(x-1, y, z, json)) {
-              // Smoothing.
-              let topHit = this.voxelHit(x, y+1, z, json);
-              let frontHit = this.voxelHit(x, y, z-1, json);
-              let backHit = this.voxelHit(x, y, z+1, json);
-              let bottomHit = this.voxelHit(x, y-1, z, json);
-
-              let topOuterHit = this.voxelHit(x-1, y+1, z, json);
-              let frontOuterHit = this.voxelHit(x-1, y, z-1, json);
-              let backOuterHit = this.voxelHit(x-1, y, z+1, json);
-              let bottomOuterHit = this.voxelHit(x-1, y-1, z, json);
-
-              this.defineLeftFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, topHit, frontHit, backHit, bottomHit, topOuterHit, frontOuterHit, backOuterHit, bottomOuterHit, smooth);
+              
+              this.defineLeftFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, web);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;
@@ -1000,18 +736,8 @@ class VoxelModel extends Drawable {
 
             // Back
             if (!this.voxelHit(x, y, z+1, json)) {
-              // Smoothing.
-              let topHit = this.voxelHit(x, y+1, z, json);
-              let leftHit = this.voxelHit(x-1, y, z, json);
-              let rightHit = this.voxelHit(x+1, y, z, json);
-              let bottomHit = this.voxelHit(x, y-1, z, json);
-
-              let topOuterHit = this.voxelHit(x, y+1, z+1, json);
-              let leftOuterHit = this.voxelHit(x-1, y, z+1, json);
-              let rightOuterHit = this.voxelHit(x+1, y, z+1, json);
-              let bottomOuterHit = this.voxelHit(x, y-1, z+1, json);
-
-              this.defineBackFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, leftHit, topHit, rightHit, bottomHit, leftOuterHit, topOuterHit, rightOuterHit, bottomOuterHit, smooth);
+              
+              this.defineBackFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, web);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;
@@ -1021,18 +747,8 @@ class VoxelModel extends Drawable {
             
             // Right
             if (!this.voxelHit(x+1, y, z, json)) {
-              // Smoothing.
-              let topHit = this.voxelHit(x, y+1, z, json);
-              let frontHit = this.voxelHit(x, y, z-1, json);
-              let backHit = this.voxelHit(x, y, z+1, json);
-              let bottomHit = this.voxelHit(x, y-1, z, json);
-
-              let topOuterHit = this.voxelHit(x+1, y+1, z, json);
-              let frontOuterHit = this.voxelHit(x+1, y, z-1, json);
-              let backOuterHit = this.voxelHit(x+1, y, z+1, json);
-              let bottomOuterHit = this.voxelHit(x+1, y-1, z, json);
               
-              this.defineRightFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, topHit, frontHit, backHit, bottomHit, topOuterHit, frontOuterHit, backOuterHit, bottomOuterHit, smooth);
+              this.defineRightFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, web);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;
@@ -1042,30 +758,44 @@ class VoxelModel extends Drawable {
 
             // Top
             if (!this.voxelHit(x, y+1, z, json)) {
-              // Smoothing.
-              let frontHit = this.voxelHit(x, y, z-1, json);
-              let leftHit = this.voxelHit(x-1, y, z, json);
-              let rightHit = this.voxelHit(x+1, y, z, json);
-              let backHit = this.voxelHit(x, y, z+1, json);
-
-              let frontOuterHit = this.voxelHit(x, y+1, z-1, json);
-              let leftOuterHit = this.voxelHit(x-1, y+1, z, json);
-              let rightOuterHit = this.voxelHit(x+1, y+1, z, json);
-              let backOuterHit = this.voxelHit(x, y+1, z+1, json);
-
-              this.defineTopFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, frontHit, leftHit, rightHit, backHit, frontOuterHit, leftOuterHit, rightOuterHit, backOuterHit, smooth);
+              
+              this.defineTopFace(this.positions, positionOffset, offsetX, offsetY, offsetZ, indices, indiceOffset, unit, textureCoordinates, json, web);
               // This is the number of indexes.
               positionOffset += 4 * 3;
               indiceOffset += 3 * 2;
               this.vertexCount += 3 * 2;
             }
-            
-
           }
         }
       }
     }
 
+    // Smooooth.
+    /*
+    let key = '', averageX = 0, averageY = 0, averageZ = 0;
+    if (smooth) {
+      for (i = 0; i < (positionOffset); i+=3) {
+        // We take the average for x, y and z.
+        key = this.generatePositionKey(this.positions, i*3);
+
+        if ((key in web)) {
+          averageX = averageY = averageZ = 0;
+          for (j = 0; j < web[key].length; j++) {
+            averageX += web[key][j][0];
+            averageY += web[key][j][1];
+            averageZ += web[key][j][2];
+          }
+          averageX /= web[key].length;
+          averageY /= web[key].length;
+          averageZ /= web[key].length;
+
+          this.positions[i] = averageX;
+          this.positions[i+1] = averageY;
+          this.positions[i+2] = averageZ;
+          
+        }
+      }
+    }*/
     // Recenter the model around the zero point.
     let centerOffset = this.size / 2;
     for (i = 0; i < (positionOffset); i+=3) {

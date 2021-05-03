@@ -36,7 +36,7 @@ function main() {
   let leaves = terrain.createLeaves();
   //let fish = [];
   //let boat = new Boat();
-  let rod = new Rod();
+  //let rod = new Rod();
   let cloud1 = new Cloud();
   let cloud2 = new Cloud();
   let cloud3 = new Cloud();
@@ -65,7 +65,7 @@ function main() {
     cloud3,
     cloud4,
     //boat,
-    rod
+    //rod
   ];
   /*for (i = 0; i < fishCount; i++) {
     drawables.unshift(fish[i]);
@@ -90,8 +90,8 @@ function main() {
   }*/
 
 
-  rod.rotateHorizontal(gl, rod.rotateRod);
-  rod.setPosition(gl, 0, 3, 102);
+  //rod.rotateHorizontal(gl, rod.rotateRod);
+  //rod.setPosition(gl, 0, 3, 102);
   //boat.setPositionRotation(gl, 0, 3, 102, Math.PI);
   // Move the rock.
   terrain.afterHeightsLoaded(function(gl, terrain, rocks) {
@@ -213,8 +213,9 @@ function main() {
     server.updateBoatPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.boatY + Math.PI);
     //boat.setPositionRotation(gl, -sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.boatY + Math.PI);
 
-    rod.updateRodRotation(gl, deltaTime, sceneControls.actionCast);
-    rod.setPositionRotation(gl, -sceneControls.x, (Math.sin(now / 10) / 10) + 5, -sceneControls.z, sceneControls.yRotation + rod.rotateVertical);
+    //rod.updateRodRotation(gl, deltaTime, sceneControls.actionCast);
+    //rod.setPositionRotation(gl, -sceneControls.x, (Math.sin(now / 10) / 10) + 5, -sceneControls.z, sceneControls.yRotation + rod.rotateVertical);
+    server.updateRodPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 5, -sceneControls.z, sceneControls.yRotation + (Math.PI*0.8));
     // END EMIT
 
     drawShadowMap(sceneCamera, sceneControls, sceneDrawables, deltaTime, absTime);
