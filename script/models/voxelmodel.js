@@ -357,10 +357,13 @@ class VoxelModel extends Drawable {
       if (!(key in web)) {
         web[key] = [];
       }
-      a = i > 0 ? i-1 : 3;
-      b = (i+1) % 4;
+      a = i - 1;
+      if (a < 0) {
+        a = 3;
+      }
+      b = (i + 1) % 4;
+      
       web[key].push(positions.slice(webOffset + (a*3), webOffset + 3 + (a*3))); // 0
-      web[key].push(positions.slice(webOffset + (i*3), webOffset + 3 + (i*3))); // 1
       web[key].push(positions.slice(webOffset + (b*3), webOffset + 3 + (b*3))); // 2
     }
   }
@@ -372,7 +375,7 @@ class VoxelModel extends Drawable {
     let webOffset = positionOffset;
     
     let oneLeft, oneBack, oneRight, oneFront, oneBottom;
-
+    // Anti clockwise looking from inside out.
     // Next concave headache.
     oneLeft = offsetX;
     oneBack = offsetZ + unit;
@@ -424,6 +427,7 @@ class VoxelModel extends Drawable {
     let webOffset = positionOffset;
     let oneLeft, oneBottom, oneRight, oneTop, oneFront;
     
+    // Clockwise looking from outside in.
     // OW! concave hurts.
     oneLeft = offsetX;
     oneBottom = offsetY;
@@ -459,6 +463,7 @@ class VoxelModel extends Drawable {
     positions[positionOffset++] = oneRight; // Right
     positions[positionOffset++] = oneBottom; // Bottom
     positions[positionOffset++] = oneFront;
+
     // Define 2 triangles out of previous 4 vertices.
     
     this.defineSquareIndices(indices, indiceOffset, vertexIndex);
@@ -475,6 +480,7 @@ class VoxelModel extends Drawable {
     let webOffset = positionOffset;
     let oneBottom, oneTop, oneBack, oneFront, oneLeft;
     
+    // Clockwise looking from outside in.
     // Next concave headache.
     oneBottom = offsetY;
     oneBack = offsetZ + unit;
@@ -526,6 +532,7 @@ class VoxelModel extends Drawable {
     let webOffset = positionOffset;
     let oneBottom, oneTop, oneLeft, oneRight, oneBack;
 
+    // Anti clockwise looking from inside out.
     // Next concave headache.
     oneBottom = offsetY;
     oneRight = offsetX + unit;
@@ -577,7 +584,7 @@ class VoxelModel extends Drawable {
     let textureIndex = vertexIndex * 2;
     let webOffset = positionOffset;
     let oneBottom, oneTop, oneBack, oneFront, oneRight;
-    
+    // Anti clockwise looking from inside out.
     // Next concave headache.
     oneBottom = offsetY;
     oneFront = offsetZ;
@@ -626,6 +633,7 @@ class VoxelModel extends Drawable {
     let webOffset = positionOffset;
     let oneLeft, oneRight, oneBack, oneFront, oneTop;
 
+    // Clockwise looking from outside in.
     // Next concave headache.
     oneLeft = offsetX;
     oneFront = offsetZ;
@@ -771,31 +779,41 @@ class VoxelModel extends Drawable {
     }
 
     // Smooooth.
-    /*
+    
     let key = '', averageX = 0, averageY = 0, averageZ = 0;
     if (smooth) {
+      let averages = [];
+      // Deep clone it.
+      let newPositions = JSON.parse(JSON.stringify(this.positions));
       for (i = 0; i < (positionOffset); i+=3) {
         // We take the average for x, y and z.
-        key = this.generatePositionKey(this.positions, i*3);
+        key = this.generatePositionKey(this.positions, i);
 
         if ((key in web)) {
-          averageX = averageY = averageZ = 0;
-          for (j = 0; j < web[key].length; j++) {
-            averageX += web[key][j][0];
-            averageY += web[key][j][1];
-            averageZ += web[key][j][2];
+          if (key in averages) {
+            newPositions[i] = averages[key][0];
+            newPositions[i+1] = averages[key][1];
+            newPositions[i+2] = averages[key][2];
+          } else {
+            averageX = averageY = averageZ = 0;
+            for (j = 0; j < web[key].length; j++) {
+              averageX += web[key][j][0];
+              averageY += web[key][j][1];
+              averageZ += web[key][j][2];
+            }
+            averageX /= web[key].length;
+            averageY /= web[key].length;
+            averageZ /= web[key].length;
+            averages[key] = [averageX, averageY, averageZ];
+            newPositions[i] = averageX;
+            newPositions[i+1] = averageY;
+            newPositions[i+2] = averageZ;
           }
-          averageX /= web[key].length;
-          averageY /= web[key].length;
-          averageZ /= web[key].length;
-
-          this.positions[i] = averageX;
-          this.positions[i+1] = averageY;
-          this.positions[i+2] = averageZ;
-          
         }
       }
-    }*/
+      // Deep clone it back.
+      this.positions = JSON.parse(JSON.stringify(newPositions));
+    }
     // Recenter the model around the zero point.
     let centerOffset = this.size / 2;
     for (i = 0; i < (positionOffset); i+=3) {
