@@ -10,7 +10,7 @@ class Terrain extends Drawable {
     this.heightsLoaded = new Promise((resolve, reject) => {
       this.heightsResolver = resolve;
     });
-    this.rockDensity = 164;
+    this.rockDensity = 64;
     this.rockSlope = 14;
     this.rockSpacing = 18;
     this.rockMinHeight = 1;
@@ -18,11 +18,11 @@ class Terrain extends Drawable {
     this.bushPositions = [];
     this.treePositions = [];
     this.terrainPositions = [];
-    this.bushDensity = 140;
+    this.bushDensity = 80;
     this.bushMinHeight = 0.3;
     this.bushSlope = 4;
     this.bushSpacing = 8;
-    this.treeDensity = 50;
+    this.treeDensity = 30;
     this.treeMinHeight = 2;
     this.treeSlope = 2;
     this.treeSpacing = 30;

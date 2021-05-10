@@ -8,8 +8,8 @@ const io = new Server(server);
 const { v4: uuidv4 } = require('uuid');
 
 app.use('/', express.static(__dirname +'/..'));
-let fishCount = 8;
-let sharkCount = 3;
+let fishCount = 4;
+let sharkCount = 1;
 let state = initState(fishCount, sharkCount);
 
 io.on('connection', (socket) => {
@@ -20,6 +20,9 @@ io.on('connection', (socket) => {
     console.log('user disconnected: ' + clientID);
     delete state[clientID];
     delete state[clientID + '-rod'];
+    delete state[clientID + '-legs'];
+    delete state[clientID + '-shirt'];
+    delete state[clientID + '-head'];
   });
 
   // PSEUDO LOGIN
@@ -42,8 +45,36 @@ io.on('connection', (socket) => {
       roll: Math.PI/3,
       animator: clientDrivenAnimator      
     };
+    state[clientID + '-legs'] = {
+      type: 'Legs',
+      x: 10 * state.length,
+      y: 0,
+      z: 102,
+      rotation: Math.PI,
+      animator: clientDrivenAnimator      
+    };
+    state[clientID + '-shirt'] = {
+      type: 'Shirt',
+      x: 10 * state.length,
+      y: 0,
+      z: 102,
+      rotation: Math.PI,
+      animator: clientDrivenAnimator      
+    };
+    state[clientID + '-head'] = {
+      type: 'Head',
+      x: 10 * state.length,
+      y: 0,
+      z: 102,
+      rotation: Math.PI,
+      animator: clientDrivenAnimator      
+    };
+    
     initClientDrivenAnimator(state[clientID]);
     initClientDrivenAnimator(state[clientID + '-rod']);
+    initClientDrivenAnimator(state[clientID + '-legs']);
+    initClientDrivenAnimator(state[clientID + '-shirt']);
+    initClientDrivenAnimator(state[clientID + '-head']);
     
     callback(clientID, Object.keys(state).length - fishCount - sharkCount);
   });
@@ -57,6 +88,33 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on("LEGSTATE", (position) => {
+    if (state[clientID + '-legs']) {
+      state[clientID + '-legs'].x = position.x;
+      state[clientID + '-legs'].y = position.y;
+      state[clientID + '-legs'].z = position.z;
+      state[clientID + '-legs'].rotate = position.rotate;
+    }
+  });
+
+  socket.on("SHIRTSTATE", (position) => {
+    if (state[clientID + '-shirt']) {
+      state[clientID + '-shirt'].x = position.x;
+      state[clientID + '-shirt'].y = position.y;
+      state[clientID + '-shirt'].z = position.z;
+      state[clientID + '-shirt'].rotate = position.rotate;
+    }
+  });
+
+  socket.on("HEADSTATE", (position) => {
+    if (state[clientID + '-head']) {
+      state[clientID + '-head'].x = position.x;
+      state[clientID + '-head'].y = position.y;
+      state[clientID + '-head'].z = position.z;
+      state[clientID + '-head'].rotate = position.rotate;
+    }
+  });
+  
   socket.on("RODSTATE", (position) => {
     if (state[clientID + '-rod']) {
       state[clientID + '-rod'].x = position.x;
@@ -68,7 +126,6 @@ io.on('connection', (socket) => {
   // RESPOND TO AN INPUT EVENT BY UPDATING ONE BOAT + ROD
   socket.on("INPUT", (callback, ...args) => {
     console.log('server:' + event, args);
-    callback('dog');
   });
 
 });

@@ -34,9 +34,6 @@ function main() {
   let bushes = terrain.createBushes();
   let trees = terrain.createTrees();
   let leaves = terrain.createLeaves();
-  //let fish = [];
-  //let boat = new Boat();
-  //let rod = new Rod();
   let cloud1 = new Cloud();
   let cloud2 = new Cloud();
   let cloud3 = new Cloud();
@@ -44,7 +41,6 @@ function main() {
   let shark = new Shark();
   let throttleLOD = 10.0;
   let targetFPS = 15;
-  //let fishCount = 5;
   let i = 0;
   let lastLOD = [];
 
@@ -52,24 +48,14 @@ function main() {
     lastLOD[i] = 0;
   }
 
-  /*for (i = 0; i < fishCount; i++) {
-    fish.push(new Dhufish());
-  }*/
-  
   let drawables = [
     terrain,
-    //shark,
     new Sea(1000, 0, 1),
     cloud1,
     cloud2,
     cloud3,
     cloud4,
-    //boat,
-    //rod
   ];
-  /*for (i = 0; i < fishCount; i++) {
-    drawables.unshift(fish[i]);
-  }*/
   
   drawables = drawables.concat(rocks);
   drawables = drawables.concat(bushes);
@@ -84,15 +70,7 @@ function main() {
   cloud2.setPosition(gl, -100, 400, 480);
   cloud3.setPosition(gl, -480, 400, 100);
   cloud4.setPosition(gl, 480, 400, -100);
-  //shark.setPosition(gl, 36, -3, 36);
-  /*for (i = 0; i < fishCount; i++) {
-    fish[i].setPosition(gl, 100*Math.sin(10*i), -3, 100*Math.cos(10*i));
-  }*/
-
-
-  //rod.rotateHorizontal(gl, rod.rotateRod);
-  //rod.setPosition(gl, 0, 3, 102);
-  //boat.setPositionRotation(gl, 0, 3, 102, Math.PI);
+  
   // Move the rock.
   terrain.afterHeightsLoaded(function(gl, terrain, rocks) {
     terrain.setRockPositions(gl, rocks);
@@ -210,12 +188,12 @@ function main() {
 
     // START EMIT
 
-    server.updateBoatPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.boatY + Math.PI);
-    //boat.setPositionRotation(gl, -sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.boatY + Math.PI);
-
-    //rod.updateRodRotation(gl, deltaTime, sceneControls.actionCast);
-    //rod.setPositionRotation(gl, -sceneControls.x, (Math.sin(now / 10) / 10) + 5, -sceneControls.z, sceneControls.yRotation + rod.rotateVertical);
-    server.updateRodPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 5, -sceneControls.z, sceneControls.yRotation + (Math.PI*0.8));
+    server.updateBoatPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + -1, -sceneControls.z, sceneControls.boatY + Math.PI);
+    server.updateRodPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 3, -sceneControls.z, sceneControls.yRotation + (Math.PI*0.8));
+    server.updateLegPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.yRotation);
+    server.updateShirtPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.yRotation);
+    server.updateHeadPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.yRotation);
+    
     // END EMIT
 
     drawShadowMap(sceneCamera, sceneControls, sceneDrawables, deltaTime, absTime);

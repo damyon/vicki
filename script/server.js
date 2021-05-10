@@ -11,7 +11,10 @@ class Server {
       'Dhufish': Dhufish,
       'Shark': Shark,
       'Boat': Boat,
-      'Rod': Rod
+      'Rod': Rod,
+      'Legs': Legs,
+      'Shirt': Shirt,
+      'Head': Head,
     };
 
     this.socket.emit("CONNECT", (clientID, load) => {
@@ -21,7 +24,6 @@ class Server {
     });
   
     this.socket.on("UPDATESTATE", (state) => {
-      console.log('state', state);
       let key = '', value = {}, i = 0;
 
       for (key in state) {
@@ -68,6 +70,18 @@ class Server {
 
   updateBoatPositionRotation(x, y, z, rotate) {
     this.socket.emit("BOATSTATE", { x: x, y: y, z: z, rotate: rotate});
+  }
+
+  updateLegPositionRotation(x, y, z, rotate) {
+    this.socket.emit("LEGSTATE", { x: x, y: y, z: z, rotate: rotate});
+  }
+
+  updateShirtPositionRotation(x, y, z, rotate) {
+    this.socket.emit("SHIRTSTATE", { x: x, y: y, z: z, rotate: rotate});
+  }
+
+  updateHeadPositionRotation(x, y, z, rotate) {
+    this.socket.emit("HEADSTATE", { x: x, y: y, z: z, rotate: rotate});
   }
 
   updateRodPositionRotation(x, y, z, rotate) {
