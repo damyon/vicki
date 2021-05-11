@@ -189,7 +189,7 @@ function main() {
     // START EMIT
 
     server.updateBoatPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + -1, -sceneControls.z, sceneControls.boatY + Math.PI);
-    server.updateRodPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 3, -sceneControls.z, sceneControls.yRotation + (Math.PI*0.8));
+    server.updateRodPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 2.5, -sceneControls.z, sceneControls.yRotation + (Math.PI*0.8));
     server.updateLegPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.yRotation);
     server.updateShirtPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.yRotation);
     server.updateHeadPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.yRotation);

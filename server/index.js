@@ -246,8 +246,8 @@ setInterval(() => {
   io.emit('UPDATESTATE', state);
 }, stateUpdateInterval);
 
-server.listen(2000, () => {
-  console.log('listening on *:2000');
+server.listen(3000, () => {
+  console.log('listening on *:3000');
 });
 
 
