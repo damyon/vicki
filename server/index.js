@@ -18,17 +18,18 @@ io.on('connection', (socket) => {
   
   socket.on('disconnect', () => {
     console.log('user disconnected: ' + clientID);
-    delete state[clientID];
+    /*
+    delete state[clientID + '-boat'];
     delete state[clientID + '-rod'];
     delete state[clientID + '-legs'];
     delete state[clientID + '-shirt'];
-    delete state[clientID + '-head'];
+    delete state[clientID + '-head'];*/
   });
 
   // PSEUDO LOGIN
   socket.on("CONNECT", (callback) => {
     
-    state[clientID] = {
+    state[clientID + '-boat'] = {
       type: 'Boat',
       x: 10 * state.length,
       y: 0,
@@ -70,7 +71,7 @@ io.on('connection', (socket) => {
       animator: clientDrivenAnimator      
     };
     
-    initClientDrivenAnimator(state[clientID]);
+    initClientDrivenAnimator(state[clientID + '-boat']);
     initClientDrivenAnimator(state[clientID + '-rod']);
     initClientDrivenAnimator(state[clientID + '-legs']);
     initClientDrivenAnimator(state[clientID + '-shirt']);
@@ -80,11 +81,11 @@ io.on('connection', (socket) => {
   });
 
   socket.on("BOATSTATE", (position) => {
-    if (state[clientID]) {
-      state[clientID].x = position.x;
-      state[clientID].y = position.y;
-      state[clientID].z = position.z;
-      state[clientID].rotate = position.rotate;
+    if (state[clientID + '-boat']) {
+      state[clientID + '-boat'].x = position.x;
+      state[clientID + '-boat'].y = position.y;
+      state[clientID + '-boat'].z = position.z;
+      state[clientID + '-boat'].rotate = position.rotate;
     }
   });
 

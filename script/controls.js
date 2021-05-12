@@ -10,7 +10,7 @@ class Controls {
     this.xRotation = -Math.PI / 15;
     
     this.x = 0;
-    this.y = -4;
+    this.y = -4.5;
     this.z = -70;
     
     this.maxSpeed = 1;

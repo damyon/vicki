@@ -2,11 +2,12 @@
 
 // Defines the API for talking from client to server and sending state back and forth.
 class Server {
-  constructor(gl, drawables, controls) {
+  constructor(gl, drawables, controls, drawMethod) {
     this.clientID = false;
     this.socket = io();
     this.map = [];
     this.drawables = drawables;
+    this.drawMethod = drawMethod;
     this.classMap = {
       'Dhufish': Dhufish,
       'Shark': Shark,
@@ -21,6 +22,7 @@ class Server {
       console.log('registered with client id ' + clientID);
       this.clientID = clientID;
       controls.x += (load * 10);
+      this.drawMethod();
     });
   
     this.socket.on("UPDATESTATE", (state) => {

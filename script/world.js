@@ -172,7 +172,7 @@ function main() {
     }
   }
 
-  var server = new Server(gl, drawables, controls);
+  var server = new Server(gl, drawables, controls, draw.bind(this, camera, controls, drawables, lastLOD, 0));
 
   
   // Draw our shadow map and light map every request animation frame
@@ -189,10 +189,10 @@ function main() {
     // START EMIT
 
     server.updateBoatPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + -1, -sceneControls.z, sceneControls.boatY + Math.PI);
-    server.updateRodPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 2.5, -sceneControls.z, sceneControls.yRotation + (Math.PI*0.8));
+    server.updateRodPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 2.6, -sceneControls.z, sceneControls.yRotation + (Math.PI*0.8));
     server.updateLegPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.yRotation);
-    server.updateShirtPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.yRotation);
-    server.updateHeadPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.yRotation);
+    server.updateShirtPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 2.6, -sceneControls.z, sceneControls.yRotation);
+    server.updateHeadPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 3.1, -sceneControls.z, sceneControls.yRotation);
     
     // END EMIT
 
@@ -207,5 +207,5 @@ function main() {
       window.requestAnimationFrame(draw.bind(this, sceneCamera, sceneControls, sceneDrawables, lastLOD));
     }, delay);
   }
-  draw(camera, controls, drawables, lastLOD, 0);
+  
 }
