@@ -193,6 +193,7 @@ function main() {
     server.updateLegPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.yRotation);
     server.updateShirtPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 2.6, -sceneControls.z, sceneControls.yRotation);
     server.updateHeadPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 3.1, -sceneControls.z, sceneControls.yRotation);
+    server.updateEyesPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 3.1, -sceneControls.z, sceneControls.yRotation);
     
     // END EMIT
 

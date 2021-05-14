@@ -16,6 +16,7 @@ class Server {
       'Legs': Legs,
       'Shirt': Shirt,
       'Head': Head,
+      'Eyes': Eyes,
     };
 
     this.socket.emit("CONNECT", (clientID, load) => {
@@ -80,6 +81,10 @@ class Server {
 
   updateShirtPositionRotation(x, y, z, rotate) {
     this.socket.emit("SHIRTSTATE", { x: x, y: y, z: z, rotate: rotate});
+  }
+
+  updateEyesPositionRotation(x, y, z, rotate) {
+    this.socket.emit("EYESSTATE", { x: x, y: y, z: z, rotate: rotate});
   }
 
   updateHeadPositionRotation(x, y, z, rotate) {

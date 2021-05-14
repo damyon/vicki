@@ -23,7 +23,8 @@ io.on('connection', (socket) => {
     delete state[clientID + '-rod'];
     delete state[clientID + '-legs'];
     delete state[clientID + '-shirt'];
-    delete state[clientID + '-head'];*/
+    delete state[clientID + '-head'];
+    delete state[clientID + '-eyes'];*/
   });
 
   // PSEUDO LOGIN
@@ -70,12 +71,21 @@ io.on('connection', (socket) => {
       rotation: Math.PI,
       animator: clientDrivenAnimator      
     };
+    state[clientID + '-eyes'] = {
+      type: 'Eyes',
+      x: 10 * state.length,
+      y: 0,
+      z: 102,
+      rotation: Math.PI,
+      animator: clientDrivenAnimator      
+    };
     
     initClientDrivenAnimator(state[clientID + '-boat']);
     initClientDrivenAnimator(state[clientID + '-rod']);
     initClientDrivenAnimator(state[clientID + '-legs']);
     initClientDrivenAnimator(state[clientID + '-shirt']);
     initClientDrivenAnimator(state[clientID + '-head']);
+    initClientDrivenAnimator(state[clientID + '-eyes']);
     
     callback(clientID, Object.keys(state).length - fishCount - sharkCount);
   });
@@ -104,6 +114,15 @@ io.on('connection', (socket) => {
       state[clientID + '-shirt'].y = position.y;
       state[clientID + '-shirt'].z = position.z;
       state[clientID + '-shirt'].rotate = position.rotate;
+    }
+  });
+
+  socket.on("EYESSTATE", (position) => {
+    if (state[clientID + '-eyes']) {
+      state[clientID + '-eyes'].x = position.x;
+      state[clientID + '-eyes'].y = position.y;
+      state[clientID + '-eyes'].z = position.z;
+      state[clientID + '-eyes'].rotate = position.rotate;
     }
   });
 
