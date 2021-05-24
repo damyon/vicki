@@ -25,6 +25,7 @@ class Controls {
     this.actionRight = false;
     this.actionLeft = false;
     this.actionCast = false;
+    this.rodRotate = Math.PI/4;
 
     canvas.onclick = function() {
       this.requestPointerLock();

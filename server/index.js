@@ -18,13 +18,13 @@ io.on('connection', (socket) => {
   
   socket.on('disconnect', () => {
     console.log('user disconnected: ' + clientID);
-    /*
+    
     delete state[clientID + '-boat'];
     delete state[clientID + '-rod'];
     delete state[clientID + '-legs'];
     delete state[clientID + '-shirt'];
     delete state[clientID + '-head'];
-    delete state[clientID + '-eyes'];*/
+    delete state[clientID + '-eyes'];
   });
 
   // PSEUDO LOGIN
@@ -141,6 +141,7 @@ io.on('connection', (socket) => {
       state[clientID + '-rod'].y = position.y;
       state[clientID + '-rod'].z = position.z;
       state[clientID + '-rod'].rotate = position.rotate;
+      state[clientID + '-rod'].roll = position.rotateHorizontal;
     }
   });
   // RESPOND TO AN INPUT EVENT BY UPDATING ONE BOAT + ROD

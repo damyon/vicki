@@ -91,7 +91,7 @@ class Server {
     this.socket.emit("HEADSTATE", { x: x, y: y, z: z, rotate: rotate});
   }
 
-  updateRodPositionRotation(x, y, z, rotate) {
-    this.socket.emit("RODSTATE", { x: x, y: y, z: z, rotate: rotate});
+  updateRodPositionRotation(x, y, z, rotate, rotateHorizontal) {
+    this.socket.emit("RODSTATE", { x: x, y: y, z: z, rotate: rotate, rotateHorizontal: rotateHorizontal});
   }
 }
