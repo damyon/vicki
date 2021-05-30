@@ -20,6 +20,7 @@ io.on('connection', (socket) => {
     console.log('user disconnected: ' + clientID);
     
     delete state[clientID + '-boat'];
+    delete state[clientID + '-hook'];
     delete state[clientID + '-rod'];
     delete state[clientID + '-legs'];
     delete state[clientID + '-shirt'];
@@ -40,6 +41,15 @@ io.on('connection', (socket) => {
     };
     state[clientID + '-rod'] = {
       type: 'Rod',
+      x: 10 * state.length,
+      y: 0,
+      z: 102,
+      rotation: Math.PI,
+      roll: Math.PI/3,
+      animator: clientDrivenAnimator      
+    };
+    state[clientID + '-hook'] = {
+      type: 'Hook',
       x: 10 * state.length,
       y: 0,
       z: 102,
@@ -144,6 +154,17 @@ io.on('connection', (socket) => {
       state[clientID + '-rod'].roll = position.rotateHorizontal;
     }
   });
+
+  socket.on("HOOKSTATE", (position) => {
+    if (state[clientID + '-hook']) {
+      state[clientID + '-hook'].x = position.x;
+      state[clientID + '-hook'].y = position.y;
+      state[clientID + '-hook'].z = position.z;
+      state[clientID + '-hook'].rotate = position.rotate;
+      state[clientID + '-hook'].roll = position.rotateHorizontal;
+    }
+  });
+
   // RESPOND TO AN INPUT EVENT BY UPDATING ONE BOAT + ROD
   socket.on("INPUT", (callback, ...args) => {
     console.log('server:' + event, args);

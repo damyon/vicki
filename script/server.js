@@ -17,6 +17,7 @@ class Server {
       'Shirt': Shirt,
       'Head': Head,
       'Eyes': Eyes,
+      'Hook': Hook,
     };
 
     this.socket.emit("CONNECT", (clientID, load) => {
@@ -94,4 +95,9 @@ class Server {
   updateRodPositionRotation(x, y, z, rotate, rotateHorizontal) {
     this.socket.emit("RODSTATE", { x: x, y: y, z: z, rotate: rotate, rotateHorizontal: rotateHorizontal});
   }
+
+  updateHookPositionRotation(x, y, z, rotate, rotateHorizontal) {
+    this.socket.emit("HOOKSTATE", { x: x, y: y, z: z, rotate: rotate, rotateHorizontal: rotateHorizontal});
+  }
+
 }

@@ -197,6 +197,13 @@ function main() {
     let rotateDelta = (targetRotate - sceneControls.rodRotate) / 10;
     sceneControls.rodRotate += rotateDelta;
 
+    // We have an angle - and we need an X and Z offset.
+    let angle = sceneControls.yRotation + (Math.PI*0.94);
+    let distance = 15;
+    let XDelta = -Math.sin(angle) * distance;
+    let ZDelta = Math.cos(angle) * distance;
+
+    server.updateHookPositionRotation(-sceneControls.x + XDelta, 1.5 - 3*sceneControls.rodRotate, -sceneControls.z + ZDelta, sceneControls.yRotation + (Math.PI*0.94), 0);
     server.updateRodPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 2.6, -sceneControls.z, sceneControls.yRotation + (Math.PI*0.9), sceneControls.rodRotate);
     server.updateLegPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.yRotation);
     server.updateShirtPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 2.6, -sceneControls.z, sceneControls.yRotation);
