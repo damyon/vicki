@@ -18,6 +18,7 @@ class Server {
       'Head': Head,
       'Eyes': Eyes,
       'Hook': Hook,
+      'Line': Line,
     };
 
     this.socket.emit("CONNECT", (clientID, load) => {
@@ -48,6 +49,9 @@ class Server {
         }
         if ("roll" in value) {
           this.map[key].rotateHorizontal(gl, value.roll);
+        }
+        if ("length" in value) {
+          this.map[key].updateLength(gl, value.length);
         }
         this.map[key].setTargetPosition(gl, value.x, value.y, value.z);
         
@@ -98,6 +102,10 @@ class Server {
 
   updateHookPositionRotation(x, y, z, rotate, rotateHorizontal) {
     this.socket.emit("HOOKSTATE", { x: x, y: y, z: z, rotate: rotate, rotateHorizontal: rotateHorizontal});
+  }
+
+  updateLinePositionRotation(x, y, z, rotate, rotateHorizontal, length) {
+    this.socket.emit("LINESTATE", { x: x, y: y, z: z, rotate: rotate, rotateHorizontal: rotateHorizontal, length});
   }
 
 }

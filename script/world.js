@@ -199,11 +199,17 @@ function main() {
 
     // We have an angle - and we need an X and Z offset.
     let angle = sceneControls.yRotation + (Math.PI*0.94);
-    let distance = 15;
-    let XDelta = -Math.sin(angle) * distance;
-    let ZDelta = Math.cos(angle) * distance;
+    let hookDistance = 15;
+    let XHookDelta = -Math.sin(angle) * hookDistance;
+    let ZHookDelta = Math.cos(angle) * hookDistance;
+    let lineDistance = 0.8 + 1.5*sceneControls.rodRotate;
+    let XLineDelta = -Math.sin(angle) * lineDistance;
+    let ZLineDelta = Math.cos(angle) * lineDistance;
 
-    server.updateHookPositionRotation(-sceneControls.x + XDelta, 1.5 - 3*sceneControls.rodRotate, -sceneControls.z + ZDelta, sceneControls.yRotation + (Math.PI*0.94), 0);
+    let lineLength = 40;
+
+    server.updateLinePositionRotation(-sceneControls.x + XLineDelta, (Math.sin(now / 10) / 10) + 6.1 - 2.2*sceneControls.rodRotate, -sceneControls.z + ZLineDelta, sceneControls.yRotation + (Math.PI*0.92), sceneControls.rodRotate, lineLength);
+    server.updateHookPositionRotation(-sceneControls.x + XHookDelta, 1.5 - 3*sceneControls.rodRotate, -sceneControls.z + ZHookDelta, sceneControls.yRotation + (Math.PI*0.94), 0);
     server.updateRodPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 2.6, -sceneControls.z, sceneControls.yRotation + (Math.PI*0.9), sceneControls.rodRotate);
     server.updateLegPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.yRotation);
     server.updateShirtPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 2.6, -sceneControls.z, sceneControls.yRotation);

@@ -57,6 +57,15 @@ io.on('connection', (socket) => {
       roll: Math.PI/3,
       animator: clientDrivenAnimator      
     };
+    state[clientID + '-line'] = {
+      type: 'Line',
+      x: 10 * state.length,
+      y: 0,
+      z: 102,
+      rotation: Math.PI,
+      roll: Math.PI/3,
+      animator: clientDrivenAnimator      
+    };
     state[clientID + '-legs'] = {
       type: 'Legs',
       x: 10 * state.length,
@@ -91,6 +100,8 @@ io.on('connection', (socket) => {
     };
     
     initClientDrivenAnimator(state[clientID + '-boat']);
+    initClientDrivenAnimator(state[clientID + '-hook']);
+    initClientDrivenAnimator(state[clientID + '-line']);
     initClientDrivenAnimator(state[clientID + '-rod']);
     initClientDrivenAnimator(state[clientID + '-legs']);
     initClientDrivenAnimator(state[clientID + '-shirt']);
@@ -162,6 +173,16 @@ io.on('connection', (socket) => {
       state[clientID + '-hook'].z = position.z;
       state[clientID + '-hook'].rotate = position.rotate;
       state[clientID + '-hook'].roll = position.rotateHorizontal;
+    }
+  });
+  socket.on("LINESTATE", (position) => {
+    if (state[clientID + '-line']) {
+      state[clientID + '-line'].x = position.x;
+      state[clientID + '-line'].y = position.y;
+      state[clientID + '-line'].z = position.z;
+      state[clientID + '-line'].rotate = position.rotate;
+      state[clientID + '-line'].roll = position.rotateHorizontal;
+      state[clientID + '-line'].length = position.length;
     }
   });
 
