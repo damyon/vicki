@@ -11,6 +11,7 @@ app.use('/', express.static(__dirname +'/..'));
 let fishCount = 4;
 let sharkCount = 1;
 let state = initState(fishCount, sharkCount);
+let links = [];
 
 io.on('connection', (socket) => {
   let clientID = uuidv4();
@@ -21,6 +22,8 @@ io.on('connection', (socket) => {
     
     delete state[clientID + '-boat'];
     delete state[clientID + '-hook'];
+    delete state[clientID + '-line'];
+    delete state[clientID + '-line2'];
     delete state[clientID + '-rod'];
     delete state[clientID + '-legs'];
     delete state[clientID + '-shirt'];
@@ -32,6 +35,7 @@ io.on('connection', (socket) => {
   socket.on("CONNECT", (callback) => {
     
     state[clientID + '-boat'] = {
+      id: clientID + '-boat',
       type: 'Boat',
       x: 10 * state.length,
       y: 0,
@@ -40,6 +44,7 @@ io.on('connection', (socket) => {
       animator: clientDrivenAnimator      
     };
     state[clientID + '-rod'] = {
+      id: clientID + '-rod',
       type: 'Rod',
       x: 10 * state.length,
       y: 0,
@@ -49,6 +54,7 @@ io.on('connection', (socket) => {
       animator: clientDrivenAnimator      
     };
     state[clientID + '-hook'] = {
+      id: clientID + '-hook',
       type: 'Hook',
       x: 10 * state.length,
       y: 0,
@@ -58,15 +64,27 @@ io.on('connection', (socket) => {
       animator: clientDrivenAnimator      
     };
     state[clientID + '-line'] = {
+      id: clientID + '-line',
       type: 'Line',
       x: 10 * state.length,
       y: 0,
       z: 102,
       rotation: Math.PI,
       roll: Math.PI/3,
-      animator: clientDrivenAnimator      
+      animator: physicsAnimator      
+    };
+    state[clientID + '-line2'] = {
+      id: clientID + '-line2',
+      type: 'Line',
+      x: 10 * state.length,
+      y: 0,
+      z: 102,
+      rotation: Math.PI,
+      roll: Math.PI/3,
+      animator: physicsAnimator      
     };
     state[clientID + '-legs'] = {
+      id: clientID + '-legs',
       type: 'Legs',
       x: 10 * state.length,
       y: 0,
@@ -75,6 +93,7 @@ io.on('connection', (socket) => {
       animator: clientDrivenAnimator      
     };
     state[clientID + '-shirt'] = {
+      id: clientID + '-shirt',
       type: 'Shirt',
       x: 10 * state.length,
       y: 0,
@@ -83,6 +102,7 @@ io.on('connection', (socket) => {
       animator: clientDrivenAnimator      
     };
     state[clientID + '-head'] = {
+      id: clientID + '-head',
       type: 'Head',
       x: 10 * state.length,
       y: 0,
@@ -91,6 +111,7 @@ io.on('connection', (socket) => {
       animator: clientDrivenAnimator      
     };
     state[clientID + '-eyes'] = {
+      id: clientID + '-eyes',
       type: 'Eyes',
       x: 10 * state.length,
       y: 0,
@@ -101,8 +122,9 @@ io.on('connection', (socket) => {
     
     initClientDrivenAnimator(state[clientID + '-boat']);
     initClientDrivenAnimator(state[clientID + '-hook']);
-    initClientDrivenAnimator(state[clientID + '-line']);
     initClientDrivenAnimator(state[clientID + '-rod']);
+    initPhysicsAnimator(state[clientID + '-line'], state[clientID + '-rod'], state[clientID + '-line2'], calculateRodTip);
+    initPhysicsAnimator(state[clientID + '-line2'], state[clientID + '-line'], state[clientID + '-hook'], calculateLineEnd);
     initClientDrivenAnimator(state[clientID + '-legs']);
     initClientDrivenAnimator(state[clientID + '-shirt']);
     initClientDrivenAnimator(state[clientID + '-head']);
@@ -175,21 +197,6 @@ io.on('connection', (socket) => {
       state[clientID + '-hook'].roll = position.rotateHorizontal;
     }
   });
-  socket.on("LINESTATE", (position) => {
-    if (state[clientID + '-line']) {
-      state[clientID + '-line'].x = position.x;
-      state[clientID + '-line'].y = position.y;
-      state[clientID + '-line'].z = position.z;
-      state[clientID + '-line'].rotate = position.rotate;
-      state[clientID + '-line'].roll = position.rotateHorizontal;
-      state[clientID + '-line'].length = position.length;
-    }
-  });
-
-  // RESPOND TO AN INPUT EVENT BY UPDATING ONE BOAT + ROD
-  socket.on("INPUT", (callback, ...args) => {
-    console.log('server:' + event, args);
-  });
 
 });
 function initClientDrivenAnimator() {
@@ -198,6 +205,63 @@ function initClientDrivenAnimator() {
 
 function clientDrivenAnimator(model) {
 
+}
+
+function physicsAnimator(model) {
+  // Apply changes to model.
+  let deltaX = links[model.id].from.x - links[model.id].to.x;
+  let deltaZ = links[model.id].from.z - links[model.id].to.z;
+  let rotation = -Math.atan2(deltaX, deltaZ);
+  model.rotate = rotation;
+
+  let position = links[model.id].calculatePosition(model);
+  model.x = position.x;
+  model.y = position.y;
+  model.z = position.z;
+}
+
+function calculateLineEnd(model) {
+  return {
+    x: links[model.id].from.x,
+    y: links[model.id].from.y,
+    z: links[model.id].from.z,
+  };
+}
+
+function calculateRodTip(model) {
+  let origin = {
+    x: links[model.id].from.x,
+    y: links[model.id].from.y,
+    z: links[model.id].from.z,
+  };
+
+  let delta = {
+    x: -0.16,
+    y: 1.2,
+    z: 3.2,
+  };
+
+  // Rotate the delta;
+  let position = {
+    x: delta.x * Math.cos(links[model.id].from.rotate) - delta.z * Math.sin(links[model.id].from.rotate),
+    y: delta.y,
+    z: delta.z * Math.cos(links[model.id].from.rotate) + delta.x * Math.sin(links[model.id].from.rotate),
+  };
+
+  return {
+    x: origin.x + position.x,
+    y: origin.y + position.y,
+    z: origin.z + position.z,
+  };
+}
+
+function initPhysicsAnimator(model, from, to, calculatePosition) {
+  // We don't modify the state.
+  links[model.id] = {
+    from: from,
+    to: to,
+    calculatePosition: calculatePosition
+  }
 }
 
 // AT INTERVALS, RESEND ALL THE DRAWABLES POSITIONS WITH AN UPDATESTATE EVENT
@@ -271,6 +335,7 @@ function initState(fishCount, sharkCount) {
     let stateID = uuidv4();
     
     init[stateID] = {
+      id: stateID,
       type: 'Dhufish',
       x: 100*Math.sin(10*i),
       y: -3,
@@ -284,6 +349,7 @@ function initState(fishCount, sharkCount) {
     let stateID = uuidv4();
     
     init[stateID] = {
+      id: stateID,
       type: 'Shark',
       x: 50*Math.sin(10*i),
       y: -3,

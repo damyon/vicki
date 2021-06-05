@@ -24,6 +24,7 @@ class VoxelModel extends Drawable {
     this.highestLOD = 1;
     this.distanceLOD = 80;
     this.textureScale = 10;
+    this.verticalScale = 1;
   }
 
   setGlobalRotation(gl, globalAngle) {
@@ -131,6 +132,11 @@ class VoxelModel extends Drawable {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.position);
     translatedPositions = this.positions.slice();
 
+    // Vertical scale.
+    for (i = 0; i < this.getVertexCount(); i++) {
+      translatedPositions[i * 3 + 1] *= this.verticalScale;
+    }
+
     c = Math.cos(this.rollOver);
     s = Math.sin(this.rollOver);
 
@@ -142,6 +148,8 @@ class VoxelModel extends Drawable {
       translatedPositions[i * 3 + 1] = y * c - z * s;
       translatedPositions[i * 3 + 2] = y * s + z * c;
     }
+
+
 
     // Now locally rotate.
     c = Math.cos(this.rotate);
@@ -814,6 +822,7 @@ class VoxelModel extends Drawable {
       // Deep clone it back.
       this.positions = JSON.parse(JSON.stringify(newPositions));
     }
+
     // Recenter the model around the zero point.
     let centerOffset = this.size / 2;
     for (i = 0; i < (positionOffset); i+=3) {

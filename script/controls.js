@@ -154,10 +154,10 @@ class Controls {
       let likelyZ = this.z + positionChange[2] - boatLength / 2;
 
       let newDepth = terrain.mapHeight(likelyX, likelyZ);
-      if (newDepth <= this.groundLimit) {
+      //if (newDepth <= this.groundLimit) {
         this.x = likelyX + boatWidth / 2;
         this.z = likelyZ + boatLength / 2;
-      }
+      //}
     }
     this.forwardSpeed *= 0.9;
   }

@@ -192,7 +192,7 @@ function main() {
     
     let targetRotate = Math.PI/4;
     if (sceneControls.actionCast) {
-      targetRotate = Math.PI/2.2;
+      targetRotate = Math.PI/3;
     }
     let rotateDelta = (targetRotate - sceneControls.rodRotate) / 10;
     sceneControls.rodRotate += rotateDelta;
@@ -202,13 +202,12 @@ function main() {
     let hookDistance = 15;
     let XHookDelta = -Math.sin(angle) * hookDistance;
     let ZHookDelta = Math.cos(angle) * hookDistance;
-    let lineDistance = 0.8 + 1.5*sceneControls.rodRotate;
+    let lineDistance = 0;
     let XLineDelta = -Math.sin(angle) * lineDistance;
     let ZLineDelta = Math.cos(angle) * lineDistance;
 
-    let lineLength = 40;
+    let lineLength = hookDistance * 25; // 10 is the scale multiplier between line and hook.
 
-    server.updateLinePositionRotation(-sceneControls.x + XLineDelta, (Math.sin(now / 10) / 10) + 6.1 - 2.2*sceneControls.rodRotate, -sceneControls.z + ZLineDelta, sceneControls.yRotation + (Math.PI*0.92), sceneControls.rodRotate, lineLength);
     server.updateHookPositionRotation(-sceneControls.x + XHookDelta, 1.5 - 3*sceneControls.rodRotate, -sceneControls.z + ZHookDelta, sceneControls.yRotation + (Math.PI*0.94), 0);
     server.updateRodPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 2.6, -sceneControls.z, sceneControls.yRotation + (Math.PI*0.9), sceneControls.rodRotate);
     server.updateLegPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.yRotation);

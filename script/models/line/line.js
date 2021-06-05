@@ -2,6 +2,7 @@ class Line extends VoxelModel {
   constructor() {
     // There is a better way to create a line, but this will do for now.
     super();
+    this.verticalScale = 20;
   }
 
   /**
@@ -15,7 +16,8 @@ class Line extends VoxelModel {
     this.loadVoxels(gl, 'script/models/line/voxels.json');
   }
 
-  updateLength(length) {
-    // Dance.
+  updateLength(gl, length) {
+    this.verticalScale = length;
+    this.setPosition(gl, this.x, this.y, this.z);
   }
 }
