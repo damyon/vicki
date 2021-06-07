@@ -200,7 +200,7 @@ function physicsAnimator(model) {
   let from = links[model.id].calculatePosition(model);
   let to = {
     x: links[model.id].to.x,
-    y: links[model.id].to.y,
+    y: links[model.id].to.y + 0.4,
     z: links[model.id].to.z
   };
   model.from = from;
@@ -218,9 +218,9 @@ function calculateRodTip(model) {
   };
 
   let delta = {
-    x: -0.16,
-    y: 1.2,
-    z: 3.2,
+    x: -0.05,
+    y: 1.9,
+    z: 2.2,
   };
   let angle = links[model.id].from.rotate;
   if (typeof angle == 'undefined') {
