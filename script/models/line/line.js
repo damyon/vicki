@@ -1,23 +1,7 @@
-class Line extends VoxelModel {
+class Line extends LineModel {
   constructor() {
-    // There is a better way to create a line, but this will do for now.
     super();
-    this.verticalScale = 20;
-  }
-
-  /**
-   * initBuffers
-   *
-   * Initialize the buffers we'll need.
-   */
-   initBuffers(gl) {
-    this.texture = this.loadTexture(gl, 'script/models/line/textures/line.jpg');
-
-    this.loadVoxels(gl, 'script/models/line/voxels.json');
-  }
-
-  updateLength(gl, length) {
-    this.verticalScale = length;
-    this.setPosition(gl, this.x, this.y, this.z);
+    this.from = { x: 0, y: 0, z: 0};
+    this.to = this.from;
   }
 }

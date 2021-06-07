@@ -50,6 +50,9 @@ class Server {
         if ("roll" in value) {
           this.map[key].rotateHorizontal(gl, value.roll);
         }
+        if ("from" in value) {
+          this.map[key].setVertices(gl, value.from, value.to);
+        }
         this.map[key].setTargetPosition(gl, value.x, value.y, value.z);
         
       }

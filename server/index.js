@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
     state[clientID + '-boat'] = {
       id: clientID + '-boat',
       type: 'Boat',
-      x: 10 * state.length,
+      x: 10,
       y: 0,
       z: 102,
       rotation: Math.PI,
@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
     state[clientID + '-rod'] = {
       id: clientID + '-rod',
       type: 'Rod',
-      x: 10 * state.length,
+      x: 10,
       y: 0,
       z: 102,
       rotation: Math.PI,
@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
     state[clientID + '-hook'] = {
       id: clientID + '-hook',
       type: 'Hook',
-      x: 10 * state.length,
+      x: 0,
       y: 0,
       z: 102,
       rotation: Math.PI,
@@ -66,27 +66,15 @@ io.on('connection', (socket) => {
     state[clientID + '-line'] = {
       id: clientID + '-line',
       type: 'Line',
-      x: 10 * state.length,
+      x: 10,
       y: 0,
       z: 102,
-      rotation: Math.PI,
-      roll: Math.PI/3,
-      animator: physicsAnimator      
-    };
-    state[clientID + '-line2'] = {
-      id: clientID + '-line2',
-      type: 'Line',
-      x: 10 * state.length,
-      y: 0,
-      z: 102,
-      rotation: Math.PI,
-      roll: Math.PI/3,
       animator: physicsAnimator      
     };
     state[clientID + '-legs'] = {
       id: clientID + '-legs',
       type: 'Legs',
-      x: 10 * state.length,
+      x: 10,
       y: 0,
       z: 102,
       rotation: Math.PI,
@@ -95,7 +83,7 @@ io.on('connection', (socket) => {
     state[clientID + '-shirt'] = {
       id: clientID + '-shirt',
       type: 'Shirt',
-      x: 10 * state.length,
+      x: 10,
       y: 0,
       z: 102,
       rotation: Math.PI,
@@ -104,7 +92,7 @@ io.on('connection', (socket) => {
     state[clientID + '-head'] = {
       id: clientID + '-head',
       type: 'Head',
-      x: 10 * state.length,
+      x: 10,
       y: 0,
       z: 102,
       rotation: Math.PI,
@@ -113,7 +101,7 @@ io.on('connection', (socket) => {
     state[clientID + '-eyes'] = {
       id: clientID + '-eyes',
       type: 'Eyes',
-      x: 10 * state.length,
+      x: 10,
       y: 0,
       z: 102,
       rotation: Math.PI,
@@ -123,8 +111,7 @@ io.on('connection', (socket) => {
     initClientDrivenAnimator(state[clientID + '-boat']);
     initClientDrivenAnimator(state[clientID + '-hook']);
     initClientDrivenAnimator(state[clientID + '-rod']);
-    initPhysicsAnimator(state[clientID + '-line'], state[clientID + '-rod'], state[clientID + '-line2'], calculateRodTip);
-    initPhysicsAnimator(state[clientID + '-line2'], state[clientID + '-line'], state[clientID + '-hook'], calculateLineEnd);
+    initPhysicsAnimator(state[clientID + '-line'], state[clientID + '-rod'], state[clientID + '-hook'], calculateRodTip);
     initClientDrivenAnimator(state[clientID + '-legs']);
     initClientDrivenAnimator(state[clientID + '-shirt']);
     initClientDrivenAnimator(state[clientID + '-head']);
@@ -209,23 +196,18 @@ function clientDrivenAnimator(model) {
 
 function physicsAnimator(model) {
   // Apply changes to model.
-  let deltaX = links[model.id].from.x - links[model.id].to.x;
-  let deltaZ = links[model.id].from.z - links[model.id].to.z;
-  let rotation = -Math.atan2(deltaX, deltaZ);
-  model.rotate = rotation;
 
-  let position = links[model.id].calculatePosition(model);
-  model.x = position.x;
-  model.y = position.y;
-  model.z = position.z;
-}
-
-function calculateLineEnd(model) {
-  return {
-    x: links[model.id].from.x,
-    y: links[model.id].from.y,
-    z: links[model.id].from.z,
+  let from = links[model.id].calculatePosition(model);
+  let to = {
+    x: links[model.id].to.x,
+    y: links[model.id].to.y,
+    z: links[model.id].to.z
   };
+  model.from = from;
+  model.x = from.x;
+  model.y = from.y;
+  model.z = from.z;
+  model.to = to;
 }
 
 function calculateRodTip(model) {
@@ -240,12 +222,16 @@ function calculateRodTip(model) {
     y: 1.2,
     z: 3.2,
   };
+  let angle = links[model.id].from.rotate;
+  if (typeof angle == 'undefined') {
+    angle = links[model.id].from.rotation;
+  }
 
   // Rotate the delta;
   let position = {
-    x: delta.x * Math.cos(links[model.id].from.rotate) - delta.z * Math.sin(links[model.id].from.rotate),
+    x: delta.x * Math.cos(angle) - delta.z * Math.sin(angle),
     y: delta.y,
-    z: delta.z * Math.cos(links[model.id].from.rotate) + delta.x * Math.sin(links[model.id].from.rotate),
+    z: delta.z * Math.cos(angle) + delta.x * Math.sin(angle),
   };
 
   return {
