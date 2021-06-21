@@ -196,10 +196,11 @@ function main() {
     }
     let rotateDelta = (targetRotate - sceneControls.rodRotate) / 10;
     sceneControls.rodRotate += rotateDelta;
+    sceneControls.rodRotate = Math.PI/3;
 
     // We have an angle - and we need an X and Z offset.
     let angle = sceneControls.yRotation + (Math.PI*0.94);
-    let hookDistance = 15;
+    let hookDistance = 9;
     let XHookDelta = -Math.sin(angle) * hookDistance;
     let ZHookDelta = Math.cos(angle) * hookDistance;
     let lineDistance = 0;
@@ -208,7 +209,9 @@ function main() {
 
     let lineLength = hookDistance * 25; // 10 is the scale multiplier between line and hook.
 
-    server.updateHookPositionRotation(-sceneControls.x + XHookDelta, 1.5 - 3*sceneControls.rodRotate, -sceneControls.z + ZHookDelta, sceneControls.yRotation + (Math.PI*0.94), 0);
+    if (!controls.actionCast) {
+      server.updateHookPositionRotation(-sceneControls.x + XHookDelta, 1.5 - 3*sceneControls.rodRotate, -sceneControls.z + ZHookDelta, sceneControls.yRotation + (Math.PI*0.94), 0);
+    }
     server.updateRodPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 2.6, -sceneControls.z, sceneControls.yRotation + (Math.PI*0.9), sceneControls.rodRotate);
     server.updateLegPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 1, -sceneControls.z, sceneControls.yRotation);
     server.updateShirtPositionRotation(-sceneControls.x, (Math.sin(now / 10) / 10) + 2.6, -sceneControls.z, sceneControls.yRotation);

@@ -218,9 +218,9 @@ function calculateRodTip(model) {
   };
 
   let delta = {
-    x: -0.05,
-    y: 1.9,
-    z: 2.2,
+    x: -0.01,
+    y: 1.55,
+    z: 2.59,
   };
   let angle = links[model.id].from.rotate;
   if (typeof angle == 'undefined') {
