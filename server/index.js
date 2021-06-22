@@ -254,7 +254,7 @@ function initPhysicsAnimator(model, from, to, calculatePosition) {
 let stateUpdateInterval = 100;
 
 
-function updateCharacterPath(model) {
+function updateCharacterPath(model, state) {
   let randomScale = 5;
   // Rotate a random little bit.
   let skewAngle = (-0.5 + Math.random()) * randomScale;
@@ -265,6 +265,34 @@ function updateCharacterPath(model) {
   skewAngle += model.globalRotation;
   skewSpeed *=  minSpeed / 2;
   skewSpeed += minSpeed;
+
+  // Avoid boats
+  let key = '';
+  for (key in state) {
+    let avoid = state[key];
+    if (avoid.type == 'Boat') {
+      let distance = Math.sqrt(Math.pow(model.x - avoid.x, 2) + Math.pow(model.z - avoid.z, 2));
+
+      if (distance < 30) {
+        let angle = Math.atan2(avoid.x - model.x, avoid.z - model.z);
+
+        // Convert to degrees
+        angle = angle * 180/Math.PI;
+
+        let delta = angle;
+        
+        //delta /= 100;
+        //skewAngle = delta;
+        model.globalRotation = skewAngle = delta;
+        // console.log('---');
+        // console.log(skewAngle);
+        console.log(delta);
+
+        break;
+      }
+      
+    }
+  }
   
   model.targetAngle = skewAngle;
   model.targetSpeed = skewSpeed;
@@ -301,8 +329,8 @@ function moveCharacterForward(model, deltaTime) {
   model.z = targetZ;
 }
 
-function characterAnimator(model) {
-  updateCharacterPath(model);
+function characterAnimator(model, state) {
+  updateCharacterPath(model, state);
   moveCharacterForward(model, stateUpdateInterval);
 }
 
@@ -355,7 +383,7 @@ setInterval(() => {
   for (key in state) {
     let model = state[key];
 
-    model.animator(model);
+    model.animator(model, state);
   }
 
   io.emit('UPDATESTATE', state);
