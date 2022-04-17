@@ -4,7 +4,7 @@ class Slab extends VoxelModel {
     //this.rotate = Math.random();
     this.y = 2;
     this.z = 0;
-    this.x = 0;
+    this.x = 8;
   }
 
   /**
