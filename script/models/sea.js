@@ -261,7 +261,7 @@ class Sea extends Drawable {
       gl.uniform1i(uSampler, 1);
     }
 
-
+    return;
     {
       const vertexCount = 6 * (this.seaLOD * this.seaLOD);
       const type = gl.UNSIGNED_SHORT;

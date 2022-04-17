@@ -467,7 +467,7 @@ class Terrain extends Drawable {
           
         }
       }
-
+/*
       this.terrainPositions[0] = -450;
       this.terrainPositions[1] = -2.5;
       this.terrainPositions[2] = -450;
@@ -483,7 +483,7 @@ class Terrain extends Drawable {
       this.terrainPositions[9] = -450;
       this.terrainPositions[10] = -2.5;
       this.terrainPositions[11] = 450;
-      
+  */    
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.terrainPositions),
                     gl.STATIC_DRAW);
       this.heightsResolver(true);

@@ -5,18 +5,16 @@ class Controls {
     // We set up controls so that we can drag our mouse or finger to adjust the rotation of
     // the camera about the X and Y axes
     this.canvasIsPressed = false;
-    this.xRotation = -Math.PI / 5;
     this.yRotation = 0;
     this.xRotation = -Math.PI / 15;
     
     this.x = 0;
     this.y = -4.5;
-    this.z = -70;
+    this.z = -10;
     
     this.maxSpeed = 1;
     this.forwardSpeed = 0;
     this.groundLimit = -0.36;
-    this.boatY = 0;
     this.lastPressX;
     this.lastPressY;
    
@@ -131,9 +129,8 @@ class Controls {
     }
   }
 
-  processKeys(terrain, boatWidth, boatLength) {
-    let turnSpeed = 0.2;
-    let moveSpeed = 0.3;
+  processKeys() {
+    let moveSpeed = 0.1;
 
     if (this.actionForward) {
       this.forwardSpeed += moveSpeed;
@@ -141,33 +138,22 @@ class Controls {
     if (this.actionBackward) {
       this.forwardSpeed -= moveSpeed;
     }
-    if (this.actionLeft) {
-      this.boatY -= turnSpeed;
-    }
-    if (this.actionRight) {
-      this.boatY += turnSpeed;
-    }
     if (this.forwardSpeed) {
       var positionChange = this.moveForward();
-          
-      let likelyX = this.x - positionChange[0] - boatWidth / 2;
-      let likelyZ = this.z + positionChange[2] - boatLength / 2;
 
-      let newDepth = terrain.mapHeight(likelyX, likelyZ);
-      //if (newDepth <= this.groundLimit) {
-        this.x = likelyX + boatWidth / 2;
-        this.z = likelyZ + boatLength / 2;
-      //}
+      this.x = this.x - positionChange[0];
+      this.z = this.z + positionChange[2];
     }
-    this.forwardSpeed *= 0.9;
+    this.forwardSpeed *= 0.3;
   }
+  
 
   moveForward() {
     var cameraMatrix = mat4.create();
     var xRotMatrix = mat4.create();
     var yRotMatrix = mat4.create();
     
-    mat4.rotateY(yRotMatrix, yRotMatrix, this.boatY);
+    mat4.rotateY(yRotMatrix, yRotMatrix, this.yRotation);
     mat4.multiply(cameraMatrix, yRotMatrix, cameraMatrix);
     mat4.invert(cameraMatrix, cameraMatrix);
 
