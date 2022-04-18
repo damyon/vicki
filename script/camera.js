@@ -71,7 +71,7 @@ class Camera {
       void main (void) {
         highp vec3 directionalVector = normalize(vec3(0, 1, 2));
         highp vec3 ambientLight = vec3(0.4, 0.4, 0.4);
-        highp vec3 directionalLightColor = vec3(0.1, 0.1, 0.3);
+        highp vec3 directionalLightColor = vec3(0.3, 0.3, 0.3);
 
         gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
 
@@ -312,7 +312,7 @@ class Camera {
   createLightViewMatrices(gl) {
     this.lightProjectionMatrix = mat4.ortho([], -120, 120, -120, 120, -40.0, 40);
     this.lightModelViewMatrix = mat4.lookAt([], 
-      [1, 20, 1], // Light position
+      [0, 20, -10], // Light position
       [0, 0, 0], // Light target
       [0, 1, 0]); // Up
 
