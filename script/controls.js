@@ -8,11 +8,11 @@ class Controls {
     this.yRotation = 0;
     this.xRotation = -Math.PI / 15;
     
-    this.x = 0;
-    this.y = -4.5;
-    this.z = -10;
+    this.x = -10;
+    this.y = -14.5;
+    this.z = -15;
     
-    this.maxSpeed = 1;
+    this.maxSpeed = 3;
     this.forwardSpeed = 0;
     this.groundLimit = -0.36;
     this.lastPressX;
@@ -130,7 +130,7 @@ class Controls {
   }
 
   processKeys() {
-    let moveSpeed = 0.1;
+    let moveSpeed = 0.5;
 
     if (this.actionForward) {
       this.forwardSpeed += moveSpeed;
