@@ -138,6 +138,12 @@ class Controls {
     if (this.actionBackward) {
       this.forwardSpeed -= moveSpeed;
     }
+    if (this.actionLeft) {
+      this.y += moveSpeed;
+    }
+    if (this.actionRight) {
+      this.y -= moveSpeed;
+    }
     if (this.forwardSpeed) {
       var positionChange = this.moveForward();
 
