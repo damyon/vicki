@@ -41,6 +41,7 @@ function main() {
 
   let slab = new Slab();
   let wall = new Wall();
+  let upper = new Upper();
   /*
   let shark = new Shark();*/
   let throttleLOD = 10.0;
@@ -61,6 +62,7 @@ function main() {
     cloud4,
     slab,
     wall,
+    upper,
   ];
   
   /*drawables = drawables.concat(rocks);

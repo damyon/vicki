@@ -69,7 +69,7 @@ class Camera {
       varying vec3 worldPos;
 
       void main (void) {
-        highp vec3 directionalVector = normalize(vec3(0, 1, 2));
+        highp vec3 directionalVector = normalize(vec3(0.1, 1, 2));
         highp vec3 ambientLight = vec3(0.4, 0.4, 0.4);
         highp vec3 directionalLightColor = vec3(0.3, 0.3, 0.3);
 
@@ -128,8 +128,8 @@ class Camera {
 
       void main(void) {
         highp vec4 texelColor = texture2D(uSampler, vTextureCoord);
-        highp vec3 ambientLight = vec3(0.6, 0.6, 0.6);
-        highp vec3 directionalLightColor = vec3(0.1, 0.1, 0.1);
+        highp vec3 ambientLight = vec3(0.9, 0.9, 0.9);
+        highp vec3 directionalLightColor = vec3(0.9, 0.6, 0.3);
         vec3 fragmentDepth = shadowPos.xyz;
         vec3 worldDepth = depthPos.xyz;
         float stepU = 1.0 / uCanvasWidth;
@@ -157,23 +157,8 @@ class Camera {
         }
         amountInLight /= 49.0;
 
-        if (isWater == 1) {
-          amountInLight = 0.5;
-        } else if (isWater == 2) {
-          amountInLight = 1.9;
-        }
-        if (worldPos.y > -1.5 && worldPos.y < -0.01 && isSand == 1) {
-          amountInLight += 2.0 * (worldPos.y + 1.5);
-        }
-        if (worldPos.y > -0.1 && worldPos.y < 0.2 && isSand == 1) {
-          amountInLight -= 0.2 * (worldPos.y + 1.0);
-        }
+       
         amountInLight = min(amountInLight, 1.8);
-
-        if (worldPos.x < -120.0 || worldPos.x > 120.0 ||
-          worldPos.z < -120.0 || worldPos.z > 120.0) {
-          amountInLight = max(amountInLight, 0.50);
-        }
 
         gl_FragColor = vec4(ambientLight * texelColor.rgb + directionalLightColor * amountInLight * uColor, texelColor.a);
 
@@ -194,7 +179,7 @@ class Camera {
 
         if (edgeColor.r + edgeColor.g + edgeColor.b < outlineCutoff && isWater == 0) {
           // This adds a dark border on edges like a cartoon - it is a bit noisy.
-         // gl_FragColor = vec4(0.1, 0.1, 0.1, 0.9);
+          //gl_FragColor = vec4(0.1, 0.1, 0.1, 0.9);
         }
         
       }
@@ -313,7 +298,7 @@ class Camera {
     this.lightProjectionMatrix = mat4.ortho([], -120, 120, -120, 120, -40.0, 40);
     this.lightModelViewMatrix = mat4.lookAt([], 
       [0, 20, -10], // Light position
-      [0, 0, 0], // Light target
+      [15, 0, 0], // Light target
       [0, 1, 0]); // Up
 
     this.shadowProjectionMatrix = gl.getUniformLocation(this.lightShaderProgram, 'uPMatrix');
@@ -327,7 +312,7 @@ class Camera {
     // Move the light camera relative to the scene camera.
     this.lightProjectionMatrix = mat4.ortho([], -180, 180, -180, 180, -80.0, 80);
     this.lightModelViewMatrix = mat4.lookAt([], 
-      [1, 20, 1], // Light position
+      [0, 20, -10], // Light position
       [0, 0, 0], // Light target
       [0, 1, 0]); // Up
 
