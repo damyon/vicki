@@ -42,6 +42,7 @@ function main() {
   let slab = new Slab();
   let wall = new Wall();
   let upper = new Upper();
+  let roof = new Roof();
   /*
   let shark = new Shark();*/
   let throttleLOD = 10.0;
@@ -63,6 +64,7 @@ function main() {
     slab,
     wall,
     upper,
+    roof,
   ];
   
   /*drawables = drawables.concat(rocks);

@@ -8,9 +8,9 @@ class Controls {
     this.yRotation = 0;
     this.xRotation = -Math.PI / 15;
     
-    this.x = -10;
-    this.y = -5.5;
-    this.z = -15;
+    this.x = -5;
+    this.y = -25.5;
+    this.z = -25;
     
     this.maxSpeed = 3;
     this.forwardSpeed = 0;

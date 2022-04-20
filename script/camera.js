@@ -129,7 +129,7 @@ class Camera {
       void main(void) {
         highp vec4 texelColor = texture2D(uSampler, vTextureCoord);
         highp vec3 ambientLight = vec3(0.9, 0.9, 0.9);
-        highp vec3 directionalLightColor = vec3(0.9, 0.6, 0.3);
+        highp vec3 directionalLightColor = vec3(0.4, 0.4, 0.4);
         vec3 fragmentDepth = shadowPos.xyz;
         vec3 worldDepth = depthPos.xyz;
         float stepU = 1.0 / uCanvasWidth;
