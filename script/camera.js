@@ -3,7 +3,7 @@
 class Camera {
   constructor() {
 
-    this.shadowDepthTextureSize = 4096;
+    this.shadowDepthTextureSize = 256;
     // We create a vertex shader from the light's point of view. 
     // It is used behind the scenes to create a texture that we can use to test testing whether
     // or not a point is inside of our outside of the shadow
@@ -129,7 +129,7 @@ class Camera {
       void main(void) {
         highp vec4 texelColor = texture2D(uSampler, vTextureCoord);
         highp vec3 ambientLight = vec3(0.9, 0.9, 0.9);
-        highp vec3 directionalLightColor = vec3(0.4, 0.4, 0.4);
+        highp vec3 directionalLightColor = vec3(0.1, 0.1, 0.1);
         vec3 fragmentDepth = shadowPos.xyz;
         vec3 worldDepth = depthPos.xyz;
         float stepU = 1.0 / uCanvasWidth;
@@ -158,7 +158,7 @@ class Camera {
         amountInLight /= 49.0;
 
        
-        amountInLight = min(amountInLight, 1.8);
+        //amountInLight = min(amountInLight, 1.8);
 
         gl_FragColor = vec4(ambientLight * texelColor.rgb + directionalLightColor * amountInLight * uColor, texelColor.a);
 
