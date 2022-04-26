@@ -3,7 +3,7 @@
 class Camera {
   constructor() {
 
-    this.shadowDepthTextureSize = 256;
+    this.shadowDepthTextureSize = 8192;
     // We create a vertex shader from the light's point of view. 
     // It is used behind the scenes to create a texture that we can use to test testing whether
     // or not a point is inside of our outside of the shadow
@@ -128,8 +128,8 @@ class Camera {
 
       void main(void) {
         highp vec4 texelColor = texture2D(uSampler, vTextureCoord);
-        highp vec3 ambientLight = vec3(0.9, 0.9, 0.9);
-        highp vec3 directionalLightColor = vec3(0.1, 0.1, 0.1);
+        highp vec3 ambientLight = vec3(0.5, 0.5, 0.8);
+        highp vec3 directionalLightColor = vec3(0.5, 0.5, 0.5);
         vec3 fragmentDepth = shadowPos.xyz;
         vec3 worldDepth = depthPos.xyz;
         float stepU = 1.0 / uCanvasWidth;
@@ -149,7 +149,9 @@ class Camera {
         // that is 9/9ths in the shadow.
         for (int x = -3; x <= 3; x++) {
           for (int y = -3; y <= 3; y++) {
-            float texelDepth = decodeFloat(texture2D(depthColorTexture, fragmentDepth.xy + vec2(x, y) * texelSize));
+            int bigx = 3 * x;
+            int bigy = 3 * y;
+            float texelDepth = decodeFloat(texture2D(depthColorTexture, fragmentDepth.xy + vec2(bigx, bigy) * texelSize));
             if (fragmentDepth.z < texelDepth) {
               amountInLight += 1.0;
             }
@@ -296,9 +298,10 @@ class Camera {
 
   createLightViewMatrices(gl) {
     this.lightProjectionMatrix = mat4.ortho([], -120, 120, -120, 120, -40.0, 40);
+    this.lightProjectionMatrix = mat4.ortho([], -180, 180, -180, 180, -80.0, 80);
     this.lightModelViewMatrix = mat4.lookAt([], 
-      [0, 20, -10], // Light position
-      [15, 0, 0], // Light target
+      [20, 5, -30], // Light position
+      [0, 0, 0], // Light target
       [0, 1, 0]); // Up
 
     this.shadowProjectionMatrix = gl.getUniformLocation(this.lightShaderProgram, 'uPMatrix');
@@ -312,7 +315,7 @@ class Camera {
     // Move the light camera relative to the scene camera.
     this.lightProjectionMatrix = mat4.ortho([], -180, 180, -180, 180, -80.0, 80);
     this.lightModelViewMatrix = mat4.lookAt([], 
-      [0, 20, -10], // Light position
+      [20, 5, -30], // Light position
       [0, 0, 0], // Light target
       [0, 1, 0]); // Up
 

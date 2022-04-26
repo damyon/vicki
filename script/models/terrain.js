@@ -3,7 +3,7 @@ class Terrain extends Drawable {
 
   constructor() {
     super();
-    this.terrainSize = 64;
+    this.terrainSize = 48;
     this.terrainLOD = 64;
     this.buffers = null;
     this.textureRepeat = 40;
