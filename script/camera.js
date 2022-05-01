@@ -128,8 +128,8 @@ class Camera {
 
       void main(void) {
         highp vec4 texelColor = texture2D(uSampler, vTextureCoord);
-        highp vec3 ambientLight = vec3(0.5, 0.5, 0.8);
-        highp vec3 directionalLightColor = vec3(0.5, 0.5, 0.5);
+        highp vec3 ambientLight = vec3(0.8, 0.8, 0.8);
+        highp vec3 directionalLightColor = vec3(0.2, 0.2, 0.2);
         vec3 fragmentDepth = shadowPos.xyz;
         vec3 worldDepth = depthPos.xyz;
         float stepU = 1.0 / uCanvasWidth;
@@ -147,17 +147,22 @@ class Camera {
         // So if 4 out of 9 fragments that we check are in the shadow then we'll say that
         // this fragment is 4/9ths in the shadow so it'll be a little brighter than something
         // that is 9/9ths in the shadow.
-        for (int x = -3; x <= 3; x++) {
-          for (int y = -3; y <= 3; y++) {
-            int bigx = 3 * x;
-            int bigy = 3 * y;
+        const int blend = 5;
+        float blendLength = float(blend) * 2.0 + 1.0;
+
+        for (int x = -blend; x <= blend; x++) {
+          for (int y = -blend; y <= blend; y++) {
+            int bigx = 1 * x;
+            int bigy = 1 * y;
             float texelDepth = decodeFloat(texture2D(depthColorTexture, fragmentDepth.xy + vec2(bigx, bigy) * texelSize));
             if (fragmentDepth.z < texelDepth) {
               amountInLight += 1.0;
             }
           }
         }
-        amountInLight /= 49.0;
+        
+        
+        amountInLight /= blendLength * blendLength;
 
        
         //amountInLight = min(amountInLight, 1.8);
