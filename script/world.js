@@ -44,6 +44,8 @@ function main() {
   let upper = new Upper();
   let roof = new Roof();
   let couch = new Couch();
+  let benchlegs = new BenchLegs();
+  let benchtop = new BenchTop();
   /*
   let shark = new Shark();*/
   let throttleLOD = 10.0;
@@ -66,6 +68,8 @@ function main() {
     wall,
     upper,
     couch,
+    benchlegs,
+    benchtop,
     roof,
   ];
   
