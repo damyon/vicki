@@ -173,4 +173,13 @@ class Controls {
     ];
   }
 
+  up() {
+    this.y += 0.5;
+  }
+  down() {
+    this.y -= 0.5;
+  }
+  forward() {
+      this.forwardSpeed += 0.5;
+  }
 }

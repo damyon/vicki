@@ -219,3 +219,15 @@ function main() {
   }
   window.requestAnimationFrame(draw.bind(this, camera, controls, drawables, lastLOD));
 }
+
+function up() {
+  controls.up();
+}
+
+function down() {
+  controls.down();
+}
+
+function forward() {
+  controls.forward();
+}
