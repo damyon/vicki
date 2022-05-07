@@ -20,6 +20,8 @@ function main() {
   gl.enable(gl.DEPTH_TEST);
 
   const controls = new Controls(canvas);
+  // Expose controls to the window.
+  this.controls = controls;
   const camera = new Camera();
 
   /**
@@ -221,13 +223,13 @@ function main() {
 }
 
 function up() {
-  controls.up();
+  this.controls.up();
 }
 
 function down() {
-  controls.down();
+  this.controls.down();
 }
 
 function forward() {
-  controls.forward();
+  this.controls.forward();
 }
