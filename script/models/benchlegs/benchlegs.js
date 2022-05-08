@@ -3,8 +3,8 @@ class BenchLegs extends VoxelModel {
     super();
     //this.rotate = Math.random();
     this.y = 3;
-    this.z = -10.5;
-    this.x = 7;
+    this.z = -9.5;
+    this.x = 6.2;
   }
 
   /**

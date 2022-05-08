@@ -2,9 +2,9 @@ class BenchTop extends VoxelModel {
   constructor() {
     super();
     //this.rotate = Math.random();
-    this.y = 3;
-    this.z = -10.5;
-    this.x = 7;
+    this.y = 2.9;
+    this.z = -9.3;
+    this.x = 6.5;
   }
 
   /**

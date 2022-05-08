@@ -48,6 +48,9 @@ function main() {
   let couch = new Couch();
   let benchlegs = new BenchLegs();
   let benchtop = new BenchTop();
+  let kitchenbenchtopnorth = new KitchenBenchTopNorth();
+  let kitchencupboardstopnorth = new KitchenCupboardsTopNorth();
+  let kitchencupboardstopsouth = new KitchenCupboardsTopSouth();
   /*
   let shark = new Shark();*/
   let throttleLOD = 10.0;
@@ -72,6 +75,9 @@ function main() {
     couch,
     benchlegs,
     benchtop,
+    kitchenbenchtopnorth,
+    kitchencupboardstopnorth,
+    kitchencupboardstopsouth,
     roof,
   ];
   
