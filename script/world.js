@@ -49,8 +49,12 @@ function main() {
   let benchlegs = new BenchLegs();
   let benchtop = new BenchTop();
   let kitchenbenchtopnorth = new KitchenBenchTopNorth();
-  let kitchencupboardstopnorth = new KitchenCupboardsTopNorth();
-  let kitchencupboardstopsouth = new KitchenCupboardsTopSouth();
+  let kitchencupboardsnorth = new KitchenCupboardsNorth();
+  let kitchenbenchtopsouth = new KitchenBenchTopSouth();
+  let kitchencupboardssouth = new KitchenCupboardsSouth();
+  let tvcabinet = new TVCabinet();
+  let tv = new TV();
+  let coffeetable = new CoffeeTable();
   /*
   let shark = new Shark();*/
   let throttleLOD = 10.0;
@@ -76,8 +80,12 @@ function main() {
     benchlegs,
     benchtop,
     kitchenbenchtopnorth,
-    kitchencupboardstopnorth,
-    kitchencupboardstopsouth,
+    kitchencupboardsnorth,
+    kitchenbenchtopsouth,
+    kitchencupboardssouth,
+    tvcabinet,
+    tv,
+    coffeetable,
     roof,
   ];
   
