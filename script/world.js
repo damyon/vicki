@@ -55,6 +55,7 @@ function main() {
   let tvcabinet = new TVCabinet();
   let tv = new TV();
   let coffeetable = new CoffeeTable();
+  let fridge = new Fridge();
   /*
   let shark = new Shark();*/
   let throttleLOD = 10.0;
@@ -86,6 +87,7 @@ function main() {
     tvcabinet,
     tv,
     coffeetable,
+    fridge,
     roof,
   ];
   
