@@ -52,6 +52,7 @@ function main() {
   let kitchencupboardsnorth = new KitchenCupboardsNorth();
   let kitchenbenchtopsouth = new KitchenBenchTopSouth();
   let kitchencupboardssouth = new KitchenCupboardsSouth();
+  let kitchenshelves = new KitchenShelves();
   let tvcabinet = new TVCabinet();
   let tv = new TV();
   let coffeetable = new CoffeeTable();
@@ -84,6 +85,7 @@ function main() {
     kitchencupboardsnorth,
     kitchenbenchtopsouth,
     kitchencupboardssouth,
+    kitchenshelves,
     tvcabinet,
     tv,
     coffeetable,
