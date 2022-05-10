@@ -56,6 +56,11 @@ function main() {
   let tvcabinet = new TVCabinet();
   let tv = new TV();
   let coffeetable = new CoffeeTable();
+  let mainbed = new MainBed();
+  let mainbedsidenorth = new MainBedSideNorth();
+  let mainbedsidesouth = new MainBedSideSouth();
+  let mainbedtvcabinet = new MainBedTVCabinet();
+  let mainbedtv = new MainBedTV();
   let fridge = new Fridge();
   /*
   let shark = new Shark();*/
@@ -89,6 +94,11 @@ function main() {
     tvcabinet,
     tv,
     coffeetable,
+    mainbed,
+    mainbedtvcabinet,
+    mainbedtv,
+    mainbedsidenorth,
+    mainbedsidesouth,
     fridge,
     roof,
   ];
