@@ -4,7 +4,7 @@
   "height":10,
   "scale": 8,
   "decimate": 0,
-  "smooth": 1,
+  "smooth": 0,
   "slices": [
     [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

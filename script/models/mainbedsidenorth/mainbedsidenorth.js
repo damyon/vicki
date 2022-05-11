@@ -4,7 +4,7 @@ class MainBedSideNorth extends VoxelModel {
     //this.rotate = Math.random();
     this.y = 3;
     this.z = -3;
-    this.x = 20;
+    this.x = 19.8;
   }
 
   /**

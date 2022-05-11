@@ -61,6 +61,7 @@ function main() {
   let mainbedsidesouth = new MainBedSideSouth();
   let mainbedtvcabinet = new MainBedTVCabinet();
   let mainbedtv = new MainBedTV();
+  let walkinrobeshelves = new WalkInRobeShelves();
   let fridge = new Fridge();
   /*
   let shark = new Shark();*/
@@ -99,6 +100,7 @@ function main() {
     mainbedtv,
     mainbedsidenorth,
     mainbedsidesouth,
+    walkinrobeshelves,
     fridge,
     roof,
   ];
