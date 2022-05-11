@@ -13,7 +13,7 @@ class CoffeeTable extends VoxelModel {
    * Initialize the buffers we'll need.
    */
   initBuffers(gl) {
-    this.texture = this.loadTexture(gl, 'script/models/coffeetable/textures/wood.jpg');
+    this.texture = this.loadTexture(gl, 'script/models/coffeetable/textures/texture.jpg');
 
     this.loadVoxels(gl, 'script/models/coffeetable/voxels.json');
   }
