@@ -32,14 +32,7 @@ function main() {
   camera.useCameraShader(gl);
   
   let terrain = new Terrain();
-  /*let rocks = terrain.createRocks();
-  let bushes = terrain.createBushes();
-  let trees = terrain.createTrees();
-  let leaves = terrain.createLeaves();*/
   let cloud1 = new Cloud();
-  let cloud2 = new Cloud();
-  let cloud3 = new Cloud();
-  let cloud4 = new Cloud();
 
   let slab = new Slab();
   let wall = new Wall();
@@ -62,9 +55,9 @@ function main() {
   let mainbedtvcabinet = new MainBedTVCabinet();
   let mainbedtv = new MainBedTV();
   let walkinrobeshelves = new WalkInRobeShelves();
+  let bath = new Bath();
+  let bathwater = new BathWater();
   let fridge = new Fridge();
-  /*
-  let shark = new Shark();*/
   let throttleLOD = 10.0;
   let targetFPS = 5;
   let i = 0;
@@ -78,9 +71,6 @@ function main() {
     terrain,
     new Sea(1, 0, 1),
     cloud1,
-    cloud2,
-    cloud3,
-    cloud4,
     slab,
     wall,
     upper,
@@ -101,32 +91,18 @@ function main() {
     mainbedsidenorth,
     mainbedsidesouth,
     walkinrobeshelves,
+    bath,
+    bathwater,
     fridge,
     roof,
   ];
   
-  /*drawables = drawables.concat(rocks);
-  drawables = drawables.concat(bushes);
-  drawables = drawables.concat(trees);
-  drawables = drawables.concat(leaves);
-*/
   for (model of drawables) {
     model.initBuffers(gl);
   }
   
   cloud1.setPosition(gl, 100, 400, -480);
-  cloud2.setPosition(gl, -100, 400, 480);
-  cloud3.setPosition(gl, -480, 400, 100);
-  cloud4.setPosition(gl, 480, 400, -100);
   
-  // Move the rock.
-  /*terrain.afterHeightsLoaded(function(gl, terrain, rocks) {
-    terrain.setRockPositions(gl, rocks);
-    terrain.setBushPositions(gl, bushes);
-    terrain.setTreePositions(gl, trees);
-    terrain.setLeafPositions(gl, leaves);
-  }.bind(this, gl, terrain, rocks))
-*/
   /**
    * Camera shader setup
    */
