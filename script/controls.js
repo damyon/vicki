@@ -17,6 +17,7 @@ class Controls {
     this.groundLimit = -0.36;
     this.lastPressX;
     this.lastPressY;
+    this.forwardPress = false;
    
     this.actionForward = false;
     this.actionBackward = false;
@@ -86,19 +87,34 @@ class Controls {
 
     // As you drag your finger we move the camera
     canvas.addEventListener('touchstart', function (e) {
-      this.lastPressX = e.touches[0].clientX;
-      this.lastPressY = e.touches[0].clientY;
+      let width = this.width;
+      let height = this.height;
+      
+      let x = e.touches[0].clientX;
+      let y = e.touches[0].clientY;
+      if ((2 * (width / 5)) <= x <= (3 * (width / 5)) &&
+          (2 * (height / 5)) <= y <= (3 * (height / 5))) {
+        this.forwardPress = true;
+      } else {
+        this.lastPressX = x;
+        this.lastPressY = y;
+      }
+        
     }.bind(this));
     canvas.addEventListener('touchmove', function (e) {
       e.preventDefault();
-      this.xRotation += (this.lastPressY - e.touches[0].clientY) / 500;
-      this.yRotation += (e.touches[0].clientX - this.lastPressX) / 500;
+      if (this.forwardPress) {
+        this.forwardSpeed += moveSpeed;
+      } else {
+        this.xRotation += (this.lastPressY - e.touches[0].clientY) / 500;
+        this.yRotation += (e.touches[0].clientX - this.lastPressX) / 500;
 
-      this.xRotation = Math.min(this.xRotation, Math.PI / 2.5);
-      this.xRotation = Math.max(this.xRotation, -Math.PI / 2.5);
+        this.xRotation = Math.min(this.xRotation, Math.PI / 2.5);
+        this.xRotation = Math.max(this.xRotation, -Math.PI / 2.5);
 
-      this.lastPressX = e.touches[0].clientX;
-      this.lastPressY = e.touches[0].clientY;
+        this.lastPressX = e.touches[0].clientX;
+        this.lastPressY = e.touches[0].clientY;
+      }
     }.bind(this));
   }
 
@@ -148,6 +164,7 @@ class Controls {
       var positionChange = this.moveForward();
 
       this.x = this.x - positionChange[0];
+      this.y = this.y + positionChange[1];
       this.z = this.z + positionChange[2];
     }
     this.forwardSpeed *= 0.3;
@@ -160,6 +177,7 @@ class Controls {
     var yRotMatrix = mat4.create();
     
     mat4.rotateY(yRotMatrix, yRotMatrix, this.yRotation);
+    mat4.rotateX(yRotMatrix, yRotMatrix, this.xRotation);
     mat4.multiply(cameraMatrix, yRotMatrix, cameraMatrix);
     mat4.invert(cameraMatrix, cameraMatrix);
 
