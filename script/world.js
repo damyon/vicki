@@ -38,6 +38,7 @@ function main() {
   let wall = new Wall();
   let wallinner = new WallInner();
   let upper = new Upper();
+  let upperinner = new UpperInner();
   let roof = new Roof();
   let couch = new Couch();
   let benchlegs = new BenchLegs();
@@ -78,6 +79,7 @@ function main() {
     wall,
     wallinner,
     upper,
+    upperinner,
     couch,
     benchlegs,
     benchtop,

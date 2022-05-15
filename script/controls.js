@@ -87,21 +87,24 @@ class Controls {
 
     // As you drag your finger we move the camera
     canvas.addEventListener('touchstart', function (e) {
-      let width = this.width;
-      let height = this.height;
+      let width = window.innerWidth;
+      let height = window.innerHeight;
       
       let x = e.touches[0].clientX;
       let y = e.touches[0].clientY;
-      if ((2 * (width / 5)) <= x <= (3 * (width / 5)) &&
-          (2 * (height / 5)) <= y <= (3 * (height / 5))) {
+      if ((2 * (width / 5)) <= x && x <= (3 * (width / 5)) &&
+          (2 * (height / 5)) <= y && y <= (3 * (height / 5))) {
         this.forwardPress = true;
       } else {
+        this.forwardPress = false;
         this.lastPressX = x;
         this.lastPressY = y;
       }
         
     }.bind(this));
     canvas.addEventListener('touchmove', function (e) {
+      let moveSpeed = 0.05;
+
       e.preventDefault();
       if (this.forwardPress) {
         this.forwardSpeed += moveSpeed;
