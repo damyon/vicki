@@ -36,6 +36,7 @@ function main() {
 
   let slab = new Slab();
   let wall = new Wall();
+  let wallinner = new WallInner();
   let upper = new Upper();
   let roof = new Roof();
   let couch = new Couch();
@@ -57,6 +58,8 @@ function main() {
   let walkinrobeshelves = new WalkInRobeShelves();
   let bath = new Bath();
   let bathwater = new BathWater();
+  let mainshower = new MainShower();
+  let garageface = new GarageFace();
   let fridge = new Fridge();
   let throttleLOD = 10.0;
   let targetFPS = 5;
@@ -73,6 +76,7 @@ function main() {
     cloud1,
     slab,
     wall,
+    wallinner,
     upper,
     couch,
     benchlegs,
@@ -93,6 +97,8 @@ function main() {
     walkinrobeshelves,
     bath,
     bathwater,
+    mainshower,
+    garageface,
     fridge,
     roof,
   ];
