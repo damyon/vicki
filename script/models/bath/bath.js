@@ -12,7 +12,7 @@ class Bath extends VoxelModel {
    * Initialize the buffers we'll need.
    */
   initBuffers(gl) {
-    this.texture = this.loadTexture(gl, 'script/models/bath/textures/texture.jpg');
+    this.texture = this.loadTexture(gl, 'script/models/bath/textures/texture.png');
 
     this.loadVoxels(gl, 'script/models/bath/voxels.json');
   }

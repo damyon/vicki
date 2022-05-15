@@ -60,6 +60,9 @@ function main() {
   let bath = new Bath();
   let bathwater = new BathWater();
   let mainshower = new MainShower();
+  let mainbathcupboard = new MainBathCupboard();
+  let mainbathmirror = new MainBathMirror();
+  let mainbathsink = new MainBathSink();
   let garageface = new GarageFace();
   let fridge = new Fridge();
   let throttleLOD = 10.0;
@@ -96,6 +99,9 @@ function main() {
     mainbedtv,
     mainbedsidenorth,
     mainbedsidesouth,
+    mainbathcupboard,
+    mainbathmirror,
+    mainbathsink,
     walkinrobeshelves,
     bath,
     bathwater,
