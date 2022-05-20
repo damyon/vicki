@@ -1,7 +1,6 @@
 class MainBathMirror extends VoxelModel {
   constructor() {
     super();
-    //this.rotate = Math.random();
     this.y = 6;
     this.z = -0.2;
     this.x = 6.4;

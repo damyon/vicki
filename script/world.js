@@ -62,6 +62,7 @@ function main() {
   let mainshower = new MainShower();
   let mainbathcupboard = new MainBathCupboard();
   let mainbathmirror = new MainBathMirror();
+  let mainbathwindow = new MainBathWindow();
   let mainbathsink = new MainBathSink();
   let garageface = new GarageFace();
   let fridge = new Fridge();
@@ -101,6 +102,7 @@ function main() {
     mainbedsidesouth,
     mainbathcupboard,
     mainbathmirror,
+    mainbathwindow,
     mainbathsink,
     walkinrobeshelves,
     bath,

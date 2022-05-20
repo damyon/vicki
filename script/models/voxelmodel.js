@@ -25,6 +25,7 @@ class VoxelModel extends Drawable {
     this.distanceLOD = 80;
     this.textureScale = 10;
     this.verticalScale = 1;
+    this.horizontalScale = 1;
   }
 
   setGlobalRotation(gl, globalAngle) {
@@ -134,6 +135,7 @@ class VoxelModel extends Drawable {
 
     // Vertical scale.
     for (i = 0; i < this.getVertexCount(); i++) {
+      translatedPositions[i * 3] *= this.horizontalScale;
       translatedPositions[i * 3 + 1] *= this.verticalScale;
     }
 

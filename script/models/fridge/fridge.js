@@ -4,6 +4,7 @@ class Fridge extends VoxelModel {
     this.y = 3;
     this.z = -10;
     this.x = 3;
+    this.textureScale = 3;
   }
 
   /**
@@ -12,7 +13,7 @@ class Fridge extends VoxelModel {
    * Initialize the buffers we'll need.
    */
   initBuffers(gl) {
-    this.texture = this.loadTexture(gl, 'script/models/fridge/textures/top.jpg');
+    this.texture = this.loadTexture(gl, 'script/models/fridge/textures/texture.png');
 
     this.loadVoxels(gl, 'script/models/fridge/voxels.json');
   }
