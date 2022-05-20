@@ -48,10 +48,20 @@ function main() {
   let kitchenbenchtopsouth = new KitchenBenchTopSouth();
   let kitchencupboardssouth = new KitchenCupboardsSouth();
   let kitchenshelves = new KitchenShelves();
+  let kitchenglass = new KitchenGlass();
   let tvcabinet = new TVCabinet();
   let tv = new TV();
   let coffeetable = new CoffeeTable();
   let mainbed = new MainBed();
+  let upperbedwest = new UpperBedWest();
+  let upperbedeast = new UpperBedEast();
+  let mainbedwindow = new MainBedWindow();
+  let mainbedglass = new MainBedGlass();
+  let livingglass = new LivingGlass();
+  let upperglasseast = new UpperGlassEast();
+  let upperglassnorth = new UpperGlassNorth();
+  let upperglasssouth = new UpperGlassSouth();
+  let upperglasswest = new UpperGlassWest();
   let mainbedsidenorth = new MainBedSideNorth();
   let mainbedsidesouth = new MainBedSideSouth();
   let mainbedtvcabinet = new MainBedTVCabinet();
@@ -92,10 +102,20 @@ function main() {
     kitchenbenchtopsouth,
     kitchencupboardssouth,
     kitchenshelves,
+    kitchenglass,
     tvcabinet,
     tv,
     coffeetable,
     mainbed,
+    upperbedwest,
+    upperbedeast,
+    mainbedwindow,
+    mainbedglass,
+    livingglass,
+    upperglasswest,
+    upperglasseast,
+    upperglassnorth,
+    upperglasssouth,
     mainbedtvcabinet,
     mainbedtv,
     mainbedsidenorth,

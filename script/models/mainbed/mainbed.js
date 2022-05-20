@@ -2,7 +2,7 @@ class MainBed extends VoxelModel {
   constructor() {
     super();
     //this.rotate = Math.random();
-    this.y = 3;
+    this.y = 3.5;
     this.z = 0;
     this.x = 19.8;
   }
