@@ -2,7 +2,7 @@ class UpperBedWest extends VoxelModel {
   constructor() {
     super();
     //this.rotate = Math.random();
-    this.y = 8.5;
+    this.y = 8.9;
     this.z = 3.5;
     this.x = 8.8;
     this.horizontalScale = 0.8;

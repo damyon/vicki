@@ -3,7 +3,7 @@ class UpperBedEast extends VoxelModel {
     super();
     //this.rotate = Math.random();
     this.rotate = Math.PI;
-    this.y = 8.5;
+    this.y = 8.9;
     this.z = 0.5;
     this.x = -0.8;
     this.horizontalScale = 0.8;

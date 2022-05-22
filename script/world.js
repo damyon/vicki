@@ -76,6 +76,8 @@ function main() {
   let mainbathsink = new MainBathSink();
   let garageface = new GarageFace();
   let fridge = new Fridge();
+  let frontdoor = new FrontDoor();
+  let garagedoor = new GarageDoor();
   let throttleLOD = 10.0;
   let targetFPS = 5;
   let i = 0;
@@ -130,6 +132,8 @@ function main() {
     mainshower,
     garageface,
     fridge,
+    frontdoor,
+    garagedoor,
     roof,
   ];
   
