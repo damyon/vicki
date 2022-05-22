@@ -58,6 +58,7 @@ function main() {
   let mainbedwindow = new MainBedWindow();
   let mainbedglass = new MainBedGlass();
   let livingglass = new LivingGlass();
+  let kitchendoor = new KitchenDoor();
   let upperglasseast = new UpperGlassEast();
   let upperglassnorth = new UpperGlassNorth();
   let upperglasssouth = new UpperGlassSouth();
@@ -77,6 +78,7 @@ function main() {
   let garageface = new GarageFace();
   let fridge = new Fridge();
   let frontdoor = new FrontDoor();
+  let garagedoornorth = new GarageDoorNorth();
   let garagedoor = new GarageDoor();
   let throttleLOD = 10.0;
   let targetFPS = 5;
@@ -104,37 +106,39 @@ function main() {
     kitchenbenchtopsouth,
     kitchencupboardssouth,
     kitchenshelves,
-    kitchenglass,
     tvcabinet,
     tv,
     coffeetable,
     mainbed,
     upperbedwest,
     upperbedeast,
-    mainbedwindow,
-    mainbedglass,
-    livingglass,
-    upperglasswest,
-    upperglasseast,
-    upperglassnorth,
-    upperglasssouth,
     mainbedtvcabinet,
     mainbedtv,
     mainbedsidenorth,
     mainbedsidesouth,
     mainbathcupboard,
     mainbathmirror,
-    mainbathwindow,
     mainbathsink,
     walkinrobeshelves,
     bath,
-    bathwater,
-    mainshower,
     garageface,
     fridge,
     frontdoor,
+    garagedoornorth,
     garagedoor,
     roof,
+    bathwater,
+    mainshower,
+    kitchenglass,
+    mainbedwindow,
+    mainbedglass,
+    livingglass,
+    kitchendoor,
+    upperglasswest,
+    upperglasseast,
+    upperglassnorth,
+    upperglasssouth,
+    mainbathwindow,
   ];
   
   for (model of drawables) {

@@ -6,8 +6,9 @@ class GarageDoor extends VoxelModel {
     this.z = 5.3;
     this.x = -2.3;
     this.horizontalScale = 110;
-    this.verticalScale = 60;
+    this.verticalScale = 120;
     this.blend = 0;
+    this.textureScale = 20;
   }
 
   /**

@@ -1,13 +1,14 @@
 {
-  "width": 1,
+  "width": 2,
   "depth": 1,
-  "height":1,
+  "height":2,
   "scale": 0.1,
   "decimate": 0,
   "smooth": 0,
   "slices": [
     [
-      [1]
+      [1, 1],
+      [1, 1]
     ]
   ]
 }

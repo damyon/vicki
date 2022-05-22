@@ -6,8 +6,9 @@ class FrontDoor extends VoxelModel {
     this.z = 3.8;
     this.x = 4.99;
     this.horizontalScale = 21;
-    this.verticalScale = 44;
+    this.verticalScale = 88;
     this.blend = 0;
+    this.textureScale = 20;
   }
 
   /**

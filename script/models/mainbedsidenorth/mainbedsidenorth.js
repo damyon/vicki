@@ -5,7 +5,7 @@ class MainBedSideNorth extends VoxelModel {
     this.y = 3;
     this.z = -3;
     this.x = 19.8;
-    this.textureScale = 10;
+    this.textureScale = 2;
   }
 
   /**

@@ -5,6 +5,7 @@ class MainBathCupboard extends VoxelModel {
     this.y = 3;
     this.z = 1.5;
     this.x = 3.5;
+    this.textureScale = 2;
   }
 
   /**
