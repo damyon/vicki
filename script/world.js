@@ -41,6 +41,7 @@ function main() {
   let upperinner = new UpperInner();
   let roof = new Roof();
   let couch = new Couch();
+  let uppercouch = new UpperCouch();
   let benchlegs = new BenchLegs();
   let benchtop = new BenchTop();
   let kitchenbenchtopnorth = new KitchenBenchTopNorth();
@@ -50,7 +51,9 @@ function main() {
   let kitchenshelves = new KitchenShelves();
   let kitchenglass = new KitchenGlass();
   let tvcabinet = new TVCabinet();
+  let uppertvcabinet = new UpperTVCabinet();
   let tv = new TV();
+  let uppertv = new UpperTV();
   let coffeetable = new CoffeeTable();
   let mainbed = new MainBed();
   let upperbedwest = new UpperBedWest();
@@ -104,6 +107,7 @@ function main() {
     upper,
     upperinner,
     couch,
+    uppercouch,
     benchlegs,
     benchtop,
     kitchenbenchtopnorth,
@@ -112,7 +116,9 @@ function main() {
     kitchencupboardssouth,
     kitchenshelves,
     tvcabinet,
+    uppertvcabinet,
     tv,
+    uppertv,
     coffeetable,
     mainbed,
     upperbedwest,
