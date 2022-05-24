@@ -77,6 +77,7 @@ function main() {
   let mainbathmirror = new MainBathMirror();
   let mainbathwindow = new MainBathWindow();
   let mainbathsink = new MainBathSink();
+  let upperbathsink = new UpperBathSink();
   let maintoilet = new MainToilet();
   let uppertoilet = new UpperToilet();
   let garageface = new GarageFace();
@@ -124,6 +125,7 @@ function main() {
     upperbathcupboard,
     mainbathmirror,
     mainbathsink,
+    upperbathsink,
     maintoilet,
     uppertoilet,
     walkinrobeshelves,
