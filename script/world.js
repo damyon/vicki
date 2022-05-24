@@ -71,10 +71,14 @@ function main() {
   let bath = new Bath();
   let bathwater = new BathWater();
   let mainshower = new MainShower();
+  let uppershower = new UpperShower();
   let mainbathcupboard = new MainBathCupboard();
+  let upperbathcupboard = new UpperBathCupboard();
   let mainbathmirror = new MainBathMirror();
   let mainbathwindow = new MainBathWindow();
   let mainbathsink = new MainBathSink();
+  let maintoilet = new MainToilet();
+  let uppertoilet = new UpperToilet();
   let garageface = new GarageFace();
   let fridge = new Fridge();
   let frontdoor = new FrontDoor();
@@ -117,8 +121,11 @@ function main() {
     mainbedsidenorth,
     mainbedsidesouth,
     mainbathcupboard,
+    upperbathcupboard,
     mainbathmirror,
     mainbathsink,
+    maintoilet,
+    uppertoilet,
     walkinrobeshelves,
     bath,
     garageface,
@@ -129,6 +136,7 @@ function main() {
     roof,
     bathwater,
     mainshower,
+    uppershower,
     kitchenglass,
     mainbedwindow,
     mainbedglass,
