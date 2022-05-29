@@ -5,6 +5,7 @@ class Slab extends VoxelModel {
     this.y = 2;
     this.z = 0;
     this.x = 8;
+    this.textureScale = 40;
   }
 
   /**
