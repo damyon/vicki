@@ -3,7 +3,7 @@ class UpperBedDoorWest extends VoxelModel {
     super();
 //    this.rotate = Math.random();
     this.rotate = Math.PI/2;
-    this.y = 8.7;
+    this.y = 8.85;
     this.z = -0.5;
     this.x = 3.9;
     this.horizontalScale = 16;

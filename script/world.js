@@ -90,6 +90,8 @@ function main() {
   let toiletdoor = new ToiletDoor();
   let mainbeddoor = new MainBedDoor();
   let upperbeddooreast = new UpperBedDoorEast();
+  let upperbedcupboardeast = new UpperBedCupboardEast();
+  let upperbedcupboardwest = new UpperBedCupboardWest();
   let upperbathdoor = new UpperBathDoor();
   let upperbeddoorwest = new UpperBedDoorWest();
   let mainbathdoor = new MainBathDoor();
@@ -152,6 +154,8 @@ function main() {
     toiletdoor,
     mainbeddoor,
     upperbeddooreast,
+    upperbedcupboardeast,
+    upperbedcupboardwest,
     upperbathdoor,
     upperbeddoorwest,
     mainbathdoor,

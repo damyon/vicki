@@ -2,7 +2,7 @@ class UpperBathDoor extends VoxelModel {
   constructor() {
     super();
 //    this.rotate = Math.random();
-    this.y = 8.7;
+    this.y = 8.85;
     this.z = -6.3;
     this.x = 0.9;
     this.horizontalScale = 16;
