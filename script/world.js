@@ -35,6 +35,7 @@ function main() {
   let cloud1 = new Cloud();
 
   let slab = new Slab();
+  let carpet = new Carpet();
   let wall = new Wall();
   let wallinner = new WallInner();
   let upper = new Upper();
@@ -86,6 +87,13 @@ function main() {
   let garageface = new GarageFace();
   let fridge = new Fridge();
   let frontdoor = new FrontDoor();
+  let toiletdoor = new ToiletDoor();
+  let mainbeddoor = new MainBedDoor();
+  let upperbeddooreast = new UpperBedDoorEast();
+  let upperbathdoor = new UpperBathDoor();
+  let upperbeddoorwest = new UpperBedDoorWest();
+  let mainbathdoor = new MainBathDoor();
+  let garagedooreast = new GarageDoorEast();
   let garagedoornorth = new GarageDoorNorth();
   let garagedoor = new GarageDoor();
   let throttleLOD = 10.0;
@@ -102,6 +110,7 @@ function main() {
     new Sea(1, 0, 1),
     cloud1,
     slab,
+    carpet,
     wall,
     wallinner,
     upper,
@@ -139,6 +148,13 @@ function main() {
     garageface,
     fridge,
     frontdoor,
+    garagedooreast,
+    toiletdoor,
+    mainbeddoor,
+    upperbeddooreast,
+    upperbathdoor,
+    upperbeddoorwest,
+    mainbathdoor,
     garagedoornorth,
     garagedoor,
     roof,

@@ -4,7 +4,7 @@ class UpperTV extends VoxelModel {
     //this.rotate = Math.random();
     this.y = 9.1;
     this.z = -0.5;
-    this.x = 7.9;
+    this.x = 8.9;
   }
 
   /**
