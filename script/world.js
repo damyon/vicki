@@ -80,6 +80,7 @@ function main() {
   let upperbathcupboard = new UpperBathCupboard();
   let mainbathmirror = new MainBathMirror();
   let mainbathwindow = new MainBathWindow();
+  let mainbathframe = new MainBathFrame();
   let mainbathsink = new MainBathSink();
   let upperbathsink = new UpperBathSink();
   let maintoilet = new MainToilet();
@@ -175,6 +176,7 @@ function main() {
     upperglassnorth,
     upperglasssouth,
     mainbathwindow,
+    mainbathframe,
   ];
   
   for (model of drawables) {
