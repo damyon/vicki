@@ -163,6 +163,7 @@ function main() {
     garagedoornorth,
     garagedoor,
     roof,
+    mainbathframe,
     bathwater,
     mainshower,
     uppershower,
@@ -176,7 +177,6 @@ function main() {
     upperglassnorth,
     upperglasssouth,
     mainbathwindow,
-    mainbathframe,
   ];
   
   for (model of drawables) {

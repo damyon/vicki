@@ -3,8 +3,10 @@ class MainBathFrame extends VoxelModel {
     super();
 //    this.rotate = Math.random();
     this.y = 6.8;
-    this.z = 3.8;
-    this.x = 9.3;
+    this.z = 4.4;
+    this.x = 9.38;
+    this.horizontalScale = 2.92;
+    this.verticalScale = 2.7;
   }
 
   /**
