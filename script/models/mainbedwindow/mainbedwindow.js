@@ -6,7 +6,7 @@ class MainBedWindow extends VoxelModel {
     this.z = 3.8;
     this.x = 19.3;
     this.horizontalScale = 70;
-    this.verticalScale = 40;
+    this.verticalScale = 30;
     this.blend = 1;
   }
 

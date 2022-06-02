@@ -10,7 +10,7 @@ class Controls {
     
     this.x = -5;
     this.y = -8;
-    this.z = 8;
+    this.z = -14;
     
     this.maxSpeed = 3;
     this.forwardSpeed = 0;

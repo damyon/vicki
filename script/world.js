@@ -81,6 +81,10 @@ function main() {
   let mainbathmirror = new MainBathMirror();
   let mainbathwindow = new MainBathWindow();
   let mainbathframe = new MainBathFrame();
+  let upperframesoutheast = new UpperFrameSouthEast();
+  let upperframesouthwest = new UpperFrameSouthWest();
+  let mainbedframesouth = new MainBedFrameSouth();
+  let mainbedframeeast = new MainBedFrameEast();
   let mainbathsink = new MainBathSink();
   let upperbathsink = new UpperBathSink();
   let maintoilet = new MainToilet();
@@ -164,6 +168,10 @@ function main() {
     garagedoor,
     roof,
     mainbathframe,
+    mainbedframesouth,
+    upperframesoutheast,
+    upperframesouthwest,
+    mainbedframeeast,
     bathwater,
     mainshower,
     uppershower,
