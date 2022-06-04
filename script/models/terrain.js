@@ -6,7 +6,7 @@ class Terrain extends Drawable {
     this.terrainSize = 48;
     this.terrainLOD = 64;
     this.buffers = null;
-    this.textureRepeat = 40;
+    this.textureRepeat = 80;
     this.heightsLoaded = new Promise((resolve, reject) => {
       this.heightsResolver = resolve;
     });

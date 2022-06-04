@@ -25,6 +25,7 @@ class Controls {
     this.actionLeft = false;
     this.actionCast = false;
     this.rodRotate = Math.PI/4;
+    this.lastAction = new Date().getTime();
 
     canvas.onclick = function() {
       this.requestPointerLock();
@@ -33,6 +34,7 @@ class Controls {
     document.addEventListener('pointerlockchange', this.togglePointerLock.bind(this), false);
     
     window.addEventListener('keydown', function (e) {
+      this.lastAction = new Date().getTime();
       switch(e.keyCode) {
         case 38:
         case 87:
@@ -61,6 +63,7 @@ class Controls {
     }.bind(this), false);
 
     window.addEventListener('keyup', function (e) {
+      this.lastAction = new Date().getTime();
       switch(e.keyCode) {
         case 38:
         case 87:
@@ -89,6 +92,7 @@ class Controls {
     canvas.addEventListener('touchstart', function (e) {
       let width = window.innerWidth;
       let height = window.innerHeight;
+      this.lastAction = new Date().getTime();
       
       let x = e.touches[0].clientX;
       let y = e.touches[0].clientY;
@@ -104,6 +108,7 @@ class Controls {
     }.bind(this));
     canvas.addEventListener('touchmove', function (e) {
       let moveSpeed = 0.05;
+      this.lastAction = new Date().getTime();
 
       e.preventDefault();
       if (this.forwardPress) {
@@ -122,6 +127,7 @@ class Controls {
   }
 
   onmousemove(e) {
+    this.lastAction = new Date().getTime();
     if (this.canvasIsPressed) {
       this.xRotation -= (e.movementY) / 3550;
       this.yRotation += (e.movementX) / 3550;
@@ -131,6 +137,12 @@ class Controls {
 
       this.lastPressX = e.pageX;
       this.lastPressY = e.pageY;
+    }
+  }
+
+  animate() {
+    if ((new Date().getTime() - this.lastAction) > 20000) {
+       this.yRotation = (this.yRotation + 0.01); 
     }
   }
 

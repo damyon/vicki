@@ -303,6 +303,7 @@ function main() {
     let rotateDelta = (targetRotate - sceneControls.rodRotate) / 10;
     sceneControls.rodRotate += rotateDelta;
     sceneControls.rodRotate = Math.PI/3;
+    sceneControls.animate();
 
     drawShadowMap(sceneCamera, sceneControls, sceneDrawables, deltaTime, absTime);
     drawModels(sceneCamera, sceneControls, sceneDrawables, deltaTime, absTime, drawLastLOD);
