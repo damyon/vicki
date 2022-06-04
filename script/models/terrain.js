@@ -371,8 +371,8 @@ class Terrain extends Drawable {
       let i = 0, j = 0, offset = 0, offsetX = 0, offsetY1 = 0, offsetY2 = 0, offsetY3 = 0, offsetY4 = 0, offsetZ = 0, one = 0, index = 0;
       let terrainNormals = [];
       let lookupOffset = 0;
-      let heightOffset = -2;
-      let heightScale = 6;
+      let heightOffset = -6;
+      let heightScale = 12;
       let heightMapDimensions = 512;
       
       one = - this.terrainSize;
