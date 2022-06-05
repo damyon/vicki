@@ -2,7 +2,7 @@ class KitchenBenchTopNorth extends VoxelModel {
   constructor() {
     super();
     this.y = 3;
-    this.z = -10;
+    this.z = -10.1;
     this.x = 3;
   }
 

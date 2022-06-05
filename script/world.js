@@ -81,9 +81,15 @@ function main() {
   let mainbathmirror = new MainBathMirror();
   let mainbathwindow = new MainBathWindow();
   let mainbathframe = new MainBathFrame();
+  let kitchendoorframe = new KitchenDoorFrame();
   let upperframesoutheast = new UpperFrameSouthEast();
   let upperframesouthwest = new UpperFrameSouthWest();
   let mainbedframesouth = new MainBedFrameSouth();
+  let mainbedframenorth = new MainBedFrameNorth();
+  let livingframeeast = new LivingFrameEast();
+  let kitchenframe = new KitchenFrame();
+  let livingwindowframeeast = new LivingWindowFrameEast();
+  let livingwindowframewest = new LivingWindowFrameWest();
   let mainbedframeeast = new MainBedFrameEast();
   let mainbathsink = new MainBathSink();
   let upperbathsink = new UpperBathSink();
@@ -167,8 +173,14 @@ function main() {
     garagedoornorth,
     garagedoor,
     roof,
+    kitchendoorframe,
     mainbathframe,
     mainbedframesouth,
+    mainbedframenorth,
+    livingframeeast,
+    kitchenframe,
+    livingwindowframeeast,
+    livingwindowframewest,
     upperframesoutheast,
     upperframesouthwest,
     mainbedframeeast,

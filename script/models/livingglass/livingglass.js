@@ -4,7 +4,7 @@ class LivingGlass extends VoxelModel {
 //    this.rotate = Math.random();
     this.y = 2.8;
     this.z = -10.6;
-    this.x = 16.3;
+    this.x = 16.1;
     this.rotate = Math.PI/2;
     this.horizontalScale = 70;
     this.verticalScale = 60;
