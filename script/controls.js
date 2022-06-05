@@ -18,6 +18,7 @@ class Controls {
     this.lastPressX;
     this.lastPressY;
     this.forwardPress = false;
+    this.backwardPress = false;
    
     this.actionForward = false;
     this.actionBackward = false;
@@ -98,9 +99,18 @@ class Controls {
       let y = e.touches[0].clientY;
       if ((2 * (width / 5)) <= x && x <= (3 * (width / 5)) &&
           (2 * (height / 5)) <= y && y <= (3 * (height / 5))) {
-        this.forwardPress = true;
+        if (y < height / 2) {
+            this.forwardPress = true;
+            this.backwardPress = false;
+        } else {
+            this.forwardPress = false;
+            this.backwardPress = true;
+        }
+        this.lastPressX = x;
+        this.lastPressY = y;
       } else {
         this.forwardPress = false;
+        this.backwardPress = false;
         this.lastPressX = x;
         this.lastPressY = y;
       }
@@ -113,6 +123,8 @@ class Controls {
       e.preventDefault();
       if (this.forwardPress) {
         this.forwardSpeed += moveSpeed;
+      } else if (this.backwardPress) {
+        this.forwardSpeed -= moveSpeed;
       } else {
         this.xRotation += (this.lastPressY - e.touches[0].clientY) / 500;
         this.yRotation += (e.touches[0].clientX - this.lastPressX) / 500;
