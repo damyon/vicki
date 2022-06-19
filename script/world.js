@@ -63,6 +63,8 @@ function main() {
   let mainbedglass = new MainBedGlass();
   let livingglass = new LivingGlass();
   let fencenorth = new FenceNorth();
+  let fenceeast = new FenceEast();
+  let fencewest = new FenceWest();
   let kitchendoor = new KitchenDoor();
   let upperglasseast = new UpperGlassEast();
   let upperglassnorth = new UpperGlassNorth();
@@ -196,6 +198,8 @@ function main() {
     upperframesouthwest,
     mainbedframeeast,
     fencenorth,
+    fenceeast,
+    fencewest,
     bathwater,
     mainshower,
     uppershower,

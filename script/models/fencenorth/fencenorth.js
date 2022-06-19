@@ -6,9 +6,9 @@ class FenceNorth extends VoxelModel {
     this.z = -18;
     this.x = 7;
 //    this.rotate = Math.PI/2;
-    this.horizontalScale = 360;
+    this.horizontalScale = 370;
     this.verticalScale = 60;
-    this.textureScale = 20;
+    this.textureScale = 25;
     //this.blend = 1;
   }
 
