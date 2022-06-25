@@ -61,6 +61,7 @@ function main() {
   let upperbedeast = new UpperBedEast();
   let mainbedwindow = new MainBedWindow();
   let mainbedglass = new MainBedGlass();
+  let mainbedpicturenorth = new MainBedPictureNorth();
   let livingglass = new LivingGlass();
   let fencenorth = new FenceNorth();
   let fenceeast = new FenceEast();
@@ -197,6 +198,7 @@ function main() {
     upperframesoutheast,
     upperframesouthwest,
     mainbedframeeast,
+    mainbedpicturenorth,
     fencenorth,
     fenceeast,
     fencewest,
