@@ -360,3 +360,9 @@ function down() {
 function forward() {
   this.controls.forward();
 }
+function backward() {
+  this.controls.backward();
+}
+function stop() {
+  this.controls.stop();
+}

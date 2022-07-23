@@ -97,6 +97,7 @@ class Controls {
       
       let x = e.touches[0].clientX;
       let y = e.touches[0].clientY;
+      /*
       if ((2 * (width / 5)) <= x && x <= (3 * (width / 5)) &&
           (2 * (height / 5)) <= y && y <= (3 * (height / 5))) {
         if (y < height / 2) {
@@ -108,12 +109,12 @@ class Controls {
         }
         this.lastPressX = x;
         this.lastPressY = y;
-      } else {
+      } else { */
         this.forwardPress = false;
         this.backwardPress = false;
         this.lastPressX = x;
         this.lastPressY = y;
-      }
+     //  }
         
     }.bind(this));
     canvas.addEventListener('touchmove', function (e) {
@@ -121,11 +122,11 @@ class Controls {
       this.lastAction = new Date().getTime();
 
       e.preventDefault();
-      if (this.forwardPress) {
+      /*if (this.forwardPress) {
         this.forwardSpeed += moveSpeed;
       } else if (this.backwardPress) {
         this.forwardSpeed -= moveSpeed;
-      } else {
+      } else { */
         this.xRotation += (this.lastPressY - e.touches[0].clientY) / 500;
         this.yRotation += (e.touches[0].clientX - this.lastPressX) / 500;
 
@@ -134,7 +135,7 @@ class Controls {
 
         this.lastPressX = e.touches[0].clientX;
         this.lastPressY = e.touches[0].clientY;
-      }
+      //}
     }.bind(this));
   }
 
@@ -226,5 +227,11 @@ class Controls {
   }
   forward() {
       this.forwardSpeed += 0.5;
+  }
+  backward() {
+      this.forwardSpeed -= 0.5;
+  }
+  stop() {
+      this.forwardSpeed = 0;
   }
 }
